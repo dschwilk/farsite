@@ -1,0 +1,2 @@
+./Panther/238648_cust_fm94.lcp ./Panther/cust.input ./Panther/ignit2.shp 0 ./Panther/cust 0
+./Panther/1177973.lcp ./Panther/1177973.input ./Panther/1177973_NTFBIgnition.shp 1177973_NTFBBarrier.shp ./Panther/1177973 0
