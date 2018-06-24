@@ -580,7 +580,7 @@ class FELocalSite : public LandscapeData
 	void windreduct();
 	void windadj(long date, double hours, long* cloud);
 	void windadj_Old(long date, double hours, long* cloud);
-
+    void WindGridAdjust(double SimTime);
     void  windadj_New(long date, double hours, long* cloud);
     int GetMthDay (int date, int *ai_Mth, int *ai_Day);
 

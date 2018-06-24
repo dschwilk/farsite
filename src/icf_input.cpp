@@ -207,6 +207,9 @@ int i;
   if ( !ICF::Set_SinIntArg ((char *)e_ICF_FARSITE_FILL_BARRIER, &this->i_FarsiteFillBarriers)) /* FARSITE_FILL_BARRIERS      */
     return ICF::CloseRet(e_EMS_ST);
 
+  if(!ICF::Set_FilNam(e_ICF_FARSITE_ATM_FILE, this->cr_FarsiteAtmFile))                        /* FARSITE_ATM_FILE     */
+        return ICF::CloseRet(e_EMS_ST);
+
   return ICF::CloseRet(1);              /* Close file and ret ok code.       */
 
 }

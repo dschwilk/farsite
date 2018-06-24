@@ -3,7 +3,7 @@ BASE=..
 
 CC=g++
 INC=
-CFLAGS=-c -g -Wall -DUNIX -Wno-deprecated
+CFLAGS=-c -std=c++11 -g -Wall -DUNIX -Wno-deprecated
 
 SOURCES=barriers.cpp burnupw.cpp cdtlib.cpp \
 	crossthread.cpp dbfopen.cpp Far_BSG.cpp Far_Cond.cpp Far_FPC.cpp \

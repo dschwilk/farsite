@@ -167,6 +167,7 @@ int  DaysInMth (int Mth);
 #define e_ICF_FARSITE_MINIMUM_SPOT_DISTANCE			"FARSITE_MINIMUM_SPOT_DISTANCE"
 #define e_ICF_FARSITE_SPOT_GRID_RESOLUTION			"FARSITE_SPOT_GRID_RESOLUTION"
 #define e_ICF_FARSITE_MIN_IGNITION_VERTEX_DISTANCE	"FARSITE_MIN_IGNITION_VERTEX_DISTANCE"
+#define e_ICF_FARSITE_ATM_FILE						"FARSITE_ATM_FILE"
 
 
 //TOM additions
@@ -591,6 +592,7 @@ d_WDI   s_WDI;       /* WindNinja Diurnal Inputs */
 
    char  cr_FarsiteIgnition[eC_PthFN];     /* MTT_IGNITION_FILE:                         */
    char  cr_FarsiteBarrier[eC_PthFN];     /* MTT_BARRIERS_FILE:                         */
+   char  cr_FarsiteAtmFile[eC_PthFN];     /* ATM_FILE:                         */
 
    float f_FarsiteSpotGridResolution;    /* for burn spot grid BSG Class  */
    float f_FarsiteSpotProb;          /* Spotting probability (0.0 - 1.0)                       */
@@ -883,6 +885,7 @@ d_WDI   s_WDI;       /* WindNinja Diurnal Inputs */
 #define  e_EMS_TPI  -115
 #define  e_EMS_WeF  -116
 #define  e_EMS_MTT_SPOT  -117
+#define	 e_EMS_FARSITE_ATM_FILE	-118
 
 
 #define  e_EMV_FM   -200
@@ -920,6 +923,12 @@ d_WDI   s_WDI;       /* WindNinja Diurnal Inputs */
 #define  e_EMS_MTTCancelled  -252
 #define  e_EMS_NoSpreadToAdjacentCell -253
 #define  e_EMS_SpottingSeed -254
+
+#define e_EMS_FARSITE_WINDGRID_COVERAGE -255
+#define e_EMS_FARSITE_WINDGRID_TIME -256
+#define e_EMS_FARSITE_WINDGRID_INVALID -257
+#define e_EMS_FARSITE_WINDGRID_SIZE_MISMATCH -258
+#define e_EMS_FARSITE_WINDGRID_HAS_NODATA -259
 
 #define  e_EMS_FARSITE_START  -260
 #define  e_EMS_FARSITE_END  -261

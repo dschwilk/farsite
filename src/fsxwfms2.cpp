@@ -163,8 +163,10 @@ double Radiate = 0, EquilMx;
 		  return;
 
 	 date = pFarsite->Chrono(SimTime, &hour, &hours, false);				// get hours days etc.
-	 if (pFarsite->AtmosphereGridExists())
-		  AtmWindAdjustments(date, hours, &cloud);
+     if (pFarsite->AtmosphereGridExists())  // comment this out and uncomment next little bit to run windninja gridded wind .atm file
+          AtmWindAdjustments(date, hours, &cloud);
+     //if (pFarsite->m_windGrids.IsValid())     // comment this out and uncomment last little bit to run with non-windninja gridded wind .atm file winds and weather
+     //   WindGridAdjust(SimTime);
  	else
 	  	windadj(date, hours, &cloud);
 
@@ -221,6 +223,15 @@ void FELocalSite::windadj(long date, double hours, long* cloud)
  //
 // printf ( "\n");
 
+}
+
+void FELocalSite::WindGridAdjust(double SimTime)
+{
+    double ws, wd;
+    pFarsite->m_windGrids.GetWinds(SimTime, XLocation, YLocation, &ws, &wd);
+    twindspd = ws;
+    wwinddir = wd;
+    windreduct();
 }
 
 /***************************************************************

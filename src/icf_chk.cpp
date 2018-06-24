@@ -87,6 +87,7 @@ d_EMS sr_EMS[] =  {
        {  e_EMS_ST,   e_ICF_ST,    "Invalid MTT maximum simulation time"},
        {  e_EMS_TPI,  e_ICF_TPI,   "Invalid MTT path interval"},
        {  e_EMS_MTT_SPOT,  e_ICF_MTTSPOT,   "Invalid MTT Spot Probability"},
+       {  e_EMS_FARSITE_ATM_FILE,  "ATM File Error" },
 
        {  e_EMV_WiD,  e_ICF_WiD,   "Invalid Wind Stream Unit" },
        {  e_EMV_CFM,  e_ICF_CFM,   "Invalid Crown Fire" },
@@ -116,6 +117,12 @@ d_EMS sr_EMS[] =  {
        {  e_EMS_MTTCancelled,       "",		"MTT Cancelled" },
        {  e_EMS_NoSpreadToAdjacentCell, "",  "No Spread From Ignition" },
        {  e_EMS_SpottingSeed, "",  "Invalid Spotting Seed" },
+
+       { e_EMS_FARSITE_WINDGRID_COVERAGE,       "",			"Insufficient Wind Grid Coverage" },
+       { e_EMS_FARSITE_WINDGRID_TIME,           "",			"Invalid Wind Grid Times" },
+       { e_EMS_FARSITE_WINDGRID_INVALID,        "",			"Invalid Wind Grid" },
+       { e_EMS_FARSITE_WINDGRID_SIZE_MISMATCH,  "",			"Wind Dir and Speed Grid Size Mismatch" },
+       { e_EMS_FARSITE_WINDGRID_HAS_NODATA,     "",			"Wind Grid has NODATA value(s)" },
 
        {  e_EMS_FARSITE_START,     "",			"Invalid start time" },
        {  e_EMS_FARSITE_END,       "",			"Invalid end time" },
