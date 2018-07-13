@@ -1989,6 +1989,7 @@ int i;
      strcpy(Ignition.ifile, icf.cr_FarsiteIgnition);
      CreateIgnitionGrid(); }
 
+   SetStartDate(GetJulianDays(GetStartMonth()) + GetStartDay());
    SetSimulationDuration (ConvertActualTimeToSimtime(GetEndMonth(),
                           GetEndDay(), GetEndHour(), GetEndMin(), false));
 
@@ -6673,7 +6674,7 @@ double Farsite5::ConvertActualTimeToSimtime(long mo, long dy, long hr, long mn,	
 
 	if (!FromCondit)
 	{
-		if (GetStartDate() == 0)
+        if (GetStartDate() == 0)
 		{
 			SimTime = -1.0;
 			return SimTime;
@@ -12379,6 +12380,7 @@ void CWindGrids::SetSimTimes(Farsite5 *pFarsite)
     {
         CAtmWindGrid *pGrid = *it;
         pGrid->SetSimTime(pFarsite);
+        //printf("gridCount = %d, m_month = %d, m_day = %d, m_hour = %d, m_simTime = %d\n",std::distance(m_vpGrids.begin(), it),pGrid->GetMonth(),pGrid->GetDay(),pGrid->GetHour(),pGrid->GetSimTime());
     }
     //now want to make sure grids are sequential
     if(m_vpGrids.size() > 1)
@@ -12435,6 +12437,7 @@ void CWindGrids::GetWinds(double simTime, double x, double y, double *speed, dou
     }
     float spd, dir;
     trgGrid->GetWinds(x, y, &spd, &dir);
+    //printf("farsiteSimTime = %f, gridCount = %d, gridSimTime = %d, x = %f, y = %f, speed = %f, dir = %f\n",simTime,std::distance(m_vpGrids.begin(), it)-1,trgGrid->GetSimTime(),x,y,spd,dir);
     *speed = spd;
     *direction = dir;
 }
