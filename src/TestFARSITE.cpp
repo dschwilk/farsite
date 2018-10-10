@@ -837,10 +837,10 @@ int openMPMain(int argc, char* argv[])
 	return 0;
 }
 #else
-#define MAX_PATH 512
+#define MAX_PATH 1512
 int linuxMain(int argc, char* argv[])
 {
-	char lcpFileName[512], inputsFileName[512], ignitName[512], barrierName[512], baseOutputsPath[512];
+    char lcpFileName[1512], inputsFileName[1512], ignitName[1512], barrierName[1512], baseOutputsPath[1512];
 	if(argc < 2)
 	{
 		printf("TestFARSITE expects one parameter\nTestFARSITE Usage:\n"
@@ -863,13 +863,13 @@ int linuxMain(int argc, char* argv[])
 		printf("Error, cannot open %s\n", argv[1]);
 		exit(1);
 	}
-	char outputName[512];
+    char outputName[1512];
 	int outType;// = atoi(argv[4]);
 	nFarsites = 0;
-	char buf[512];
+    char buf[1512];
 	while(!feof(cmd))
 	{
-		fgets(buf, 512, cmd);
+        fgets(buf, 1512, cmd);
 
 		if(ParseCommands(buf, lcpFileName, inputsFileName, ignitName, barrierName, baseOutputsPath, &outType))//assume valid commands
 			nFarsites++;
@@ -901,7 +901,7 @@ int linuxMain(int argc, char* argv[])
 		strcpy(ignits[i], "");
 		strcpy(barriers[i], "");
 		strcpy(outs[i], "");
-		fgets(buf, 512, cmd);
+        fgets(buf, 1512, cmd);
 		if(!ParseCommands(buf, lcps[i], inputs[i], ignits[i], barriers[i], outs[i], &outTypes[i]))
 			continue;
 	}
