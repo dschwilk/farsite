@@ -607,7 +607,7 @@ float fr[e_wifr];
 
 /* Look for Unit switch, if none set to english                              */
    if ( !ICF::Set_SinTxtArg ((char *)e_ICF_WiDU,this->cr_WiDU,eC_WSU) )
-     strcpy (this->cr_WiDU,"English");
+     strcpy (this->cr_WiDU,"ENGLISH");
 
    ICF::SetWindYear ();   /* Set Year(s) into table */
   return 1;
@@ -618,7 +618,7 @@ float fr[e_wifr];
 * Name: WindDataFile       WIND_FILE:
 * Desc: Find the Wind Data File Name switch and if found, open
 *       the file and loads its data.
-*       The first line in the file may have "English" or "Metric"
+*       The first line in the file may have "ENGLISH" or "METRIC"
 *        if none - defaults to English
 *
 *  Out: ai.....error number
@@ -662,14 +662,14 @@ FILE *fhW;
 
 /* 1st line in file can contain the units                                    */
    fscanf (fhW, "%s", cr);              /* 1st line in file                  */
-   if ( !strcmp (cr,"Metric")){         /* See what unit                     */
-     strcpy (cr_Unit,"Metric");   /* save it                           */
+   if ( !strcasecmp (cr,"METRIC")){         /* See what unit                     */
+     strcpy (cr_Unit,"METRIC");   /* save it                           */
      fpos = ftell(fhW); }               /* pos in file to look for num data  */
-   else if ( !strcmp (cr,"English")){
-     strcpy (this->cr_WiDU,"English");
+   else if ( !strcasecmp (cr,"ENGLISH")){
+     strcpy (this->cr_WiDU,"ENGLISH");
      fpos = ftell(fhW); }
    else {                               /* None - default to English         */
-     strcpy (this->cr_WiDU,"English");
+     strcpy (this->cr_WiDU,"ENGLISH");
      fpos = 0;
      fseek (fhW, fpos, SEEK_SET);}        /* to begin of file                  */
 
@@ -724,7 +724,7 @@ FILE *fhW;
 * Name: WeatherDataFile       WEATHER_FILE:
 * Desc: Find the Weather Data File Name switch and if found, open
 *       the file and loads its data.
-*       The first line in the file may have "English" or "Metric"
+*       The first line in the file may have "ENGLISH" or "METRIC"
 *        if none - defaults to English
 * NOTE: This function is setup to allow for the Weather Stream input
 *       file to have or not have the last to values on a line, which
@@ -771,14 +771,14 @@ FILE *fhW;
 
 /* 1st line in file can contain the units                                    */
    fscanf (fhW, "%s", cr);              /* 1st line in file                  */
-   if ( !strcmp (cr,"Metric")){         /* See what unit                     */
-     strcpy (cr_Unit,"Metric");   /* save it                           */
+   if ( !strcasecmp (cr,"METRIC")){         /* See what unit                     */
+     strcpy (cr_Unit,"METRIC");   /* save it                           */
      fpos = ftell(fhW); }               /* pos in file to look for num data  */
-   else if ( !strcmp (cr,"English")){
-     strcpy (cr_Unit,"English");
+   else if ( !strcasecmp (cr,"ENGLISH")){
+     strcpy (cr_Unit,"ENGLISH");
      fpos = ftell(fhW); }
    else {                               /* None - default to English         */
-     strcpy (cr_Unit,"English");
+     strcpy (cr_Unit,"ENGLISH");
      fpos = 0;                        /* to begin of file                  */
      fseek (fhW, fpos, SEEK_SET);
     }
@@ -938,8 +938,8 @@ float wr[e_wr];
       *ai = e_EMS_RAWS;
       return 0; }
 
-   if ( !strcmp (cr_Un,"Metric") )
-     this->i_RAWSElev = (int) (f * 3.28);
+   if ( !strcasecmp (cr_Un,"METRIC") )
+     this->i_RAWSElev = (int) (f * 3.28); // convert to feet
    else
      this->i_RAWSElev = (int) (f + 0.5);  /* roundoff elev */
 
@@ -984,7 +984,7 @@ float wr[e_wr];
      this->a_RAWS[iN_Recs].f_WinDir = wr[8];        /* Wind Direction */
      this->a_RAWS[iN_Recs].f_CloCov = wr[9];        /* Cloud Cover */
 
-     if ( !strcmp (cr_Un,"Metric")) {             /* Get it to English units */
+     if ( !strcasecmp (cr_Un,"METRIC")) {             /* Get it to English units */
         CelsToFahr ( &this->a_RAWS[iN_Recs].f_Temp); /* Temp to Fahrenheit */
         this->a_RAWS[iN_Recs].f_PerHou *= 3.93;      /* percip to inches  */
         this->a_RAWS[iN_Recs].f_WinSpd *= 0.5402; }  /* (0.62125/1.15) 10m wind kph to 20ft wind mph*/
@@ -1210,7 +1210,7 @@ float fr[e_fr];
 
 /* Look for Unit switch, if none set to english                              */
    if ( !ICF::Set_SinTxtArg ((char *)e_ICF_WeDU,cr_Unit,eC_WSU) )
-     strcpy (cr_Unit,"English");
+     strcpy (cr_Unit,"ENGLISH");
 
 /* We want it in English if it comes in as Metric */
    ToEnglish (cr_Unit);
@@ -1283,7 +1283,7 @@ int i, i_Year;
 * Desc: Check and get the Units to English if they come in
 *        as Metric
 *       ALSO to a check and set on the Humidty - see code below
-*       cr_Unit...."English" "Metric"
+*       cr_Unit...."ENGLISH" "METRIC"
 {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
 void  ICF::ToEnglish (char cr_Unit[])
 {
@@ -1295,7 +1295,7 @@ d_Wtr *aWS;
 
   for ( i = 0; i < this->iN_Wtr; i++ ) {
     aWS = &this->a_Wtr[i];
-    if ( !strcmp (cr_Unit,"Metric")){    /* if in Metric convt to Englis */
+    if ( !strcasecmp (cr_Unit,"METRIC")){    /* if in Metric convt to English */
 
 /* percipitation from centimeters to hundredths of inches */
        aWS->f_Per *= 3.93;                 /*  ppt  *= 3.93;     */
@@ -2957,7 +2957,7 @@ int  ICF::CustomFuelData  (int *ai)
 {
 	/* Look for Unit switch, if none set to english                              */
 		if ( !ICF::Set_SinTxtArg ((char *)e_ICF_CFDU,this->cr_CustFuelUnits, eC_WSU) )
-		 strcpy (this->cr_CustFuelUnits,"English");
+		 strcpy (this->cr_CustFuelUnits,"ENGLISH");
 	int i, i_Arg;
 	strcpy (this->cr_ErrExt,"");
 	i = ICF::Set_SinIntArg ((char *)e_ICF_CFD ,&i_Arg); // FUEL_MOISTURES_DATA:       //

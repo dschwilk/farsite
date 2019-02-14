@@ -85,7 +85,7 @@ long Row, Col;
 		Grid[Row][Col]++;
 
  // if ( fh != NULL ) {
- //   if ( !strcmpi (cr,"S")) {  // Spotting is setting the cell as a hit
+ //   if ( !strcasecmp (cr,"S")) {  // Spotting is setting the cell as a hit
  //   fprintf (fh, "%s    %f  %f %d \n", cr, d_x, d_y, Grid[Row][Col]);
   //}}
 

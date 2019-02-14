@@ -1030,16 +1030,16 @@ int ICF::EngMet (char cr[],  char cr_Err[])
    strcpy (cr_Err,"");
 
    if ( !strcmp(cr,"" )) {
-     strcpy (cr,"English");
+     strcpy (cr,"ENGLISH");
      return 1; }
 
-   if ( !strcmp(cr,"English") )
+   if ( !strcasecmp(cr,"ENGLISH") )
       return 1;
 
-   if ( !strcmp(cr,"Metric") )
+   if ( !strcasecmp(cr,"METRIC") )
       return 1;
 
-   sprintf (cr_Err,"\"%s\" - Use: %s or %s",cr,"English","Metric");
+   sprintf (cr_Err,"\"%s\" - Use: ENGLISH or METRIC (case is ignored)",cr);
    return 0;
 
 }

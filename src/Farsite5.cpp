@@ -23,7 +23,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define strcmpi strcasecmp
 #define FALSE 0
 #define MAX_PATH 256
 void CopyFile(char *in, char *out, bool unused)
@@ -2834,11 +2833,11 @@ int Farsite5::LoadCustomFuelFile(char *FileName)
 	     fgets(Line, 255, CurrentFile);
      	sscanf(Line, "%s", head);
 	    	AccessFuelModelUnits(0);
-     	if(!strcmp(head, "metric"))
+     	if(!strcasecmp(head, "METRIC"))
 	     {    Metric=true;
      	     AccessFuelModelUnits(1);
 	     }
-     	else if(strcmpi(head, "english"))   // no header in file
+     	else if(strcasecmp(head, "ENGLISH"))   // no header in file
 	     {    if(atol(head)>256)
      	     {     //::MessageBox(Client->HWindow, "Bad Header in File", "Custom Fuel Model File Error", MB_OK);
           	     fclose(CurrentFile);
@@ -2898,9 +2897,10 @@ int Farsite5::LoadCustomFuelFile(char *FileName)
      memset(head, 0x0, 64*sizeof(char));
      fgets(Line, 255, CurrentFile);
     	sscanf(Line, "%s", head);
-    	if(strcmpi(head, "metric") && strcmp(head, "english"))
-     	rewind(CurrentFile);
-
+    	if(strcasecmp(head, "METRIC") && strcasecmp(head, "ENGLISH")) {
+            // no header
+     	    rewind(CurrentFile);
+        }
      count=0;
 	while(!feof(CurrentFile))
 	{    memset(Line, 0x0, 256*sizeof(char));
@@ -3340,7 +3340,8 @@ long Farsite5::AllocWeatherData(long StatNum, long NumObs)
 {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
 void  Farsite5::_WSConver (d_Wtr *a, char cr[])
 {
-  if ( !strcmpi (cr,"Metric")){
+  if ( !strcasecmp (cr,"METRIC")){
+    // Metric units - convert to English
     a->f_Per *= 3.93;                 /*  ppt  *= 3.93;     */
     a->f_mT  *= 1.8;                  /*  Tmin *= 1.8;      */
     a->f_mT  += 32;                   /*  Tmin += 32;       */
@@ -3448,7 +3449,7 @@ int i;
 {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
 void Farsite5::_WDSConver (d_Wnd *a, char cr[])
 {
-  if ( !strcmpi (cr,"Metric")) /* if Metric                                  */
+  if ( !strcasecmp (cr,"METRIC")) /* if Metric                                  */
     a->f_Spd *= 0.5402;     /* (0.62125/1.15) 10m wind kph to 20ft wind mph*/
 }
 
@@ -11457,7 +11458,7 @@ void Farsite5::LoadCrownFireMethod (char cr_CroFirMet[])
 {
 /* check if Reinhardt was set in cmd file, else we'll assume Finney was set or  */
 /* the no switch was found and so Finney is used as default                     */
-   if ( !strcmpi (cr_CroFirMet, e_CFM_ScotRein) )
+   if ( !strcasecmp (cr_CroFirMet, e_CFM_ScotRein) )
 	  SetCrownFireCalculation ( 1 );   /* if scott reinhardt           */
    else
       SetCrownFireCalculation ( 0 );   /* else assume finney           */
@@ -12319,12 +12320,12 @@ int CWindGrids::Create(char *atmFileName)
         nRead = sscanf(buf, "%s", unitsStr);
         if (nRead == 1)
         {
-            if (strcmp(unitsStr, "METRIC") == 0)
+            if (strcasecmp(unitsStr, "METRIC") == 0)
             {
                 isMetric = true;
                 break;
             }
-            else if (strcmp(unitsStr, "ENGLISH") == 0)
+            else if (strcasecmp(unitsStr, "ENGLISH") == 0)
             {
                 isMetric = false;
                 break;

@@ -134,9 +134,9 @@ bool AtmosphereGrid::ReadInputTable(char *InputFileName)
 		std::transform(UnitsString, UnitsString+strlen(UnitsString), 
 			UnitsString, tolower);
 		fpos = ftell(InputTable);
-		if (!strcmp(UnitsString, "metric"))
+		if (!strcasecmp(UnitsString, "METRIC"))
 			Metric = 1;
-		else if (!strcmp(UnitsString, "english"))   // english default
+		else if (!strcasecmp(UnitsString, "ENGLISH"))   // english default
 			Metric = 0;//fseek(InputTable, fpos, SEEK_SET);
 		else
 		{
