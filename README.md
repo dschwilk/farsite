@@ -29,6 +29,8 @@ Not exactly sure where the files for the Panther example come from, it is appare
 
 The cougarCreek-fire (others to add later) cases have recently been added, the cougarCreek-fire case uses gridded wind outputs from WindNinja.
 
+The test1177973.input file is an example input file that Loren put together in the summer of 2018, as he tried to figure out what inputs are actually used in this version of farsite, and what is actually done by the code at different steps. Probably is not an easy read, but might be helpful. To make WindNinja happy during these experiments, the 1177973 case was renamed test1177973.
+
 
 #################  Step by Step Guide for Building and Running the Script  #################
 
