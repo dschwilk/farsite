@@ -2,15 +2,15 @@ Farsite BenchMark Results
 
 
 Simulation Info:
-	Landscape File: /home/latwood/src/farsite/example/Panther/1177973/input/1177973.lcp
+	Landscape File: $scriptRoot/farsite/examples/Panther/test1177973/input/test1177973.lcp
 	Landscape Resolution: 30.0
 	Landscape Size: 748 x 648
-	Inputs File: /home/latwood/src/farsite/example/Panther/1177973/input/1177973.input
+	Inputs File: $scriptRoot/farsite/examples/Panther/test1177973/input/test1177973.input
 	Farsite Start Time: 05 03 1200
 	Farsite End Time:   05 06 2000
 	Total Sim Time:     4800.000000
-	Ignition File:      /home/latwood/src/farsite/example/Panther/1177973/input/1177973_NTFBIgnition.shp
-	Barriers File:      /home/latwood/src/farsite/example/Panther/1177973/input/1177973_NTFBBarrier.shp
+	Ignition File:      $scriptRoot/farsite/examples/Panther/test1177973/input/test1177973_NTFBIgnition.shp
+	Barriers File:      $scriptRoot/farsite/examples/Panther/test1177973/input/test1177973_NTFBBarrier.shp
 	Time Step:                  60.000000
 	Distance Resolution:        30.000000
 	Perimeter Resolution:       60.000000
@@ -297,4 +297,4 @@ Simulation Info:
 5 6 2000 7 220 65
 5 7 200 7 220 65
 
-	Total Farsite Run Time: 147.506 Seconds
+	Total Farsite Run Time: 87.576 Seconds

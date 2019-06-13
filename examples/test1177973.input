@@ -7,7 +7,7 @@
 ## desired output files. Then all the used up memory is garbage collected and the process is repeated for the next line of the command line input file.                               ######
 ############################################################################################################################################################################################
 ## This .input file is all about the LoadFarsiteInputs() function called in LinuxMain() of TestFarsite.cpp. The idea is to figure out all the possible inputs that are needed and     ######
-## possible for Linux Farsite, with examples for each option. The files tend to be of the same appearance as the desired input. Explanations here do not cover an overall view of the ######
+## possible for Linux Farsite, with exampless for each option. The files tend to be of the same appearance as the desired input. Explanations here do not cover an overall view of the ######
 ## class structures, say the constructors, so look them up for yourself if you need to understand more. Also it is tough to put in how the verification of the input occurs, but an   ######
 ## attempt to summarize how verification of inputs is done is present in the explanations here.                                                                                       ######
 ############################################################################################################################################################################################
@@ -51,7 +51,7 @@
 ## a single exception. Once you need to edit even a little bit too much, not having all the verification consistently in one spot or the opening of files always verifying format on the ###
 ## spot and some of the order of the validation stuff, it seems like there is a chance to mess things up without care.                                                                 #####
 ############################################################################################################################################################################################
-####  The rest of this document is going to show all the inputs as they come in, in the order and class and function that calls them, with the needed format explained with examples,   ####
+####  The rest of this document is going to show all the inputs as they come in, in the order and class and function that calls them, with the needed format explained with exampless,   ####
 ####  with explanations to try to get an idea of what is actually needed and what is optional and what exceptions should be thrown or what is a conflicting option, or if the functions ####
 ####  are even used in the same way as everything else (cause yes there are tons of exceptions to what seems the closest to the normal format, like generate gridded winds and gridded  ####
 ####  winds .atm file as these are checked as inputs but nothing appears to be done with them till outside or are halfway done inside and halfway done outside the ICF class. So they ######
@@ -123,7 +123,7 @@
 ### required values: just filename with path to file
 ### required values in file according to Windows Farsite: FuelMod, AdjustmentFactor
 ### other information Windows Farsite inputs: FuelMod is an integer value between 1 and 256 where 1-13 are restricted to the 13 standard fire behavior models used by original Rothermel, some numbers 90-219 are reserved for Scott and Burgan models, and models 14-89 are custom fuel models specified in the custom fuels file stuff.
-# windows example:
+# windows examples:
 # 01 1.000
 # 02 1.000
 # 03 0.500
@@ -132,7 +132,7 @@
 # . . . .
 ##
 #ROS_ADJUST_FILE: /home/latwood/Documents/windninaPanther/test1177973/currentInput/test.adj
-### other information: this is technically checked for between the RAWS and the WEATHER, though those data and WIND are grouped together in required use. Interestingly there isn't a data version of this and it just checks that the file exists and can be opened without reading in or testing the data. The data is loaded in Farsite5::LoadROSAdjustFile() during Farsite5::LoadInputsFile(). Turns out that the windows example matches the Linux farsite version.
+### other information: this is technically checked for between the RAWS and the WEATHER, though those data and WIND are grouped together in required use. Interestingly there isn't a data version of this and it just checks that the file exists and can be opened without reading in or testing the data. The data is loaded in Farsite5::LoadROSAdjustFile() during Farsite5::LoadInputsFile(). Turns out that the windows examples matches the Linux farsite version.
 
 
 ### might be optional input: FOLIAR_MOISTURE_CONTENT
@@ -335,7 +335,7 @@
 
 ### ICF::Chk_FarsiteStartEnd() is run by ICF::ValidateFarsite(), calls ICF::Chk_FarsiteDate() on both the start and end dates. ICF::Chk_FarsiteDate() runs a ton of different date and time functions to make sure the dates are valid and to deal with leap years and a bunch of other time phenomenon, to make sure the days fit within the limit of the days of a given month, and to make sure that the hours are between 0 and 2359. Then the most important and confusing part of this whole date/time stuff, it checks the FARSITE_START_TIME or FARSITE_END_TIME, whichever is the current one to be checked, to see if they correctly match the start and end times of the whatever weather data is loaded. All these comparisons come from i_FarTotMin which is the FARSITE_START_TIME or FARSITE_END_TIME date converting the years and days and minutes of the date to total minutes, and from i_WtrTotMin which is the weather or RAWS version of the same thing, either the first weather or RAWS data entry or the last depending on if ICF::Chk_FarsiteDate() is being run for FARSITE_START_TIME or FARSITE_END_TIME. Unfortunately I have no idea if the validation has been done to make sure this weather data is even validated to be correct data and in proper order, for sure it is assumed to exist at this point even if it does not based off of the error messages that pop up starting from a blank inputs file.
 ### If it is RAWS weather, the times can go right up to be equal, but for regular weather, the times need a buffer since the conditioning goes past the FARSITE_END_TIME. So for RAWS, FARSITE_START_TIME has to be at least greater than and not equal to the starting RAWS time, whereas for regular weather, FARSITE_START_TIME has to be at least a whole day greater than but not equal to the starting weather time. Now for the end times, for RAWS, FARSITE_END_TIME has to be at least less than but not equal to the last RAWS time less the FARSITE_TIMESTEP. So basically at least less than what seems like almost one step back in the last of the RAWS weather data. For regular weather, FARSITE_END_TIME has to be at least less than but not equal to the last weather data time.
-### Important to note is that while there are these restrictions on the times, there are situations where you try to make the FARSITE_END_TIME be smaller or the FARSITE_START_TIME be greater, but then run into other errors, so it seems like at times certain datasets won't even allow the simulation to run. For example, with the following last line of RAWS:
+### Important to note is that while there are these restrictions on the times, there are situations where you try to make the FARSITE_END_TIME be smaller or the FARSITE_START_TIME be greater, but then run into other errors, so it seems like at times certain datasets won't even allow the simulation to run. For examples, with the following last line of RAWS:
 #2013 5 6 2000 51 82 0.00 7 220 65
 ## and the following last line of Weather:
 #5 6 0 700 1300 48 57 82 65 4159

@@ -16,9 +16,9 @@ SPOTTING_SEED: 1000
 FUEL_MOISTURES_DATA: 1
 0 3 4 6 70 100
 
-RAWS_FILE: $scriptRoot/farsite/example/cougarCreek-fire/input/7a-cougarCreek-polygonIgnit.raws
+RAWS_FILE: $scriptRoot/farsite/examples/cougarCreek/input/cougarCreek.raws
 
-FARSITE_ATM_FILE: $scriptRoot/farsite/example/cougarCreek-fire/input/7a-cougarCreek-polygonIgnit.atm
+FARSITE_ATM_FILE: $scriptRoot/farsite/examples/cougarCreek/input/cougarCreek.atm
 
 FOLIAR_MOISTURE_CONTENT: 70.00
 CROWN_FIRE_METHOD: Finney

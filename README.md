@@ -27,7 +27,7 @@ Neither the assembla nor git versions utilize post-frontal combustion, nor do th
 
 Not exactly sure where the files for the Panther example come from, it is apparent that there are two .lcp files for which the panther case is run on, namely 1177973.lcp and cust.lcp. The 1177973 case has to be run as is, while the cust case has the option to try out a different ignition file and custom fuels file by changing some of the input files.
 
-The cougarCreek-fire (others to add later) cases have recently been added, the cougarCreek-fire case uses gridded wind outputs from WindNinja.
+The cougarCreek, ..., and ... cases (others to add later) have recently been added after work on a separate repo to automate farsite runs using WRF files as inputs to WindNinja: https://github.com/latwood/WRF-WindNinja-FarsiteScript. The cougarCreek case was generated in the first working run of said other repo script and uses gridded wind outputs from WindNinja.
 
 The test1177973.input file is an example input file that Loren put together in the summer of 2018, as he tried to figure out what inputs are actually used in this version of farsite, and what is actually done by the code at different steps. Probably is not an easy read, but might be helpful. To make WindNinja happy during these experiments, the 1177973 case was renamed test1177973.
 
@@ -36,20 +36,25 @@ The test1177973.input file is an example input file that Loren put together in t
 
 The following worked on fresh installations of Ubuntu 16.04 and 18.04:
 ```
-cd farsite/src
+cd <pathToFarsiteRepo>/farsite/src
 make
-./TestFARSITE ../example/Panther/runPanther.txt
+./TestFARSITE ../examples/Panther/runPanther.txt 2>&1 | tee scriptRun.log
 ```
 
-You will need to replace all `/HOME/LOCATION/farsite` occurences with your farsite repo root in each of the input files. For running the cougarCreek-fire case, the path you need to modify is `/home/john/Code/farsite/farsite` instead of `/HOME/LOCATION/farsite`. At some point in time the same fake root path will be changed to be consistent for all the files.
+Before any of the examples will run, you need to replace all occurrences of `$scriptRoot/farsite` in many of the examples files with `<pathToRepo>/farsite`. For example, if your username is `john` and you have placed the farsite repo in a directory called `src` in your `$HOME` directory, you need to replace `$scriptRoot/farsite` with `/home/john/src/farsite`. (notice that `farsite` is repeated in both texts to change, so can drop the `/farsite` when running keyword replacer command line utilities).
 
 Here is some command line code you can use to modify the paths:
 ```
-aboveBaseDir="((((root directory to folder location))))
-varToReplace="\/home/john/Code/farsite" # might need to add more path stuff here
-preppedAboveBaseDir=$(sed 's/\//\\\//g' <<<"$aboveBaseDir")
-preppedVarToReplace=$(sed 's/\//\\\//g' <<<"$varToReplace")
-grep -rl $preppedVarToReplace $finalScriptDir --exclude-dir=.git --exclude-dir=src --exclude=readme | xargs sed -i 's/'$preppedVarToReplace'/'$preppedAboveBaseDir'/g'
+editingDir="<pathToFarsiteRepo>/farsite/examples"
+textToReplace="\$scriptRoot"
+replacementText="<pathToFarsiteRepo>"
+## prepare the text by replacing all "/" chars with "\/" chars
+preppedTextToReplace=$(sed 's/\//\\\//g' <<<"$textToReplace")
+preppedReplacementText=$(sed 's/\//\\\//g' <<<"$replacementText")
+## prepare the text by replacing all "=" chars with "\=" chars
+preppedTextToReplace=$(sed 's/\=/\\\=/g' <<<"$preppedTextToReplace")
+preppedReplacementText=$(sed 's/\=/\\\=/g' <<<"$preppedReplacementText")
+grep -rl "${preppedTextToReplace}" "${editingDir}" --exclude-dir=.git --exclude-dir=src --exclude=readme | xargs sed -i 's/'"${preppedTextToReplace}"'/'"${preppedReplacementText}"'/g'
 success=$?
 echo $success
 ```
@@ -57,26 +62,38 @@ echo $success
 Note that a 0 means success, a 123 means nothing needed replaced, anything else is probably a fail. You'll probably have to play around a bit to get the right paths.
 
 
-If you hate that changing the paths means running "git status" results in a bunch of changed files you really don't want to keep track of, but that git has to keep track of cause they are the example files, you can use something like the following:
+If you hate that changing the paths means running "git status" results in a bunch of changed files you really don't want to keep track of, since git has to keep track of the example files but they change in a way that means they should be ignored unless you are directly developing them since the paths all changed, you can use something like the following:
 ```
-examplesDir=(((path to examples directory)))
-git ls-files -- $examplesDir | xargs -l git update-index --assume-unchanged
+examplesDir="<pathToFarsiteRepo>/farsite/examples"
+git ls-files -- ${examplesDir} | xargs -l git update-index --assume-unchanged
 ```
 
-To change it back, use:
+If you realize you need to make development changes to all the example files and want to retrack these ignored but tracked example files, use:
 ```
-git ls-files -- $examplesDir | xargs -l git update-index --no-assume-unchanged
+git ls-files -- ${examplesDir} | xargs -l git update-index --no-assume-unchanged
 success=$?
 ```
+
+If you just want to retrack a single example file that you've been doing development work on, use:
+```
+git update-index --no-assume-unchanged <fileToRetrack>
+```
+
+Note that running the farsite examples will overwrite past output with new output, which only should be tracked if you are doing development work on the example files, so the above git ignore stuff might be even more useful than you think. The main reason the old output is tracked in these example files is so you can look over what the normal outputs of farsite are like without running farsite.
 
 
 #################  General Overview for Viewing Results on Windows Machine  #################
 
 If you don't want to install farsite, you're on your own, just need some kind of GIS software:
+
 go to https://www.firelab.org/, on this webpage look for "apps and products/fire behavior/farsite". On this farsite page, look for "farsite software". This leads you to a farsite for windows installer.
+
 After installing farsite, run farsite, and in the menu search for "view/view landscape file (.LCP)/2D window". Use the "cougarCreekFire.lcp" file.
+
 After the file loads, right click the section of the box labeled "Visible Theme" in the section with the numbers and colors. This should pop up a menu "Choose Color Ramp". Select "Load Color File (.CLR)" and use the "colorInput.CLR" file. Note you need to make your own if doing a different .lcp file than this example, I randomly changed colors till it looked good, then saved this color scheme.
+
 In the menu search for "view/View Vector File". Change the extensions it is looking for to ".shp", then you can view the "cougarCreekFire_Perimeters.shp" fire perimeters and "cougarCreekFire_Spots.shp" probabilistic spot location files. Need to select the boxes labeled "2D" to get the files to actually show the pictures, left click the lines or dots to choose colors, right click to choose the sizes.
+
 Note that you can see other files as well, but might need to hunt down their specific types using either "vector" or "raster" input from the "view" menu.
 
 

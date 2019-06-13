@@ -1,0 +1,1 @@
+$scriptRoot/farsite/examples/cougarCreek/input/cougarCreek.lcp $scriptRoot/farsite/examples/cougarCreek/input/cougarCreek.input $scriptRoot/farsite/examples/cougarCreek/input/cougarCreek_polygonIgnit.shp 0 $scriptRoot/farsite/examples/cougarCreek/output/cougarCreek_polygonIgnit 0
