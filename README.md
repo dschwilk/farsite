@@ -35,31 +35,39 @@ The test1177973.input file is an example input file that Loren put together in t
 #################  Step by Step Guide for Building and Running the Script  #################
 
 The following worked on fresh installations of Ubuntu 16.04 and 18.04:
+```
 cd farsite/src
 make
 ./TestFARSITE ../example/Panther/runPanther.txt
+```
 
-You may need to modify all /HOME/LOCATION/farsite with your root to the farsite dir in each of the input files. For running the cougarCreek-fire case, the path you need to modify is $scriptRoot/farsite instead of /HOME/LOCATION/farsite. At some point in time the same fake root path will be changed to be consistent for all the files.
+You will need to replace all `/HOME/LOCATION/farsite` occurences with your farsite repo root in each of the input files. For running the cougarCreek-fire case, the path you need to modify is `/home/john/Code/farsite/farsite` instead of `/HOME/LOCATION/farsite`. At some point in time the same fake root path will be changed to be consistent for all the files.
 
 Here is some command line code you can use to modify the paths:
-varToReplace="\$scriptRoot"(((might need to add more path stuff here)))
+```
 aboveBaseDir="((((root directory to folder location))))
-preppedVarToReplace=$(sed 's/\//\\\//g' <<<"$varToReplace")
+varToReplace="\/home/john/Code/farsite" # might need to add more path stuff here
 preppedAboveBaseDir=$(sed 's/\//\\\//g' <<<"$aboveBaseDir")
+preppedVarToReplace=$(sed 's/\//\\\//g' <<<"$varToReplace")
 grep -rl $preppedVarToReplace $finalScriptDir --exclude-dir=.git --exclude-dir=src --exclude=readme | xargs sed -i 's/'$preppedVarToReplace'/'$preppedAboveBaseDir'/g'
 success=$?
 echo $success
+```
 
 Note that a 0 means success, a 123 means nothing needed replaced, anything else is probably a fail. You'll probably have to play around a bit to get the right paths.
 
 
 If you hate that changing the paths means running "git status" results in a bunch of changed files you really don't want to keep track of, but that git has to keep track of cause they are the example files, you can use something like the following:
+```
 examplesDir=(((path to examples directory)))
 git ls-files -- $examplesDir | xargs -l git update-index --assume-unchanged
+```
 
 To change it back, use:
+```
 git ls-files -- $examplesDir | xargs -l git update-index --no-assume-unchanged
 success=$?
+```
 
 
 #################  General Overview for Viewing Results on Windows Machine  #################
