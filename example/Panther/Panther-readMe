@@ -1,4 +1,0 @@
-Everything should be setup where all you need to do is compile farsite, edit runPanther.txt changing HOME to your home directory and LOCATION to any path locations of the file, then run the following command to run the panther example: ./TestFarsite /HOME/LOCATION//farsite/example/Panther/runPanther.txt
-Note that this will overwrite the past output with new output, and the old output is left there so you can look over what the normal outputs of farsite are like.
-Not sure what fire the cust and 1177973 examples are, but you can load the any of the .lcp files in the farsite distributed on firelab.org to get a view of the location, using the inputColors.CLR for the 1177973 example to make it look nice. Then open any of the output files like the output fire perimeter shapefile to see the results. For the cust example you will have to make your own .CLR file.
-
