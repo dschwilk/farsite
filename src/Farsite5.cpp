@@ -1584,7 +1584,7 @@ double* Farsite5::AllocPerimeter1(long NumFire, long NumPoints)
 			}
 		}
 		nmemb = (NumPoints) * NUMDATA;			// add 1 to make room for bounding rectangle
-                if (perimeter1[NumFire] && perimeter1[NumFire] > 0)
+                if (perimeter1[NumFire]) // DWS: Why did original code have 2 tests here?
 			FreePerimeter1(NumFire);
 		perimeter1[NumFire] = new double[nmemb];
 
