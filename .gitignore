@@ -16,7 +16,6 @@
 *.lib
 
 # Executables
-TestFARSITE
 *.exe
 *.out
 *.app
