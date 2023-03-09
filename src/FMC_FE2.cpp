@@ -539,7 +539,7 @@ bool FE2::AllocHistory (long Station, long FuelSize)
      	return false;
 
   memset (CurHist[Station][FuelSize]->Moisture, 0x0, MxDesc.NumAlloc[Station][FuelSize] * sizeof(double));
-  for(int i = 0; i < MxDesc.NumAlloc[Station][FuelSize]; i++)
+  for(size_t i = 0; i < MxDesc.NumAlloc[Station][FuelSize]; i++)
 		CurHist[Station][FuelSize]->Moisture[i] = -1.0;
 	 CurHist[Station][FuelSize]->next = 0;
 
@@ -1509,7 +1509,7 @@ FmsThread::~FmsThread()
 // ****************************************************************************
 void FmsThread::StartFmsThread(long ID, long sizeclass, DeadMoistureDescription *mxdesc, bool firsttime)
 {
-X_HANDLE hFmsThread;
+//X_HANDLE hFmsThread;
 
     FuelSize = sizeclass;
     FirstTime = firsttime;
@@ -1527,7 +1527,7 @@ X_HANDLE hFmsThread;
 			      ProcNum -= sysinf.dwNumberOfProcessors;
 
 /* ---> starts FmsThread::UpdateMoistures() */
-      hFmsThread=(HANDLE) ::_beginthreadex(NULL, 0, &FmsThread::RunFmsThread, this, CREATE_SUSPENDED, &ThreadID);
+                    //    hFmsThread=(HANDLE) ::_beginthreadex(NULL, 0, &FmsThread::RunFmsThread, this, CREATE_SUSPENDED, &ThreadID);
 
 		    //unsigned long Affinity =pow(2.0, (int)ProcNum);
 		    //SetThreadAffinityMask (hFmsThread, Affinity);

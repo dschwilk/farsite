@@ -24,7 +24,7 @@
 #include <unistd.h>
 
 #define FALSE 0
-#define MAX_PATH 256
+#define MAX_PATH 1512 // DWS allow longer paths
 void CopyFile(char *in, char *out, bool unused)
 {
 
@@ -241,10 +241,13 @@ void Farsite5::CurTimeConvert()
 		min);
 }
 
-
-
-
-Farsite5::Farsite5(void) : burn(this), Atk(this), Ignition(this), vect(this), shape(this)
+Farsite5::Farsite5(void) :
+    vect(this),
+    shape(this),
+    burn(this),
+    Atk(this),
+    Ignition(this),
+    _rd()
 {
 	timeLaunchFarsite = timeFinish = 0;
 	NumCrews = 0;
@@ -3408,7 +3411,6 @@ long Farsite5::SetWeatherData(long StationNumber, long NumObs, long month, long 
 ****************************************************************************/
 long Farsite5::AllocWindData(long StatNum, long NumObs)
 {
-int i;
 	long StationNumber = StatNum;
 
 	if (wddt[StationNumber])	{
@@ -3430,7 +3432,7 @@ int i;
 			   StationNumber = -1;
 
 // WN-Test
-    for ( i = 0; i < nmemb; i++ )
+    for (size_t i = 0; i < nmemb; i++ )
        wddt[StationNumber][i].a_FWN = NULL;
 
   }
@@ -4750,7 +4752,7 @@ void Farsite5::CondenseRings(long RingNum)
 		return;
 
 	FireRing* ring1, * ring2;
-	long i, j, TotalPts;
+	long i, j; //, TotalPts;
 	long NewRingNum;//=GetNumRings();
 	long NewStructNum;
 
@@ -4768,7 +4770,7 @@ void Farsite5::CondenseRings(long RingNum)
 		if (ring1->perimpoints == NULL)
 		{
 			FreeFireRing(i);
-			TotalPts = 0;
+			//TotalPts = 0;
 			for (j = i + 1; j < GetNumRings(); j++)
 			{
 				ring2 = GetRing(j);
@@ -4776,7 +4778,7 @@ void Farsite5::CondenseRings(long RingNum)
 					continue;
 				if (ring2->perimpoints)
 				{
-					TotalPts = ring2->NumPoints[ring2->NumFires - 1];
+                                     //TotalPts = ring2->NumPoints[ring2->NumFires - 1];
 					ring1->perimpoints = ring2->perimpoints;
 					ring1->NumPoints = ring2->NumPoints;
 					ring2->perimpoints = 0;
@@ -10475,7 +10477,7 @@ int Farsite5::SetBarrier(char *_barrierFileName)
 	{
 		return 0;//must load ignitions first!
 	}
-		long i, j, NumPts, NumAlloc, NumSeg, cellx, celly;
+        long i, j, NumPts, NumSeg, cellx, celly; // NumAlloc
 		double x, y, x1, x2, y1, y2, dx, dy, dist, fract, res, linedist;
 		res = Header.XResol;
 		dist=res/IGNITON_GRID_LINEDIST_DIVISOR;
@@ -10496,7 +10498,7 @@ int Farsite5::SetBarrier(char *_barrierFileName)
 			return FALSE;
 		}
 		SHPGetInfo( hSHP, &nShapes, &shapeType, adfMinBound, adfMaxBound );
-		NumAlloc=0;
+		//NumAlloc=0;
 		for(int s = 0; s < nShapes; s++ )
 		{
 			pShape = SHPReadObject( hSHP, s );
@@ -10737,7 +10739,7 @@ int Farsite5::CreateIgnitionGrid()
 	crowndata igCrown;
 	grounddata igGround;
 	long garbage;
-		long i, j, NumPts, NumAlloc, NumSeg, cellx, celly;
+        long i, j, NumPts, NumSeg, cellx, celly; //NumAlloc
 		double x, y, x1, x2, y1, y2, dx, dy, dist, fract, res, linedist;
 		res = Header.XResol;
 		dist=res/IGNITON_GRID_LINEDIST_DIVISOR;
@@ -10761,7 +10763,7 @@ int Farsite5::CreateIgnitionGrid()
 			return FALSE;
 		}
 		SHPGetInfo( hSHP, &nShapes, &shapeType, adfMinBound, adfMaxBound );
-		NumAlloc=0;
+		//NumAlloc=0;
 		for(int s = 0; s < nShapes; s++ )
 		{
 			pShape = SHPReadObject( hSHP, s );
@@ -11047,7 +11049,7 @@ void Farsite5::CleanPerimeters()
 
 void Farsite5::AddCurrPerimeter()
 {
-	int NumVertices;//, NumParts;
+//	int NumVertices;//, NumParts;
 	//int		*PartsArray;
 	long InOut, count;//, NumRecord;
 	long NumVertex;
@@ -11060,7 +11062,7 @@ void Farsite5::AddCurrPerimeter()
 		return;
 
 	NumVertex = GetNumPoints(CurrentFire);
-	NumVertices = NumVertex + 1;
+//	NumVertices = NumVertex + 1;
 	CPerimeterData *newData = new CPerimeterData();
 	newData->SetNumPts(NumVertex + 1);
 
@@ -11854,9 +11856,9 @@ void Farsite5::WritePerimeter2Shapefile(int num, long curFire)
 		VertexX = new double[n];
 		VertexY = new double[n];
 		VertexZ=new double[n];
-		double startX, startY;
-		startX = GetPerimeter2Value(0, XCOORD);
-		startY = GetPerimeter2Value(0, YCOORD);
+//		double startX, startY;
+//		startX = GetPerimeter2Value(0, XCOORD);
+//		startY = GetPerimeter2Value(0, YCOORD);
 		for(int i = 0; i < n; i++)
 		{
 			VertexX[i] = GetPerimeter2Value(i, XCOORD);
@@ -12223,7 +12225,7 @@ void Tokenize(const char delim, std::string str, std::vector<std::string> &token
 
 int ParseFileNamesFromAtmRec(char *recBuf, std::string *spdName, std::string *dirName)
 {
-    int retCount = 0;
+//    int retCount = 0;
     int blankCount = 0, loc = 0, len = strlen(recBuf);
     while (blankCount < 3 && loc < len)
     {
@@ -12234,7 +12236,7 @@ int ParseFileNamesFromAtmRec(char *recBuf, std::string *spdName, std::string *di
     std::string filesStr = &recBuf[loc];
     trim(filesStr);
     int qCount = 0;
-    for (int c = 0; c < filesStr.size(); c++)
+    for (size_t c = 0; c < filesStr.size(); c++)
     {
         if (filesStr[c] == '\"')
             qCount++;
@@ -12247,7 +12249,7 @@ int ParseFileNamesFromAtmRec(char *recBuf, std::string *spdName, std::string *di
     }
     if (qCount == 0)
     {
-        int tStart = 0;
+//        int tStart = 0;
         std::vector<std::string> v;
         Tokenize(' ', filesStr, v);
         std::vector<std::string>::iterator it;
@@ -12273,7 +12275,7 @@ int ParseFileNamesFromAtmRec(char *recBuf, std::string *spdName, std::string *di
         std::vector<std::string> vStrs;
         std::vector<std::string>::iterator it;
         Tokenize('\"', filesStr, vStrs);
-        bool dirSet = false;
+//        bool dirSet = false;
         *spdName = vStrs[0];
         trim(*spdName);
         for (it = vStrs.begin(); it != vStrs.end(); ++it)

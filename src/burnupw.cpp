@@ -933,7 +933,7 @@ c   	hvap =  		heat of vaporization of water , J / kg
 void BurnUp::Step(double dt, double tin, double fid, long* ncalls)
 {
 	int nspan;
-	long k, l, kl, next, now, mu, index;
+	long k, l, kl, now, mu, index; //next
 	double c, rindef = 1.e+30;
 	double tnext, tnow, tgo, tdun, tifi;
 	double aint, tav1, tav2, tav3, tavg;
@@ -941,7 +941,7 @@ void BurnUp::Step(double dt, double tin, double fid, long* ncalls)
 	double tlit, ts, r, gi, tf, dia, hf, hb;
 	double e, qqq, tst, dnext, wnext, rate, ddt, dryt, dtemp, dqdt;
 	double dteff, heff, tfe, dtlite, qd, delt, factor;
-	double conwet, dtcum, he, dtef, thd, biot, cpwet, tbar, fac;
+	double conwet, dtcum, he, dtef, thd, biot, cpwet, fac; //tbar
 	bool flag;
 
 	*ncalls += 1;
@@ -950,7 +950,7 @@ void BurnUp::Step(double dt, double tin, double fid, long* ncalls)
 	tnext = tnow + dt;
 	//c  tifi = time when fire ignition phase ended ( at now = 1 )
 	tifi = tnow - ((double) (now - 1)) * dt;
-	next = now + 1;
+	// next = now + 1;
 
 	for (k = 1; k <= number; k++)	//do k = 1 , number
 	{
@@ -1188,7 +1188,7 @@ void BurnUp::Step(double dt, double tin, double fid, long* ncalls)
 					delt = tnext - tdry[kl];
 					qcum[kl] = dqdt * delt;
 					tcum[kl] = (tf - ts) * delt;
-					tbar = 0.5 * (tpdry + tpig[k - 1]);
+					//tbar = 0.5 * (tpdry + tpig[k - 1]);
 
 					//c  See if ignition to occur before time step complete
 
@@ -2059,7 +2059,7 @@ bool BurnUp::SetBurnStruct(double time, long now)
 bool BurnUp::Summary(char* OutFile)
 {
 	long m, n, mn;
-	double fr, ti, ts, to, tf, wd, rem, di;
+	double ti, ts, to, tf, wd, rem; //fr, di
 	FILE* outfile;
 
 
@@ -2078,14 +2078,14 @@ bool BurnUp::Summary(char* OutFile)
 		for (n = 0; n <= m; n++)
 		{
 			mn = loc(m, n);
-			fr = xmat[mn];
+			//fr = xmat[mn];
 			ti = tign[mn];
 			ts = min(ti, ts);
 			to = tout[mn];
 			tf = max(to, tf);
 			wd = wo[mn];
 			rem = rem + wd;
-			di = diam[mn];
+			//di = diam[mn];
 			//     fprintf(outfile, "\n     %ld %lf %lf %lf %lf", n, fr, ti, to, wd, di);
 		}
 		fprintf(outfile, " %8.2lf\t %10.2lf\t %3.4lf\t %3.2lf\n", ts, tf, rem,

@@ -400,16 +400,16 @@ double d;
 {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}*/
 void  c_NN::CutIt ()
 {
-int r,c, rs,re,cs,ce;
-int rCen, cCen;
+     int r,c;
+     //int re, rs, cs, ce;
+     int rCen, cCen;
 
     GetCenter (&rCen, &cCen);
 
-    rs =  rCen - this->row / 10;
-    re =  rCen + this->row / 10;
-
-    cs =  cCen - this->col / 10;
-    ce =  cCen + this->col / 10;
+    //rs =  rCen - this->row / 10;
+    //re =  rCen + this->row / 10;
+    //cs =  cCen - this->col / 10;
+    //ce =  cCen + this->col / 10;
 
    for ( r = 400; r < 550; r++ ) {
      for ( c = 700; c < 900; c++ ) {
@@ -428,7 +428,7 @@ int rCen, cCen;
 {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}*/
 int c_NN::DumpTest (float f_XLLCORNER,float f_YLLCORNER,float f_CELLSIZE, char cr_FN[] )
 {
-long c, m, row,col;
+long c,row,col;
 FILE *fh;
 
    fh = fopen  (cr_FN,"w");
@@ -443,7 +443,7 @@ FILE *fh;
    fprintf(fh, "CELLSIZE     %f\n",  f_CELLSIZE);
    fprintf(fh, "NODATA_VALUE %lf\n",  this->d_MisVal);
 
-   m = (long)this->col * (long)this->row;
+   //m = (long)this->col * (long)this->row;
    c = 0;
 
   printf ("%ld %ld \n", this->col, this->row);

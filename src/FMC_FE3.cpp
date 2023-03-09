@@ -434,7 +434,7 @@ void FE2::Load_CurHist (DeadMoistureHistory *CurHist, d_RAWS *a_RAWS, int i_Elev
 // ****************************************************************************
 void FmsThread::StartFmsThread_RAWS(long ID, long sizeclass, DeadMoistureDescription *mxdesc, bool firsttime)
 {
-X_HANDLE hFmsThread;
+//X_HANDLE hFmsThread;
 
     FuelSize = sizeclass;
     FirstTime = firsttime;
@@ -451,7 +451,7 @@ X_HANDLE hFmsThread;
 		    while ( ProcNum >= sysinf.dwNumberOfProcessors )
 			      ProcNum -= sysinf.dwNumberOfProcessors;
 
-      hFmsThread=(HANDLE) ::_beginthreadex(NULL, 0, &FmsThread::RunFmsThread_RAWS, this, CREATE_SUSPENDED, &ThreadID);
+                    //    hFmsThread=(HANDLE) ::_beginthreadex(NULL, 0, &FmsThread::RunFmsThread_RAWS, this, CREATE_SUSPENDED, &ThreadID);
 
 		    //unsigned long Affinity =pow(2.0, (int)ProcNum);
 		   // SetThreadAffinityMask (hFmsThread, Affinity);
@@ -651,7 +651,7 @@ long i, j, NumHist,NumAlloc;
 			fprintf(fout, "\tNumAspects: %ld\n", MxDesc.NumAspects[i][j]);
 			fprintf(fout, "\tNumCovers:  %ld\n", MxDesc.NumCovers[i][j]);
 			fprintf(fout, "\tNumFuels:   %ld\n", MxDesc.NumFuels[i][j]);
-			fprintf(fout, "\tFuelKey:    %ld\n", MxDesc.FuelKey[i][j]);
+			fprintf(fout, "\tFuelKey:    %ld\n", *MxDesc.FuelKey[i][j]); // This is a pointer when it is dead moisture description? long int*?
 			fprintf(fout, "\tNumHist:    %ld\n", MxDesc.NumHist[i][j]);
 			fprintf(fout, "\tEndTime:    %f\n", MxDesc.EndTime[i][j]);		}	}
 

@@ -488,8 +488,8 @@ int OutputFile::WriteBinaryHeader(FILE *trg, int outType)
 	float nullVal = NODATA_VAL;
 	//float zeroVal = 0.0;
 	double xres, yres;
-	long numcells;
-	double MetersToKm = 1.0;
+	//long numcells;
+//	double MetersToKm = 1.0;
 		North = pFarsite->GetHiNorth();
 		South = pFarsite->GetLoNorth();
 		East =pFarsite-> GetHiEast();
@@ -507,12 +507,12 @@ int OutputFile::WriteBinaryHeader(FILE *trg, int outType)
 
 	numcols = (long) ((East - West) / xres);//((GetEastUtm()-GetWestUtm())/xres);
 	numrows = (long) ((North - South) / yres);//((GetNorthUtm()-GetSouthUtm())/yres);
-	numcells = numrows * numcols;
+	//numcells = numrows * numcols;
 	//memset(RasterCopy, 0x0, sizeof RasterCopy);
 	//strcpy(RasterCopy, pFarsite->GetRasterFileName(Type));
 
-	if (pFarsite->CheckCellResUnits() == 2)
-		MetersToKm = 0.001;
+	//if (pFarsite->CheckCellResUnits() == 2)
+             //	MetersToKm = 0.001;
 
 	char textBuf[64];
 	//memset(textBuf, '
@@ -861,7 +861,7 @@ int OutputFile::WriteFile(long Type)
 {
 	double xres, yres;
 	char RasterCopy[256] = "";
-	long numcells;
+	//long numcells;
 	double MetersToKm = 1.0;
 		North = pFarsite->GetHiNorth();
 		South = pFarsite->GetLoNorth();
@@ -871,7 +871,7 @@ int OutputFile::WriteFile(long Type)
 	pFarsite->GetRastRes(&xres, &yres);
 	numcols = (long) ((East - West) / xres);//((GetEastUtm()-GetWestUtm())/xres);
 	numrows = (long) ((North - South) / yres);//((GetNorthUtm()-GetSouthUtm())/yres);
-	numcells = numrows * numcols;
+	//numcells = numrows * numcols;
 	memset(RasterCopy, 0x0, sizeof RasterCopy);
 	strcpy(RasterCopy, pFarsite->GetRasterFileName(Type));
 

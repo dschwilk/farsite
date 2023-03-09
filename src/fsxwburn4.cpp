@@ -58,8 +58,7 @@ using namespace std;
 
 //static X_HANDLE *hSimEvent=0;
 
-BurnThread::BurnThread( Farsite5 *_pFarsite) : MechCalls(_pFarsite), cf(_pFarsite), prod(_pFarsite),
-	embers(_pFarsite)
+BurnThread::BurnThread( Farsite5 *_pFarsite) : MechCalls(_pFarsite), cf(_pFarsite), embers(_pFarsite), prod(_pFarsite)
 {
 	pFarsite = _pFarsite;
 	FireIsUnderAttack = false;

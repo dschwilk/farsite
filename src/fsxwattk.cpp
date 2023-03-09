@@ -61,7 +61,7 @@ Crew::Crew()
 }
 
 
-static long NumCrews = 0;
+//static long NumCrews = 0;
 //static Crew*	crew[200];
 Crew* crew[200];
 
@@ -75,7 +75,7 @@ Crew* crew[200];
 //------------------------------------------------------------------------------
 
 
-Attack::Attack(Farsite5 *_pFarsite) : ld(_pFarsite), vectorbarrier(_pFarsite)
+Attack::Attack(Farsite5 *_pFarsite) : vectorbarrier(_pFarsite), ld(_pFarsite)
 {
 	NumInsertPoints = 0;
 	LineOffset = -1.0;
@@ -2539,7 +2539,7 @@ void Attack::FindHullQuadrant(double* Hull, long* NumPts, long StartPt,
 	long EndPt, double RefAngle)
 {
 	long i, j, Mult, ConvexStartPt, ConvexEndPt;
-	long ConPt, ConOrder, OldPt;
+	long ConPt, ConOrder; //, OldPt;
 	long FireNum = attack->FireNumber;
 	long NumPoints = pFarsite->GetNumPoints(attack->FireNumber);
 	long NumHullPts = *NumPts;
@@ -2557,7 +2557,7 @@ void Attack::FindHullQuadrant(double* Hull, long* NumPts, long StartPt,
 	else
 		Mult = 1;
 	Hull[NumHullPts * 3 + 2] = StartPt * Mult;
-	OldPt = StartPt;
+	//OldPt = StartPt;
 	NumHullPts++;
 	ap.startx = pFarsite->GetPerimeter1Value(FireNum, StartPt, XCOORD);
 	ap.starty = pFarsite->GetPerimeter1Value(FireNum, StartPt, YCOORD);
@@ -2626,7 +2626,7 @@ void Attack::FindHullQuadrant(double* Hull, long* NumPts, long StartPt,
 			Hull[NumHullPts * 3 + 2] = ConPt * Mult;
 			NumHullPts++;
 			ConOrder = -1;
-			OldPt = ConPt;
+			//OldPt = ConPt;
 		}
 	}
 	*NumPts = NumHullPts;
@@ -3572,7 +3572,6 @@ bool LoadCrews(char* FileName, bool AppendList)
 	return true;
 }
 
-/*
 bool LoadCrews(char *FileName, bool AppendList)
 {
 	FILE* crewfile;

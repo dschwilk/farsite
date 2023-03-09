@@ -90,7 +90,7 @@ class AtmosphereGrid
 public:
 	bool AtmGridWTR;
 	bool AtmGridWND;
-	char ErrMsg[256];
+	char ErrMsg[512];
 
 	AtmosphereGrid(long numgrids, Farsite5 *_pFarsite);  	// will default to 6 if all themes included,
 	~AtmosphereGrid();  				// and 3 if only wind spd dir & cloud %

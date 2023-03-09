@@ -37,7 +37,7 @@ const double PI = acos(-1.0);
 //extern const double PI;
 
 
-Rasterize::Rasterize(Farsite5 *_pFarsite) : OutputFile(_pFarsite), APolygon(_pFarsite)
+Rasterize::Rasterize(Farsite5 *_pFarsite) : APolygon(_pFarsite), OutputFile(_pFarsite)
 {
 	pFarsite = _pFarsite;
 	xmid = ymid = 0;

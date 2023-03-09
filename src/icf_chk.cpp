@@ -490,7 +490,7 @@ int diff,str,end, allowed;
 /* Make sure start and end condition dates are far enough apart */
 /* See Note-1 above */
     diff = end - str;                    /* take diff of  minutes */
-    if ( this->iN_RAWS != NULL )         /* if have RAWS hourly data */
+    if ( this->iN_RAWS != 0 )         /* if have RAWS hourly data */
       allowed = 240 ;                    /* Set minimum minutes time condition can run */
     else
       allowed = ( e_MinPerDay );//* 2 );     /* daily weather data */

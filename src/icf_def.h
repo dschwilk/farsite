@@ -574,7 +574,7 @@ d_WDI   s_WDI;       /* WindNinja Diurnal Inputs */
    FILE *fh;
 
    char cr_ErrMes[2000];
-   char cr_ErrExt[500];       /*  extra error message text is placed    */
+   char cr_ErrExt[2000];       /*  extra error message text is placed    */
 
 
 /* Farsite...............................*/
@@ -711,7 +711,7 @@ d_WDI   s_WDI;       /* WindNinja Diurnal Inputs */
    int  Set_Date (char cr_Sw[]); 
 
    
-   int  Set_FilNam (char cr_Sw[], char cr_FN[]);
+   int  Set_FilNam (const char cr_Sw[], char cr_FN[]);
    int  Set_SinNumArg (char cr_Sw[], float *af);
    int  Set_SinTxtArg (char cr_Sw[], char *a, int iN);
    int  Set_SinIntArg (char cr_Sw[], int *ai);
@@ -729,7 +729,7 @@ d_WDI   s_WDI;       /* WindNinja Diurnal Inputs */
    int  GetWeatherYear (int i_Month, int i_Day); 
    
 
-   int  GetSw    (char cr_Sw[]);
+   int  GetSw    (const char cr_Sw[]);
    int  CloseRet(int i_Ret);
    char *ErrorMessage(int i_Num);
 

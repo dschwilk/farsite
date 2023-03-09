@@ -7,6 +7,7 @@
 
 //#include "stdafx.h"
 #include "rand3.h"
+#include <ctime>
 
 //#define NTAB 32  // included in .cpp file
 #define IM1 2147483563
@@ -62,9 +63,10 @@ void Random::SetFixedSeed(long Number)
 
 void Random::ResetRandomSeed()
 {
-	ftime(&t);
-	srand(t.time+t.millitm);
-     idum=-((rand()%10000)+1);
+//	ftime(&t);
+//	srand(t.time+t.millitm);
+     srand(time(NULL));  // DWS: weird, using C rand to set local generator seed. 
+        idum=-((rand()%10000)+1);
 }
 	
 
@@ -80,7 +82,8 @@ double Random::rand3()
 	return rand2(&idum);
 }
 
-
+// Random number generator of L’Ecuyer with Bays-Durham shuffle
+// and added safeguards
 double Random::rand2(long *idum)
 {
 	long j, k;

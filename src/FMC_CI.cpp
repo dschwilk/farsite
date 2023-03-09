@@ -82,7 +82,7 @@ long *lr;
    strcpy (this->cr_ErrMes,"");
 
    if ( lN < 0 || lN > (long) eC_Hdr ) {  /* Watch out - this is a fixed size */
-     sprintf (cr_ErrMess, "to many Fuel Moist Models: %ld",lN);
+     sprintf (cr_ErrMess, "to many Fuel Moist Models: %d",lN);
      strcpy (this->cr_ErrMes, cr_ErrMess);  /* also save in Class, in case */
     return e_EMS_cFMM; }
 

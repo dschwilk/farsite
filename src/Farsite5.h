@@ -14,7 +14,7 @@
 #include "fsxwshap.h"
 #include "polygon.h"
 #include "PerimeterData.h"
-#include "rand3.h"
+#include "rand3.h"  // TODO: replace with std:random
 #include <list>
 #include <algorithm>
 

@@ -2801,7 +2801,7 @@ void PostFrontal::MergeFireRings(long* Fires, long NumPerims, long* isects,
 	PerimPoints* tempperim;
 	MergePoints* tempmerge;
 	long* tempnum, TempMergeAlloc;
-	long OldNum[2];
+	//long OldNum[2];
 
 
 	// find the correct fires
@@ -2845,8 +2845,8 @@ void PostFrontal::MergeFireRings(long* Fires, long NumPerims, long* isects,
 	}
 
 	// reorder ring[0] && ring[1] to match current order of Fire1 and Fire2
-	OldNum[0] = ring[0]->NumMergePoints[0];
-	OldNum[1] = ring[1]->NumMergePoints[0];
+	//OldNum[0] = ring[0]->NumMergePoints[0];
+	//OldNum[1] = ring[1]->NumMergePoints[0];
 	UpdateMergeOrder(ring[0], Fires[0]);
 	UpdateMergeOrder(ring[1], Fires[1]);
 
