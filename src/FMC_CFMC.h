@@ -16,11 +16,7 @@
 class FE2;
 
 #ifndef int32
-#if UINT_MAX == 65535
-typedef long int32;
-#else
-typedef int int32;
-#endif
+typedef int32_t int32;
 #endif
 /*******************************************************************************/
 class FMC_DLL_EXPORT CFMC {

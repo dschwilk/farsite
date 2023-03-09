@@ -42,11 +42,7 @@
 //typedef unsigned char BYTE;
 //#include "Farsite5.h"
 #ifndef int32
-#if UINT_MAX == 65535
-typedef long int32;
-#else
-typedef int int32;
-#endif
+typedef int32_t int32; 
 #endif
 
 
