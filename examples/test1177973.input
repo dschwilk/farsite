@@ -161,6 +161,11 @@
 ### required values: just a single number for the total amount of expected spots
 #SPOTTING_SEED: 253114
 ### other information: is just set and validated that it is a number and not a string, so validation of whether it is a proper value comes after many more inputs. In the later section, the rest of the needed spotting variables are set. This is used/loaded during Farsite5::LoadInputsFile() by Random::SetFixedSeed() from the rand3.cpp, after loading and using a bunch of other spotting variables.
+
+[DWS: I think that is a random number seed for porducing reproducible output.
+But note that the main function in TestFarsite also sets the random number seed
+directly with srand(). This seems to allow a per-run random number seed
+recorded in the input file. The combination seems a bit worrisome.]
  
 
 ############################################################################################################################################################################################
