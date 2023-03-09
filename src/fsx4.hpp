@@ -349,7 +349,7 @@ class OutputFile
 	double convf1, convf2, convf3;
 	long filepos;   				// record filepositions in
 	long FileOutput;
-	int32 numrows, numcols;
+	long numrows, numcols; // was int32 but code later assumes long
 	long NumRastAlloc;
 	long NumRastData;
 	long HeaderType ;
