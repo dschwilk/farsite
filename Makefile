@@ -2,7 +2,8 @@
 TARGET	= TestFARSITE
 
 CXX=g++
-CXXFLAGS=-c -std=c++17 -g -Wall -DUNIX -Wno-deprecated -Wno-reorder -Wno-misleading-indentation
+CXXFLAGS=-c -std=c++17 -g -Wall -Wno-misleading-indentation
+#CXXFLAGS=-c -std=c++17 -g -o2
 LINKER   = g++ -o
 LFLAGS   =
 
