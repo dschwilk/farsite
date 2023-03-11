@@ -475,7 +475,7 @@ public:
     void setPertubateColumn( bool pertubate=true ) ;
     void setPlanarHeatTransferRate( double planarHeatTransferRate ) ;
     void setRainfallRunoffFactor( double rainfallRunoffFactor );
-    void setRandomSeed( int randseed=0 ) ;
+    void setRandomSeed( int randseed=0 ) ; // Not used by CLI
     void setRampRai0( bool ramp=true ) ;
     void setStickDensity( double stickDensity=0.4 );
     void setStickLength( double stickLength=41.0 );

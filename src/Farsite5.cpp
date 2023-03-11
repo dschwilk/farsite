@@ -12,6 +12,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <algorithm>
+#include <cassert>
+
 #include "barriers.hpp"
 
 #ifndef WIN32
@@ -9903,7 +9905,7 @@ void Farsite5::Initiate()
 	//added EB  for override
 	F_ON = true;
 
-	ResetVisPerimFile();		 // reset visperim file to 0
+	//ResetVisPerimFile();		 // reset visperim file to 0
 	for (i = 0; i < 5; i++)
 		WStat[i].tws = -1.0;
 	LastFMCalcTime = 0;
@@ -10068,44 +10070,6 @@ void Farsite5::SaveIgnitions()
 	else
 		printf("Check File Attributes and Change From 'READ ONLY' Could Not Write File\n");
 }
-void Farsite5::ResetVisPerimFile()
-{
-	//	system("del c:\visperim.vsp");
-	//WaitForSingleObject(hVisperimSemaphore, INFINITE);
-	//bfs::path visPerimPath = bfs::path(VisPerim) ;
-	//if (bfs::exists(visPerimPath))
-	//{
-		//SetFileAttributes(VisPerim, FILE_ATTRIBUTE_NORMAL);
-		//bfs::remove(visPerimPath) ;
-	//}
-
-	// compose a randomly generated filename
-	char RNum[16] = "";
-	sprintf(RNum, "%d", rand() % 1000);  // DWS: std::rand() remove?
-	//std::string fname = "visperim" + std::string(RNum) + ".vsp" ;
-	char fname[256];
-	sprintf(fname, "visperim%s.vsp", RNum);
-	// put file in cwd (?)
-	//char visPerimPath[256];
-	//visPerimPath = bfs::initial_path() / fname ;
-
-	// copy from a path object to a C String
-	//std::strncpy(VisPerim, visPerimPath.native_file_string().c_str(),
-	//	sizeof VisPerim) ;
-
-	// remove file if it exists
-	//if (bfs::exists(visPerimPath))
-	//{
-		//SetFileAttributes(VisPerim, FILE_ATTRIBUTE_NORMAL);
-	//	remove(visPerimPath);
-	//}
-	MemCount = 0;
-	//ReleaseSemaphore(hVisperimSemaphore, 1, &prevct);
-	//	VP=fopen(VisPerim, "w");
-	//	fclose(VP);
-	//	DeleteFile(VisPerim);
-}
-
 
 void Farsite5::ResetDuration()
 {

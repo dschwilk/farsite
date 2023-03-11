@@ -1250,7 +1250,7 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	int SetBarrier(char *_barrierFileName);
 
 	long IgnitionReset;// = 0;
-	void 	ResetVisPerimFile();
+	//void 	ResetVisPerimFile();
 	long 	IgnitionResetAtRestart(long YesNo);
 	void ElTimeConvert(); 					// convert time to Elapsed time
 	void CurTimeConvert();					// convert time to Current Time

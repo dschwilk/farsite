@@ -35,6 +35,7 @@
 #include <string.h>
 #include <algorithm>
 #include <cctype>
+#include <cassert>
 #include "Farsite5.h"
 
 const double PI = acos(-1.0);
@@ -1916,10 +1917,12 @@ void Attack::BurnOut()
 
 	do
 	{
-        printf("Danger: code here assumes RAND_MAX");
         printf("Code does not support attacking the fire");
+        assert(false);
 		LineOffset = ((double) (rand() % 22490) + 7500.0) / 15000.0;	// largest is 2.0m, smallest is 0.5
-        // DWS: is code above assuming a particular RAND_MAX? this seems dangerous.
+        // DWS: is code above assuming a particular RAND_MAX? Well, it uses
+        // modulo so it does not really matter. But that is kind of weird
+        // distribution of values.
 	}
 	while (fabs(LineOffset - OldOffset) < 0.5);
 
