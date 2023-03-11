@@ -1,16 +1,24 @@
 # Project General Overview  #
 
-FARSITE is a fire growth model. See firelab.org/https://www.firelab.org/project/farsite for the general description of Farsite. 
+FARSITE is a trademark owned by Mark Finney. 
+
+FARSITE is a fire growth model. See firelab.org/https://www.firelab.org/project/farsite for the general description of Farsite.
+
+The compiled windows version of farsite is no longer avialable, but the mean travel time model is implemented in [FlamMap](https://www.firelab.org/project/flammap)
+
+This is a fork of the command line code that was released as a mix of public domain and GNU gpl in 2016 and that source includes code by Finney, Collin Bevins, Stuart Brittain and others. This version includes some additions to the weather handling by Loren Atwood in 2018-2019.
 
 # Notes on this fork by DWS #
 
-I downloaded the public domain linux farsite code in September 2016 from the website maintained by Stuart Brittain [Farsite for Linux](http://sbrittain.net/Farsite/Distrib/Linux/Farsite_Linux.htm). I found a couple of minor reasons the code would not compile and fixed those. I informed Stuart Brittain about the most serious issue (a missing closing braces on an `if` statement in `Farsite5.cpp`) and he confirmed the correct fix, but the posted online code linked above with the 07/19/2016 date still has the error in it. Following successful compilation, I then made some changes to reorganize the code, create a makefile, and move the examples to their own directory. I got things running, fixed some more compile issues on newer C++ compilers, tested against the examples, and wrote some steering code for batch use in simulations. However, I did not really use this for the simulation project I was preparing it for (no funding). I hosted the code on github and called the repo "firemod" with a README explaining its genealogy. A few years later, the RMRS Missoula Fire Sciences Lab github organization page (https://github.com/firelab) hosted code that appears to be originate from the same 2016 archive. The original commit in that repo made in 2018 by nwagenbrenner matches the 2016 dated tar.gz archive except that the syntax error described above was fixed. The README in that github repo makes no reference to that "Farsite for Linux" archive and refers to code "ripped" from a non-public version control system but I've confirmed they have the same exact starting code base). 
+I downloaded the public domain linux farsite code in September 2016 from the website maintained by Stuart Brittain [Farsite for Linux](http://sbrittain.net/Farsite/Distrib/Linux/Farsite_Linux.htm). I found a couple of minor reasons the code would not compile and fixed those. Following successful compilation, I then made some changes to reorganize the code, create a makefile, and move the examples to their own directory. I got things running, fixed some more compile issues on newer C++ compilers, tested against the examples, and wrote some steering code for batch use in simulations. However, I did not really use this for the simulation project I was preparing it for (grant not funded). I hosted the code on github and called the repo "firemod" with a README explaining its genealogy and used it to explore a few fuel models in shrubs. A few years later, the RMRS Missoula Fire Sciences Lab github organization page (https://github.com/firelab) hosted code that appears to be originate from the same 2016 archive. The original commit in that repo made in 2018 by nwagenbrenner matches the 2016 dated tar.gz archive except that one syntax error I found had also been fixed in the initial commit. The README in that github repo makes no reference to that "Farsite for Linux", but I've confirmed they have the same exact starting code base).
 
-The last commits to that firelab repo were in 2019 and involved significant fixes to the weather handling code allowing gridded winds so that this version could be used with [WindNinja](https://github.com/firelab/windninja) outputs. Thanks firelab! I cloned that github repo to compare with my own `firemod` named version and this is the result. In early 2023, the source repo called `farsite` at the [RMRS Missoula Fire Sciences github organization page](https://github.com/firelab) was either made private or deleted. After the disappearance of the firelab parent repo, the github forks now show up as forks of mbedward's repo. See [github's explanation for what happens when a public fork is made private or deleted](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/what-happens-to-forks-when-a-repository-is-deleted-or-changes-visibility). 
+The latest commits to that firelab repo were in 2019 and involved significant additions to the weather handling code allowing gridded winds so that this version could be used with [WindNinja](https://github.com/firelab/windninja) outputs. Thanks firelab! I cloned that github repo to compare with my own `firemod` named version and this is the result. In early 2023, the source repo called `farsite` at the [RMRS Missoula Fire Sciences github organization page](https://github.com/firelab) was either made private or deleted. After the disappearance of the firelab parent repo, the github forks now show up as forks of mbedward's repo. See [github's explanation for what happens when a public fork is made private or deleted](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/what-happens-to-forks-when-a-repository-is-deleted-or-changes-visibility).
 
-When the authors below refer to the "github version" they mean that this repository's ancestor with an original code commit in March 2018 by nwagenbrenner rather than other code on github.
+When the author(s) of the original readme below refer to the "github version" they mean that this repository's ancestor with an original code commit in March 2018 by nwagenbrenner.
 
 # Text that was in the README.md in firelab github repo #
+
+[Author apparently Loren Atwood in 2019]
 
 There are three versions of Farsite that we know of. On firelab.org under Apps and Products/Fire Behavior/Farsite/Farsite Software you can download an installer (so not source code) for Windows. This version has a nice GUI unlike the one on github, and is actually a little bit farther ahead with some of the features than the github version. This version can be helpful to understand the ideas of the inputs for Farsite, for creating ignition files, and for viewing results from the github version. While you can get an understanding of the inputs to Farsite with this firelab.org version of Farsite, the inputs do not necessarily match up between different versions of Farsite. You almost need to double check the github code directly to understand what it uses for inputs.
 
@@ -54,6 +62,6 @@ make
 ./bin/TestFARSITE ../examples/Panther/runPanther.txt 2>&1 | tee scriptRun.log
 ```
 
-Note from DWS: at this point there was a bunch of text about absolute paths. However, FarsiteTest works fine with relative paths so I'm not sure that was all about. I deleted that and made sure the examples run as is in the code above.
+Note from DWS: at this point there was a bunch of text about absolute paths. I'll move all that to a historical record files. The above example runs as is for a start.
 
 
