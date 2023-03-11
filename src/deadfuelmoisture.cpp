@@ -29,7 +29,6 @@
 #include <ctime>
 #include <iostream>
 #include <sstream>
-#include <cassert>
 using std::cerr;
 using std::endl;
 using std::ostringstream;
@@ -1239,7 +1238,6 @@ void Sem::DeadFuelMoisture::setRampRai0( bool ramp )
 
 void Sem::DeadFuelMoisture::setRandomSeed( int randseed )
 {
-    assert(false); // should not be called in farsite cli
     m_randseed = randseed;
     if ( m_randseed > 0 )
     {
@@ -1407,7 +1405,6 @@ double Sem::DeadFuelMoisture::surfaceTemperature( void ) const
 
 double Sem::DeadFuelMoisture::uniformRandom( double min, double max )
 {
-    assert(false);
     return( (max - min) * ( (double) rand() / (double) RAND_MAX ) + min );
 }
 
@@ -1904,7 +1901,6 @@ SB 1/6/2007
                 m_s[i] = ( ae * m_Tsold[i+1] + aw * m_Tsold[i-1] + ar * m_Tsold[i] ) / ap;
                 if ( m_randseed )
                 {
-                    assert(false);
                     double rn = uniformRandom( -.0001, 0.0001 );
                     m_s[i] += rn;
                 }
@@ -1934,7 +1930,6 @@ SB 1/6/2007
                     m_w[i] = m_wsa + m_s[i] * wdiff;
                     if ( m_pertubateColumn )
                     {
-                        assert(false);
                         double rn = uniformRandom( -.0001, 0.0001 );
                         m_w[i] += rn;
                     }
@@ -1956,7 +1951,6 @@ SB 1/6/2007
                            / ap;
                     if ( m_randseed )
                     {
-                        assert(false);
                         double rn = uniformRandom( -.0001, 0.0001 );
                         m_w[i] += rn;
                     }
@@ -1977,7 +1971,6 @@ SB 1/6/2007
             m_t[i] = ( ae * m_Ttold[i+1] + aw * m_Ttold[i-1] + ar * m_Ttold[i] ) / ap;
             if ( m_randseed )
             {
-                assert(false);
                 double rn = uniformRandom( -.0001, 0.0001 );
                 m_t[i] += rn;
             }
