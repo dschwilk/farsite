@@ -863,7 +863,7 @@ void Farsite5::ReadHeader()
 	if (lcptheme)
 	{
 		delete lcptheme;
-		lcptheme = 0;
+		lcptheme = nullptr;
 	}
 	lcptheme = new LandscapeTheme(false, this);
 
