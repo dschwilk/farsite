@@ -401,7 +401,7 @@ Farsite5::Farsite5(void) :
 	ShapePolygonsNotLines = 1;
 	ShapeBarriersSeparately = 0;
 
-	lcptheme = 0;
+	//lcptheme = 0;
 
 	NextFireAfterInterrupt = 0;
 	RastMake = false;
@@ -477,9 +477,9 @@ Farsite5::~Farsite5(void)
 	}
 	CleanPerimeters();
 	Terminate();
-    if (lcptheme) {
-        delete lcptheme;
-        lcptheme = 0;  }
+    // if (lcptheme) {
+    //     delete lcptheme;
+    //     lcptheme = 0;  }
 #ifdef WIN32
 	DeleteCriticalSection(&progressCS);
 #endif
@@ -860,12 +860,12 @@ void Farsite5::ReadHeader()
 	}
 	CantAllocLCP = false;
 
-	if (lcptheme)
-	{
-		delete lcptheme;
-		lcptheme = 0;
-	}
-	lcptheme = new LandscapeTheme(false, this);
+	// if (lcptheme)
+	// {
+	// 	delete lcptheme;
+	// 	lcptheme = 0;
+	// }
+	// lcptheme = new LandscapeTheme(false, this);
 
 	if (landscape == 0)
 	{
@@ -6850,10 +6850,10 @@ void Farsite5::ConvertSimtimeToActualTime(double SimTime, long* mo, long* dy, lo
 	*mn = mins;
 }
 
-LandscapeTheme* Farsite5::GetLandscapeTheme()
-{
-	return lcptheme;
-}
+// LandscapeTheme* Farsite5::GetLandscapeTheme()
+// {
+// 	return lcptheme;
+// }
 
 long Farsite5::GetTheme_HiValue(short DataTheme)
 {
@@ -9671,29 +9671,15 @@ void Farsite5::Execute_InitiateTerminate()
 int Farsite5::Execute_StartRestart()
 {
     int i_Ret;
-
-	/*     if(DDE.DDE_SIMCOMMAND)   	// delay response for dde return
-           {    Sleep(500);
-           DDE.DDE_SIMCOMMAND=false;
-           }
-    */
 	if (SIMULATE_GO)
 	{
-		//Beep(24000, 150);
-
-		//int Response = IDYES;
-
-		//if (!FARSITE_GO)
-		//	Response = IDYES;
-		//printf("? Are You Sure You Want To Restart The Simulation ? RESTART FARSITE SIMULATION ?\n");		if (Response == IDYES)
-		//{
         Execute_Reset();
-        //  							  //CmSimulateRestart();
+
         // reset the simulation to beginning
         if (IgnitionResetAtRestart(GETVAL))
             LoadIgnitions();
         CountFires();
-		//}
+
 	}
 	else
 	{
@@ -9720,10 +9706,10 @@ int Farsite5::Execute_StartRestart()
 					printf("Set Model | Parameters before Starting the Simulation Time- and Space-resolutions not set\n");				}
 				else
 				{
-					long i;
+//					long i;
 					bool NEEDMX = false;
 					char msg[128] = "", msg2[128] = "";
-					LandscapeTheme* grid;
+					//LandscapeTheme* grid;
 
 					/*
                       for(i=14;  i<257; i++)
@@ -9738,26 +9724,26 @@ int Farsite5::Execute_StartRestart()
                       }
                     */
 
-					if (!NEEDMX)
-					{
-						grid = GetLandscapeTheme();
-						for (i = 1; i <= grid->NumAllCats[3]; i++)
-						{
-							if (GetFuelConversion(grid->AllCats[3][i]) > 0 &&
-								GetFuelConversion(grid->AllCats[3][i]) < 257)
-							{
-								if (!InitialFuelMoistureIsHere(GetFuelConversion(grid->AllCats[3][i])))
-								{
-									NEEDMX = true;
-									//sprintf(msg, "Fuel Model %ld Has No Initial Fuel Moisture",(long) GetFuelConversion(grid->AllCats[3][i]));
-									//sprintf(msg2,
-									//	"Update File %s before continuing",
-									//	Inputs.MBMois.c_str());
-									break;
-								}
-							}
-						}
-					}
+					// if (!NEEDMX)
+					// {
+					// 	grid = GetLandscapeTheme();
+					// 	for (i = 1; i <= grid->NumAllCats[3]; i++)
+					// 	{
+					// 		if (GetFuelConversion(grid->AllCats[3][i]) > 0 &&
+					// 			GetFuelConversion(grid->AllCats[3][i]) < 257)
+					// 		{
+					// 			if (!InitialFuelMoistureIsHere(GetFuelConversion(grid->AllCats[3][i])))
+					// 			{
+					// 				NEEDMX = true;
+					// 				//sprintf(msg, "Fuel Model %ld Has No Initial Fuel Moisture",(long) GetFuelConversion(grid->AllCats[3][i]));
+					// 				//sprintf(msg2,
+					// 				//	"Update File %s before continuing",
+					// 				//	Inputs.MBMois.c_str());
+					// 				break;
+					// 			}
+					// 		}
+					// 	}
+					// }
 
 					if (!NEEDMX)
 					{
