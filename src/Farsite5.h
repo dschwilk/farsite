@@ -1,6 +1,6 @@
 /* Farsite5.h
  * This is main simulation class backend, circa 2011? The exported
- * class CFarsite is FARSITE.h
+ * class CFarsite is found in FARSITE.h
  */
 
 #pragma once
@@ -26,16 +26,9 @@
 #include "Far_BSG.h"
 #include <vector>
 
-// WN-Test
-//#include "..\WindNinja2\CWindNinja2.h"
-/*#ifndef max
-#define max(a,b)        (((a) > (b)) ? (a) : (b))
-#endif
-
-#ifndef min
-#define min(a,b)        (((a) < (b)) ? (a) : (b))
-#endif*/
-
+// Can change the RNG engine here. This is the std Mersenne Twister. Random
+// numbers are used in spotting code and the seed can be set in the input file
+// for reproducible runs.
 typedef std::mt19937 random_engine_t;
 
 int GetMCDate(int mth, int day, int year);
@@ -503,17 +496,7 @@ public:
   int ExportMoistureDataText(char *trgName);
 
 //___________________________________________________________________
-// WN-New....
- // CWindNinja2 WN2;
-  float  fN_WNToDo;      /* Number of Ninja runs that will need to be run */
-  float  fN_WNDone; /* Number of Ninja runs completed */
-
- // int  Load_WindNinja(char cr_ErrMes[]);
- // void Disp_WindTbl_WN();
- // int WindNinjaInit ( CWindNinja2 *a_WN2, double *ad_ElevRes, long *al_NumNorthRows, long *al_NumEastCols, char cr_ErrMes[]);
- // int WindNinjaRun ( CWindNinja2 *a_WN2, WindData *a_WD, double d_ElevRes, long l_NumNorthRows, long l_NumEastCols, char cr_ErrMes[]);
-  //int WindNinja_SetExisting(int iX);
-//  float WindNinja_Progress(float *afN_WNtoDo);
+// Gridded winds
 
   float  GetLayerValueByCell (int i_Type, int l_Col, int l_Row);
   float  GetRough (int r, int c, int i_Type);
@@ -541,7 +524,7 @@ void HumTemp(long l_Mth, long l_Day, long l_Hr, double* tempref);
 float  computeSurfPropForCell ( int i_Type, double canopyHeight,
                                 int canopyCover, int fuelModel, double fuelBedDepth);
 
-// WN-New...
+// End Gridded winds stuff
 // ------------------------------------------------------------------------
 
     // constructors and destructors
