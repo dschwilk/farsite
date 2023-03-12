@@ -456,8 +456,8 @@ Farsite5::Farsite5(void) :
 	progress = 0.0;
 // SetFarsiteRunStatus (e_StartUp);
 
-    fN_WNToDo = 0;
-    fN_WNDone = 0;
+    //fN_WNToDo = 0;
+    //fN_WNDone = 0;
 
 	m_nCellsLit = 0;
     m_xLo = m_xHi = m_yLo = m_yHi = 0.0;
