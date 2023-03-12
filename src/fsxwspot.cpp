@@ -12,7 +12,6 @@
 //#include "fsglbvar.h"
 #include <time.h>
 #include <sys/timeb.h>
-#include "rand3.h"
 //#include "atltrace.h"
 
 const double PI=acos(-1.0);
@@ -221,7 +220,7 @@ void Embers::Flight(double CurTime, double EndCurTimeStep)
 	double Z1AboveGround, Z2AboveGround, ZAvgAboveGround;
 	double zfuel1, zfuel2, Z1HtFromStart, Z2HtFromStart;
 	double ztest1, ztest2, zt1, zt2;
-	double voo, tao, DZRate, UH, rwinddir;	// rwinddir=randomwinddirection
+	double voo, tao, DZRate, UH, rwinddir;
 	double dxdt, HtLimit, eZelev, Zelev=0;
 	long posit, positlast=0;
 	long count=0, PassA, PassB;
@@ -234,9 +233,6 @@ void Embers::Flight(double CurTime, double EndCurTimeStep)
 	long IgProb=pFarsite->PercentIgnition(GETVAL)*100;		// in FSXW.CPP
 	long ProbSpot;
 
-	//srand(GetTickCount());
-	//idum=-((rand()%1000)+1);		// initialize random num gen
-	//--------------------------------------------------------
 
 	double eH;
 	double TempAccel=mech.A;
@@ -270,8 +266,7 @@ void Embers::Flight(double CurTime, double EndCurTimeStep)
 		//if(Diameter>SuccessfulEmberDiameter)
 		//	continue;
 		//--------------------------------------------------------
-		//ProbSpot=rand2(&idum)*10000;//rand()%1000;
-		ProbSpot = (long)(pFarsite->Rand.rand3() * 10000.0);//rand()%1000;
+		ProbSpot = (long)(pFarsite->Runif() * 10000.0);
 		if(ProbSpot>IgProb)
 			continue;
 		//--------------------------------------------------------

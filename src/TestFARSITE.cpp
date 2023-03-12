@@ -468,16 +468,6 @@ unsigned int __stdcall  ompCheckKey( void *_pFarsite )
 
 typedef CFarsite * LPFARSITE;
 
-int RangedRand( int range_min, int range_max)
-{
-   // Generate random numbers in the half-closed interval
-   // [range_min, range_max). In other words,
-   // range_min <= random number < range_max
-      int u = (double)rand() / (RAND_MAX + 1) * (range_max - range_min)
-            + range_min;
-     return u;
-}
-
 int openMPMain(int argc, char* argv[])
 {
 	char lcpFileName[512], inputsFileName[512], ignitName[512], barrierName[512], baseOutputsPath[512];
@@ -555,16 +545,13 @@ int openMPMain(int argc, char* argv[])
     threadHandle[0] =(HANDLE) ::_beginthreadex(NULL, 0, ompProgressThread, &pFarsites[0], NULL, &ThreadID2);
 	int ret;
 	int f, waitTime;
-	timeb t;
 
-	ftime(&t);
-	srand(t.time);
 #pragma omp parallel for default(shared) private (buf, ret, outputName, waitTime) schedule (dynamic, 1)
 	for(f = 0; f < nFarsites; f++)
 	{
 		#pragma omp critical
 		{
-			waitTime = f;//RangedRand(5, 2000);//need a wait here so farsite random number generators are unique
+			waitTime = f;
 			printf("Sleeping %d ms for iteration %d\n", waitTime*f, f);
 			Sleep(waitTime*f);
 			pFarsites[f] = new CFarsite();
@@ -909,13 +896,6 @@ int linuxMain(int argc, char* argv[])
 
 	int ret;
 	int f;
-	//timeb t;
-
-        /* Set random number seed */
-        srand(time(NULL));
-	//ftime(&t); // deprecated do we really need milliseconds?
-	//srand(t.time);  // unsigned in
-
 	for(f = 0; f < nFarsites; f++)
 	{
         pFarsites[f] = new CFarsite();

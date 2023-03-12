@@ -1916,7 +1916,10 @@ void Attack::BurnOut()
 
 	do
 	{
+        printf("Danger: code here assumes RAND_MAX");
+        printf("Code does not support attacking the fire");
 		LineOffset = ((double) (rand() % 22490) + 7500.0) / 15000.0;	// largest is 2.0m, smallest is 0.5
+        // DWS: is code above assuming a particular RAND_MAX? this seems dangerous.
 	}
 	while (fabs(LineOffset - OldOffset) < 0.5);
 

@@ -249,6 +249,10 @@ Farsite5::Farsite5(void) :
     Ignition(this),
     _rd()
 {
+    // create random number generator
+    _random_engine = random_engine_t(_rd()); // seed from hardware random
+    _runif = std::uniform_real_distribution<double>(0.0, 1.0);
+    // 
 	timeLaunchFarsite = timeFinish = 0;
 	NumCrews = 0;
 	OutputVectsAsGrown = 0;
@@ -2011,9 +2015,13 @@ int i;
       this->EnableSpotFireGrowth(1);
       this->PercentIgnition(icf.f_FarsiteSpotProb * 100.0);
 	  if(icf.i_SpottingSeed >= 0)
-		Rand.SetFixedSeed(icf.i_SpottingSeed);
-	  else
-		  Rand.ResetRandomSeed();
+      {
+          _random_engine.seed(icf.i_SpottingSeed);
+          //Rand.SetFixedSeed(icf.i_SpottingSeed);
+      }  else
+      {
+		  _random_engine.seed(_rd());
+      }
    }
 
  /* If the Spot Grid Resolution input not found, use landscape resolution */
@@ -9335,7 +9343,7 @@ long Farsite5::InsertSpotFire(double xpt, double ypt)
 
 	Xlo = Xhi = xpt;
 	Ylo = Yhi = ypt;	 							// initialize bounding rectangle
-	AngleOffset = ((double) (Rand.rand3() * 1000)) / 999.0 * PI / 2.0;	// randomize orientation of fire polygon
+	AngleOffset = ((double) (this->Runif() * 1000)) / 999.0 * PI / 2.0;	// randomize orientation of fire polygon
 	AngleIncrement = PI / ((double) NumVertex / 2.0);				// to avoid coincident sides
 	OutsideX = -1.0;	// no outside points
 	OutsideY = -1.0;
@@ -9899,10 +9907,6 @@ void Farsite5::Initiate()
 	for (i = 0; i < 5; i++)
 		WStat[i].tws = -1.0;
 	LastFMCalcTime = 0;
-	//SYSTEMTIME tb;
-	//GetSystemTime(&tb);
-	//srand(tb.wMilliseconds);
-	idum = -((rand() % 20) + 1);				// initialize random num gen
 	StepThrough = false;
 }
 
@@ -10077,7 +10081,7 @@ void Farsite5::ResetVisPerimFile()
 
 	// compose a randomly generated filename
 	char RNum[16] = "";
-	sprintf(RNum, "%d", rand() % 1000);
+	sprintf(RNum, "%d", rand() % 1000);  // DWS: std::rand() remove?
 	//std::string fname = "visperim" + std::string(RNum) + ".vsp" ;
 	char fname[256];
 	sprintf(fname, "visperim%s.vsp", RNum);
@@ -11931,6 +11935,20 @@ int Farsite5::GetNumIgnitionCells()
 {
 	return m_nCellsLit;
 }
+
+
+double Farsite5::Runif()
+{
+    return(this->_runif(_random_engine));
+}
+        
+
+
+
+// END: Farsite5 class stuff
+
+
+// CAtmWindGrid class starts
 
 CAtmWindGrid::CAtmWindGrid()
 {

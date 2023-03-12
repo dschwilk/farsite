@@ -36,7 +36,6 @@
 #include "fsxsync.h"
 //#endif
 #include "vec.h"
-//#include "rand2.h"
 #include "Farsite5.h"
 #include <string.h>
 
@@ -443,8 +442,6 @@ bool CompareRect::YOverlap()
 }
 
 
-//static long idum;   // this is for the random numbers in Intersections::EliminateDuplicatePoints
-
 Intersections::Intersections(Farsite5 *_pFarsite) : XUtilities(_pFarsite), CompareRect(_pFarsite), StandardizePolygon(_pFarsite), post(_pFarsite)
 {
 	pFarsite = _pFarsite;
@@ -459,11 +456,6 @@ Intersections::Intersections(Farsite5 *_pFarsite) : XUtilities(_pFarsite), Compa
 	AltIsect = 0;
 	NumCrossThreads = 0;
 	crossthread = 0;
-	/*     SYSTEMTIME tb;
-		 GetSystemTime(&tb);
-		 srand(tb.wMilliseconds);
-		 idum=-((rand()%20)+1);				// initialize random num gen
-	*/
 }
 
 
@@ -1502,22 +1494,6 @@ bool Intersections::EliminateCrossPoints(long CurrentFire)
 			}
 			else		 // not zero distance between points, so just dither it by 0.1m or ft
 			{
-				/*
-						xoffset=((double) (rand2(&idum)*100))/999.0;	// randomize distance offset
-						xoffset*=dist;
-						if(xoffset>0.1)
-							 xoffset=0.1;
-						yoffset=((double) (rand2(&idum)*100))/999.0;	// randomize distance offset
-						yoffset*=dist;
-						if(yoffset>0.1)
-							 yoffset=0.1;
-						xa=((double) ((rand2(&idum)*20))/20.0+1.0)*PI;	// randomize xdirection offset
-						ya=((double) ((rand2(&idum)*20))/20.0+1.0)*PI;	// randomize ydirection offset
-						xpt=xpt-xoffset*cos(xa);
-				// *xdiff/dist;
-						ypt=ypt-yoffset*sin(ya);
-				// *ydiff/dist;
-						*/
 				offset = 0.1 * dist;
 				j = 0;
 				while (offset > 0.1)

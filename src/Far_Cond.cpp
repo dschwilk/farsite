@@ -24,7 +24,6 @@
 #include <math.h>
 #include <stdio.h>
 #include <algorithm>
-// #include "rand2.h"
 #include "barriers.hpp"
 
 #define e_MinPerDay 1440

@@ -1,4 +1,7 @@
-/* Farsite20 */
+/* Farsite5.h
+ * This is main simulation class backend, circa 2011? The exported
+ * class CFarsite is FARSITE.h
+ */
 
 #pragma once
 #include "fsxlandt.h"
@@ -14,7 +17,7 @@
 #include "fsxwshap.h"
 #include "polygon.h"
 #include "PerimeterData.h"
-#include "rand3.h"  // TODO: replace with std:random
+#include <random>
 #include <list>
 #include <algorithm>
 
@@ -33,6 +36,8 @@
 #define min(a,b)        (((a) < (b)) ? (a) : (b))
 #endif*/
 
+typedef std::mt19937 random_engine_t;
+
 int GetMCDate(int mth, int day, int year);
 int MilToMin (int i_MilTim);
 
@@ -41,6 +46,7 @@ inline double 	pow2(double in)//;               			// returns square of base
 {
 	return in * in;
 }
+
 const double TinyVal = 1e-9;
 inline bool IsTiny(double in){return (in < TinyVal && in > -TinyVal) ? true : false;}
 long const MaxNumCompoundCrews = 200;
@@ -485,6 +491,8 @@ private:
 
 };
 
+
+// Main simulation class.
 class Farsite5
 {
 public:
@@ -536,12 +544,12 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 // WN-New...
 // ------------------------------------------------------------------------
 
-
+    // constructors and destructors
 	Farsite5(void);
 	~Farsite5(void);
+
 	CSpotList spotList;
-	Random Rand;
-	void 	ReadHeader();
+   	void 	ReadHeader();
 	bool LoadLandscapeFile(char *FileName);
 	int LoadInputsFile(char *FileName);
 	char  *LoadInputError (int i_Num);
@@ -1194,7 +1202,8 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	Burn burn;   								  // declare Burn object, contains burn,area,intersections,embers
 	long PrimaryVisEqual, PrimaryVisCount;
 	long SecondaryVisEqual, SecondaryVisCount;				// visible timestep counters
-	long maximum, idum;					// maximum time in simulation, updated with global "numaximum"
+	long maximum;					// maximum time in simulation, updated with global "numaximum"
+    //long idum // ?? never used? Seems to be major bleed through of random number abstraction...
 	long OutputVectsAsGrown, VisPerimSize;
 	long ShowVectsAsGrown;// = 1;
 	bool SIM_SUSPENDED, SIM_COMPLETED, FARSITE_GO, TerminateWait, WaitInProgress,
@@ -1389,4 +1398,12 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 
     //for atmosphere wind grids.
     CWindGrids m_windGrids;
-};
+
+    // random number generation for a farsite simulation
+private:
+    std::random_device _rd; // hardware device for seeding
+	random_engine_t _random_engine;  // random number engine
+    std::uniform_real_distribution<double> _runif; // random number generator
+public:
+    double Runif(void);
+};  // class Farsite5

@@ -28,6 +28,8 @@
 //				Mark A. Finney, Systems for Environemntal Management
 //******************************************************************************
 
+//DWS: This code is included but not used by the command-line TestFARSITE.
+
 #ifndef ATTACKRESOURCES
 #define ATTACKRESOURCES
 
