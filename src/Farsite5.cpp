@@ -1,9 +1,9 @@
 /********************************************************************************
-* Name: Farsite5.cpp
-* Note: --> Now-11-10 This file was update with most recent changes to the
-*             original Farsite code.
-*
-*********************************************************************************/
+ * Name: Farsite5.cpp
+ * Note: --> Now-11-10 This file was update with most recent changes to the
+ *             original Farsite code.
+ *
+ *********************************************************************************/
 
 #include "Farsite5.h"
 #include <memory.h>
@@ -118,8 +118,8 @@ FuelConversions::FuelConversions()
 	long i;
 
 	for (i = 0;
-		i < 257;
-		i++)   		  		// could also read default file here
+         i < 257;
+         i++)   		  		// could also read default file here
 		Type[i] = i;
 	Type[99] = -1;
 	Type[98] = -2;
@@ -240,7 +240,7 @@ void Farsite5::CurTimeConvert()
 	while (mo != oldmo);						// allows startup of current clock at any time, will find cur month
 	//TimeKeepCurrent.SetData(dy, hr, min, mo);
 	sprintf(CurTime, "%02ld%s%02ld  %02ld%s%02ld", mo, slash, dy, hr, colon,
-		min);
+            min);
 }
 
 Farsite5::Farsite5(void) :
@@ -266,10 +266,10 @@ Farsite5::Farsite5(void) :
 	landscape = NULL;
 	landfile = 0;
 	OldFilePosition = 0;
-	 NEED_CUST_MODELS = false;	// custom fuel models
-	 HAVE_CUST_MODELS = false;
-	 NEED_CONV_MODELS = false;     // fuel model conversions
-	 HAVE_CONV_MODELS = false;
+    NEED_CUST_MODELS = false;	// custom fuel models
+    HAVE_CUST_MODELS = false;
+    NEED_CONV_MODELS = false;     // fuel model conversions
+    HAVE_CONV_MODELS = false;
 	SimulationDuration = 0.0;
 	CondPeriod = false;
 
@@ -424,7 +424,7 @@ Farsite5::Farsite5(void) :
 	VisPerimSize = 0;   			// size of disk copy of vector perimeters
 	CanModify = true;
 	PreCalcFuelMoistures = true;
-        LastFMCalcTime=0;
+    LastFMCalcTime=0;
 	VectMake = false;
 	ShapeMake = false;
 
@@ -456,8 +456,8 @@ Farsite5::Farsite5(void) :
 	progress = 0.0;
 // SetFarsiteRunStatus (e_StartUp);
 
-  fN_WNToDo = 0;
-  fN_WNDone = 0;
+    fN_WNToDo = 0;
+    fN_WNDone = 0;
 
 	m_nCellsLit = 0;
     m_xLo = m_xHi = m_yLo = m_yHi = 0.0;
@@ -477,9 +477,9 @@ Farsite5::~Farsite5(void)
 	}
 	CleanPerimeters();
 	Terminate();
-        if (lcptheme) {
-          delete lcptheme;
-          lcptheme = 0;  }
+    if (lcptheme) {
+        delete lcptheme;
+        lcptheme = 0;  }
 #ifdef WIN32
 	DeleteCriticalSection(&progressCS);
 #endif
@@ -488,7 +488,7 @@ Farsite5::~Farsite5(void)
 void Farsite5::SetModelParams()
 {
 	double ActualTimeStep = 30.0;	// minutes
-     double VisibleTimeStep=30.0;	// minutes
+    double VisibleTimeStep=30.0;	// minutes
 	//bool secondaryVisibleStep = false;
 	bool isEnglishints = false;
 	double perimeterResolution = 90.0;     // keep this bigger than distance resolution!
@@ -548,7 +548,7 @@ void Farsite5::CloseLandFile()
 }
 
 celldata Farsite5::CellData(double east, double north, celldata& cell, crowndata& cfuel,
-	grounddata& gfuel, long* posit)
+                            grounddata& gfuel, long* posit)
 {
 	long Position;
 
@@ -579,10 +579,10 @@ celldata Farsite5::CellData(double east, double north, celldata& cell, crowndata
 				if (landscape != NULL)
 				{
 					//ZeroMemory(landscape,Header.numnorth * Header.numeast * NumVals * sizeof(short));
-                                        memset(landscape,0x0,Header.numnorth * Header.numeast * NumVals * sizeof(short));
+                    memset(landscape,0x0,Header.numnorth * Header.numeast * NumVals * sizeof(short));
 					for (i = 0; i < Header.numnorth; i++)
 						fread(&landscape[i * NumVals * Header.numeast],
-							sizeof(short), NumVals * Header.numeast, landfile);
+                              sizeof(short), NumVals * Header.numeast, landfile);
 					fseek(landfile, headsize, SEEK_SET);
 					//     		 	OldFilePosition=0;     // thread local
 					CantAllocLCP = false;
@@ -597,9 +597,10 @@ celldata Farsite5::CellData(double east, double north, celldata& cell, crowndata
 	if (!CantAllocLCP)
 	{
 		GetCellDataFromMemory(Position, cell, cfuel, gfuel);
-          if(posit!=NULL)
+        if(posit!=NULL)
+        {
           	*posit=Position;
-
+        }
 		return cell;
 	}
 
@@ -608,15 +609,15 @@ celldata Farsite5::CellData(double east, double north, celldata& cell, crowndata
 		if (Header.GroundFuels == 20)
 		{
 			fseek(landfile, (Position - OldFilePosition) * sizeof(celldata),
-				SEEK_CUR);
+                  SEEK_CUR);
 			fread(&cell, sizeof(celldata), 1, landfile);
 		}
 		else
 		{
 			fseek(landfile,
-				(Position - OldFilePosition) * (sizeof(celldata) +
-				sizeof(grounddata)),
-				SEEK_CUR);
+                  (Position - OldFilePosition) * (sizeof(celldata) +
+                                                  sizeof(grounddata)),
+                  SEEK_CUR);
 			fread(&cell, sizeof(celldata), 1, landfile);
 			fread(&gfuel, sizeof(grounddata), 1, landfile);
 		}
@@ -626,19 +627,19 @@ celldata Farsite5::CellData(double east, double north, celldata& cell, crowndata
 		if (Header.GroundFuels == 20)		// none
 		{
 			fseek(landfile,
-				(Position - OldFilePosition) * (sizeof(celldata) +
-				sizeof(crowndata)),
-				SEEK_CUR);
+                  (Position - OldFilePosition) * (sizeof(celldata) +
+                                                  sizeof(crowndata)),
+                  SEEK_CUR);
 			fread(&cell, sizeof(celldata), 1, landfile);
 			fread(&cfuel, sizeof(crowndata), 1, landfile);
 		}
 		else
 		{
 			fseek(landfile,
-				(Position - OldFilePosition) * (sizeof(celldata) +
-				sizeof(crowndata) +
-				sizeof(grounddata)),
-				SEEK_CUR);
+                  (Position - OldFilePosition) * (sizeof(celldata) +
+                                                  sizeof(crowndata) +
+                                                  sizeof(grounddata)),
+                  SEEK_CUR);
 			fread(&cell, sizeof(celldata), 1, landfile);
 			fread(&cfuel, sizeof(crowndata), 1, landfile);
 			fread(&gfuel, sizeof(grounddata), 1, landfile);
@@ -701,23 +702,23 @@ bool Farsite5::OpenLandFile()
 
 bool Farsite5::LoadLandscapeFile(char *FileName)
 {
-     CloseLandFile();
+    CloseLandFile();
 
-     SetLandFileName(FileName);
-     if(!OpenLandFile())
-     {	//::MessageBox(HWindow, FileName,
+    SetLandFileName(FileName);
+    if(!OpenLandFile())
+    {	//::MessageBox(HWindow, FileName,
      	//	"Error Loading LCP", MB_OK);
-          //lcp->SetCheck(BF_UNCHECKED);
+        //lcp->SetCheck(BF_UNCHECKED);
      	//tlcp->SetText("");
 
      	return false;
-     }
+    }
 
-     //LandFileOpen=true;
-     ReadHeader();
-     SetCustFuelModelID(HaveCustomFuelModels());
-     SetConvFuelModelID(HaveFuelConversions());
-     return true;
+    //LandFileOpen=true;
+    ReadHeader();
+    SetCustFuelModelID(HaveCustomFuelModels());
+    SetConvFuelModelID(HaveFuelConversions());
+    return true;
 }
 
 void Farsite5::ReadHeader()
@@ -826,23 +827,23 @@ void Farsite5::ReadHeader()
 	RasterCellResolutionY = (Header.NorthUtm - Header.SouthUtm) /
 		(double) Header.numnorth;
 	/*ViewPortNorth = RasterCellResolutionY * (double) Header.numnorth +
-		Header.lonorth;
-	ViewPortSouth = Header.lonorth;
-	ViewPortEast = RasterCellResolutionX * (double) Header.numeast +
-		Header.loeast;
-	ViewPortWest = Header.loeast;
-	//	NumViewNorth=(ViewPortNorth-ViewPortSouth)/Header.YResol;
-	//	NumViewEast=(ViewPortEast-ViewPortWest)/Header.XResol;
-	double rows, cols;
-	rows = (ViewPortNorth - ViewPortSouth) / Header.YResol;
-	NumViewNorth = (long)rows;
-	if (modf(rows, &rows) > 0.5)
-		NumViewNorth++;
-	cols = (ViewPortEast - ViewPortWest) / Header.XResol;
-	NumViewEast = (long)cols;
-	if (modf(cols, &cols) > 0.5)
-		NumViewEast++;
-*/
+      Header.lonorth;
+      ViewPortSouth = Header.lonorth;
+      ViewPortEast = RasterCellResolutionX * (double) Header.numeast +
+      Header.loeast;
+      ViewPortWest = Header.loeast;
+      //	NumViewNorth=(ViewPortNorth-ViewPortSouth)/Header.YResol;
+      //	NumViewEast=(ViewPortEast-ViewPortWest)/Header.XResol;
+      double rows, cols;
+      rows = (ViewPortNorth - ViewPortSouth) / Header.YResol;
+      NumViewNorth = (long)rows;
+      if (modf(rows, &rows) > 0.5)
+      NumViewNorth++;
+      cols = (ViewPortEast - ViewPortWest) / Header.XResol;
+      NumViewEast = (long)cols;
+      if (modf(cols, &cols) > 0.5)
+      NumViewEast++;
+    */
 	if (HaveCrownFuels())
 	{
 		if (HaveGroundFuels())
@@ -895,10 +896,10 @@ void Farsite5::ReadHeader()
 			if (landscape != NULL)
 			{
 				//ZeroMemory(landscape,Header.numnorth * Header.numeast * NumVals * sizeof(short));
-                                memset(landscape,0x0,Header.numnorth * Header.numeast * NumVals * sizeof(short));
+                memset(landscape,0x0,Header.numnorth * Header.numeast * NumVals * sizeof(short));
 				for (i = 0; i < Header.numnorth; i++)
 					fread(&landscape[i * NumVals * Header.numeast],
-						sizeof(short), NumVals * Header.numeast, landfile);
+                          sizeof(short), NumVals * Header.numeast, landfile);
 				fseek(landfile, headsize, SEEK_SET);
 				//     		 	OldFilePosition=0;     // thread local
 				CantAllocLCP = false;
@@ -931,7 +932,7 @@ void Farsite5::SetCellFuel(long posit, short tfuel)
 }
 
 void Farsite5::GetCellDataFromMemory(long posit, celldata& cell, crowndata& cfuel,
-	grounddata& gfuel)
+                                     grounddata& gfuel)
 {
 	short ldata[10], zero = 0;
 
@@ -1055,38 +1056,38 @@ double Farsite5::GetCellResolutionY()
 bool Farsite5::CreateSpotSemaphore()
 {
 	CloseSpotSemaphore();
-     /*
-	char Name[128] = "";
-	char TimeID[128] = "";
-	SYSTEMTIME st;
-	GetSystemTime(&st);
-	sprintf(TimeID, "%ld%ld%ld%ld%ld%ld%ld", st.wYear, st.wMonth, st.wDay,
-		st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+    /*
+      char Name[128] = "";
+      char TimeID[128] = "";
+      SYSTEMTIME st;
+      GetSystemTime(&st);
+      sprintf(TimeID, "%ld%ld%ld%ld%ld%ld%ld", st.wYear, st.wMonth, st.wDay,
+      st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
 
-	sprintf(Name, "%s%s", "SPOTSEMAPHORE", TimeID);
-	hNewSpotSemaphore = CreateSemaphore(NULL, 1, 1, Name);
+      sprintf(Name, "%s%s", "SPOTSEMAPHORE", TimeID);
+      hNewSpotSemaphore = CreateSemaphore(NULL, 1, 1, Name);
 
-	sprintf(Name, "%s%s", "NEWP1SEMAPHORE", TimeID);
-	hNewPerimSemaphore = CreateSemaphore(NULL, 1, 1, Name);
+      sprintf(Name, "%s%s", "NEWP1SEMAPHORE", TimeID);
+      hNewPerimSemaphore = CreateSemaphore(NULL, 1, 1, Name);
 
-	if (hNewSpotSemaphore == NULL)
-		return false;
-	if (hNewPerimSemaphore == NULL)
-		return false;
-     */
+      if (hNewSpotSemaphore == NULL)
+      return false;
+      if (hNewPerimSemaphore == NULL)
+      return false;
+    */
 	return true;
 }
 
 void Farsite5::CloseSpotSemaphore()
 {
 	/*
-	if (hNewSpotSemaphore != NULL)
-		CloseHandle(hNewSpotSemaphore);
-	hNewSpotSemaphore = 0;
-	if (hNewPerimSemaphore != NULL)
-		CloseHandle(hNewPerimSemaphore);
-	hNewPerimSemaphore = 0;
-     */
+      if (hNewSpotSemaphore != NULL)
+      CloseHandle(hNewSpotSemaphore);
+      hNewSpotSemaphore = 0;
+      if (hNewPerimSemaphore != NULL)
+      CloseHandle(hNewPerimSemaphore);
+      hNewPerimSemaphore = 0;
+    */
 }
 
 bool Farsite5::AccelerationON()
@@ -1131,9 +1132,9 @@ void Farsite5::SetInout(long FireNumber, int Inout)
 }
 
 /*long Farsite5::GetNumPoints(long FireNumber)
-{
-	return numpts[FireNumber];
-}*/
+  {
+  return numpts[FireNumber];
+  }*/
 
 void Farsite5::SetNumPoints(long FireNumber, long NumPoints)
 {
@@ -1143,15 +1144,15 @@ void Farsite5::SetNumPoints(long FireNumber, long NumPoints)
 double Farsite5::PercentIgnition(double percent)
 {
 	/*if (percent >= 0.01 && percent <= 100.0)
-		PercentageOfEmberIgnitions = percent;
-	else if (percent >= 0.0 && percent < 0.01)
-		PercentageOfEmberIgnitions = 0.01;
-	else if (percent > 100.0)
-		PercentageOfEmberIgnitions = 100.0;*/
+      PercentageOfEmberIgnitions = percent;
+      else if (percent >= 0.0 && percent < 0.01)
+      PercentageOfEmberIgnitions = 0.01;
+      else if (percent > 100.0)
+      PercentageOfEmberIgnitions = 100.0;*/
 	if (percent >= 0.0 && percent <= 100.0)
 		PercentageOfEmberIgnitions = percent;
 	//else if (percent >= 0.0 && percent < 0.01)
-		//PercentageOfEmberIgnitions = 0.01;
+    //PercentageOfEmberIgnitions = 0.01;
 	else if (percent > 100.0)
 		PercentageOfEmberIgnitions = 100.0;
 
@@ -1406,7 +1407,7 @@ long Farsite5::DistanceCheckMethod(long Method)
 //------------------------------------------------------------------------------
 
 void Farsite5::GetPerimeter2(long coord, double* xpt, double* ypt, double* ros,
-	double* fli, double* rct)
+                             double* fli, double* rct)
 {
 	if (coord < p2numalloc)
 	{
@@ -1430,7 +1431,7 @@ double Farsite5::GetPerimeter2Value(long coord, long value)
 }
 
 void Farsite5::SetPerimeter2(long coord, double xpt, double ypt, double ros, double fli,
-	double rct)
+                             double rct)
 {
 	if (coord < p2numalloc)
 	{
@@ -1593,7 +1594,7 @@ double* Farsite5::AllocPerimeter1(long NumFire, long NumPoints)
 			}
 		}
 		nmemb = (NumPoints) * NUMDATA;			// add 1 to make room for bounding rectangle
-                if (perimeter1[NumFire]) // DWS: Why did original code have 2 tests here?
+        if (perimeter1[NumFire]) // DWS: Why did original code have 2 tests here?
 			FreePerimeter1(NumFire);
 		perimeter1[NumFire] = new double[nmemb];
 
@@ -1621,12 +1622,12 @@ void Farsite5::FreePerimeter1(long NumFire)
 }
 
 /*double Farsite5::GetPerimeter1Value(long NumFire, long NumPoint, int coord)
-{
-	if (perimeter1[NumFire])
-		return perimeter1[NumFire][NumPoint * NUMDATA + coord];
+  {
+  if (perimeter1[NumFire])
+  return perimeter1[NumFire][NumPoint * NUMDATA + coord];
 
-	return 0.0;
-}*/
+  return 0.0;
+  }*/
 
 
 double* Farsite5::GetPerimeter1Address(long NumFire, long NumPoint)
@@ -1683,7 +1684,7 @@ long Farsite5::SwapFirePerims(long NumFire1, long NumFire2)
 	{
 		AllocPerimeter2(numpts[NumFire2]);
 		if (std::memmove(perimeter2, perimeter1[NumFire2],
-				numpts[NumFire2] * NUMDATA * sizeof(double)))
+                         numpts[NumFire2] * NUMDATA * sizeof(double)))
 			return 1;
 		else
 			return 0;
@@ -1693,7 +1694,7 @@ long Farsite5::SwapFirePerims(long NumFire1, long NumFire2)
 		if (perimeter1[NumFire1])
 		{
 			if (std::memmove(perimeter1[NumFire1], perimeter2,
-					(NumFire2 * -1) * NUMDATA * sizeof(double)))
+                             (NumFire2 * -1) * NUMDATA * sizeof(double)))
 				return 1;
 		}
 		return 0;
@@ -1800,10 +1801,10 @@ void Farsite5::ResetStopLocation(long StopNum)
 	if (StopNum < NumStopLocations)
 	{
 		memcpy(&StopLocation[StopNum * 2],
-			&StopLocation[(StopNum + 1) * 2],
-			(NumStopLocations - StopNum - 1) * sizeof(double) * 2);
+               &StopLocation[(StopNum + 1) * 2],
+               (NumStopLocations - StopNum - 1) * sizeof(double) * 2);
 		memcpy(&StopEnabled[StopNum], &StopEnabled[StopNum + 1],
-			(NumStopLocations - StopNum - 1) * sizeof(bool));
+               (NumStopLocations - StopNum - 1) * sizeof(bool));
 		NumStopLocations--;
 	}
 }
@@ -1868,81 +1869,80 @@ bool Farsite5::HaveFuelConversions()
 
 bool Farsite5::LoadFuelMoistureFile(char *FileName)
 {
-
 	long ModNum, F1, F10, F100, FLW, FLH;
-     FILE *CurrentFile;
+    FILE *CurrentFile;
 
-     if((CurrentFile=fopen(FileName, "r"))==NULL)
-     	return false;
+    if((CurrentFile=fopen(FileName, "r"))==NULL)
+        return false;
 
-	while(!feof(CurrentFile))
-     {    fscanf(CurrentFile,"%ld", &ModNum);
-          if(feof(CurrentFile))
-               break;
-          fscanf(CurrentFile, "%ld %ld %ld %ld %ld", &F1, &F10, &F100, &FLH, &FLW);
+    while(!feof(CurrentFile))
+    {
+        fscanf(CurrentFile,"%ld", &ModNum);
+        if(feof(CurrentFile))
+            break;
+        fscanf(CurrentFile, "%ld %ld %ld %ld %ld", &F1, &F10, &F100, &FLH, &FLW);
 		if(ModNum>256)
 		{	//::MessageBox(HWindow, "Correct Fuel Moisture File Before Proceeding",
 			//		"Error: Model Number>50", MB_OK);
-               //fms->SetCheck(BF_UNCHECKED);
-               //tfms->SetText("");
-
+            //fms->SetCheck(BF_UNCHECKED);
+            //tfms->SetText("");
 			return false;
 		}
 		if(F1<=0 || F10<=0 || F100<=0 || FLW<=0 || FLH<=0)
 		{	//::MessageBox(HWindow, "Correct Before Proceeding",
 			//		"Error: Fuel Moisture <=0", MB_OK);
-               //fms->SetCheck(BF_UNCHECKED);
-               //tfms->SetText("");
+            //fms->SetCheck(BF_UNCHECKED);
+            //tfms->SetText("");
 
 			return false;
 		}
-          SetInitialFuelMoistures(ModNum, F1, F10, F100, FLH, FLW);
+        SetInitialFuelMoistures(ModNum, F1, F10, F100, FLH, FLW);
 	}
-     fclose(CurrentFile);
+    fclose(CurrentFile);
 
-     return true;
+    return true;
 }
 
 
 void Farsite5::LoadFuelMoist ()
 {
-int i;
+    int i;
 
 /* Load Fuel Moist File if we have a file name                           */
-   if ( strcmp (icf.cr_FMF,"" )) {
-     LoadFuelMoistureFile (icf.cr_FMF);
-     return;  }
+    if ( strcmp (icf.cr_FMF,"" )) {
+        LoadFuelMoistureFile (icf.cr_FMF);
+        return;  }
 
 /* Look for the Default Model and load it to all Models .................... */
-   for ( i = 0; i < icf.iN_FMD; i++ ) {
-     if ( icf.a_FMD[i].i_Model != e_DefFulMod )
-       continue;
-     SetAllMoistures(icf.a_FMD[i].i_TL1,icf.a_FMD[i].i_TL10,
-           icf.a_FMD[i].i_TL100, icf.a_FMD[i].i_TLLH,icf.a_FMD[i].i_TLLW);
-   }
+    for ( i = 0; i < icf.iN_FMD; i++ ) {
+        if ( icf.a_FMD[i].i_Model != e_DefFulMod )
+            continue;
+        SetAllMoistures(icf.a_FMD[i].i_TL1,icf.a_FMD[i].i_TL10,
+                        icf.a_FMD[i].i_TL100, icf.a_FMD[i].i_TLLH,icf.a_FMD[i].i_TLLW);
+    }
 
 /* Load all other Models                                                     */
-   for ( i = 0; i < icf.iN_FMD; i++ ) {
-     if ( icf.a_FMD[i].i_Model == e_DefFulMod )  /* Skip the Default Model            */
-       continue;
-     SetInitialFuelMoistures(icf.a_FMD[i].i_Model,
-                icf.a_FMD[i].i_TL1,icf.a_FMD[i].i_TL10,
-                icf.a_FMD[i].i_TL100, icf.a_FMD[i].i_TLLH,
-                icf.a_FMD[i].i_TLLW);
-   }
+    for ( i = 0; i < icf.iN_FMD; i++ ) {
+        if ( icf.a_FMD[i].i_Model == e_DefFulMod )  /* Skip the Default Model            */
+            continue;
+        SetInitialFuelMoistures(icf.a_FMD[i].i_Model,
+                                icf.a_FMD[i].i_TL1,icf.a_FMD[i].i_TL10,
+                                icf.a_FMD[i].i_TL100, icf.a_FMD[i].i_TLLH,
+                                icf.a_FMD[i].i_TLLW);
+    }
 }
 
 void Farsite5::SetAllMoistures(int _fm1, int _fm10, int _fm100,
-		int _fmHerb, int _fmWoody)
+                               int _fmHerb, int _fmWoody)
 {
 	long i, j, k;
 	for(i = 0; i <= 256; i++)
 	{
-                fm[i].TL1   = max(_fm1, 2);
-                fm[i].TL10  = max(_fm10, 2);
-                fm[i].TL100 = max(_fm100, 2);
-                fm[i].TLLH  = max(_fmHerb, 2);
-                fm[i].TLLW  = max(_fmWoody, 2);
+        fm[i].TL1   = max(_fm1, 2);
+        fm[i].TL10  = max(_fm10, 2);
+        fm[i].TL100 = max(_fm100, 2);
+        fm[i].TLLH  = max(_fmHerb, 2);
+        fm[i].TLLW  = max(_fmWoody, 2);
 		if(fm[i].TL1>1 && fm[i].TL10>1)
 			fm[i].FuelMoistureIsHere=true;
 		else
@@ -1959,90 +1959,90 @@ void Farsite5::SetAllMoistures(int _fm1, int _fm10, int _fm100,
 
 int Farsite5::LoadInputsFile(char *FileName)
 {
-int i;
+    int i;
 
-   strcpy(InputsFName, FileName);
+    strcpy(InputsFName, FileName);
 
-   i = icf.InputFarsite(FileName);          /* Load info from commnad file       */
-   if ( i != 1 )                        /*  some basic checking done         */
-    return i;                           /* Error - return error number       */
+    i = icf.InputFarsite(FileName);          /* Load info from commnad file       */
+    if ( i != 1 )                        /*  some basic checking done         */
+        return i;                           /* Error - return error number       */
 
-   i = icf.ValidateFarsite();           /* Validate inputs, detailed err chk */
-   if ( i != 1 )                        /* Return err num                    */
-     return i;
-   i = LoadCustomFuelsData();
-   if ( i != 1 )                        /* Return err num                    */
-     return i;
+    i = icf.ValidateFarsite();           /* Validate inputs, detailed err chk */
+    if ( i != 1 )                        /* Return err num                    */
+        return i;
+    i = LoadCustomFuelsData();
+    if ( i != 1 )                        /* Return err num                    */
+        return i;
 
-   i = CheckCustomFuelsCoverage();
-   if(i != 1)
-	   return i;
+    i = CheckCustomFuelsCoverage();
+    if(i != 1)
+        return i;
 
-   SetStartMonth (icf.i_FarsiteStartMth);      /* Farsite simulation start date */
-   SetStartDay   (icf.i_FarsiteStartDay);
-   SetStartHour  (icf.i_FarsiteStartHour);
+    SetStartMonth (icf.i_FarsiteStartMth);      /* Farsite simulation start date */
+    SetStartDay   (icf.i_FarsiteStartDay);
+    SetStartHour  (icf.i_FarsiteStartHour);
 
-   SetEndMonth   (icf.i_FarsiteEndMth);        /* Farsite simulation end date */
-   SetEndDay     (icf.i_FarsiteEndDay);
-   SetEndHour    (icf.i_FarsiteEndHour);
+    SetEndMonth   (icf.i_FarsiteEndMth);        /* Farsite simulation end date */
+    SetEndDay     (icf.i_FarsiteEndDay);
+    SetEndHour    (icf.i_FarsiteEndHour);
 
-   LoadFuelMoist();                        // Fuel Moist, File or Embeded data  /
-   LoadFoliarMoist(icf.i_FolMoi);          // Foliar Moisture      /
-   LoadWeatherStream (&this->icf);
-   LoadCrownFireMethod(icf.cr_CroFirMet);  /* Crown Fire Method, Finney,Reih */
+    LoadFuelMoist();                        // Fuel Moist, File or Embeded data  /
+    LoadFoliarMoist(icf.i_FolMoi);          // Foliar Moisture      /
+    LoadWeatherStream (&this->icf);
+    LoadCrownFireMethod(icf.cr_CroFirMet);  /* Crown Fire Method, Finney,Reih */
 
-   LoadWind_Table (&this->icf);
+    LoadWind_Table (&this->icf);
 
-   if(strlen(icf.cr_FarsiteIgnition) > 0)  {
-     strcpy(Ignition.ifile, icf.cr_FarsiteIgnition);
-     CreateIgnitionGrid(); }
+    if(strlen(icf.cr_FarsiteIgnition) > 0)  {
+        strcpy(Ignition.ifile, icf.cr_FarsiteIgnition);
+        CreateIgnitionGrid(); }
 
-   SetStartDate(GetJulianDays(GetStartMonth()) + GetStartDay());
-   SetSimulationDuration (ConvertActualTimeToSimtime(GetEndMonth(),
-                          GetEndDay(), GetEndHour(), GetEndMin(), false));
+    SetStartDate(GetJulianDays(GetStartMonth()) + GetStartDay());
+    SetSimulationDuration (ConvertActualTimeToSimtime(GetEndMonth(),
+                                                      GetEndDay(), GetEndHour(), GetEndMin(), false));
 
-   SetActualTimeStep(icf.f_FarsiteActualTimeStep);
-   this->SetDistRes(icf.f_FarsiteDistanceRes);
-   this->SetPerimRes(icf.f_FarsitePerimeterRes);
-   this->IgnitionDelay(icf.f_FarsiteSpotIgnitionDelay);
-   SetRastMake(true);
-   this->SetAccelerationON((icf.i_FarsiteAccelerationOn == 0) ? false : true);
-   this->EnableCrowning(1);
-   if (icf.f_FarsiteSpotProb <= 0.0) {
-      this->EnableSpotting(0);
-      this->EnableSpotFireGrowth(0);
-      this->PercentIgnition(icf.f_FarsiteSpotProb * 100.0); }
-   else  {
-      this->EnableSpotting(1);
-      this->EnableSpotFireGrowth(1);
-      this->PercentIgnition(icf.f_FarsiteSpotProb * 100.0);
-	  if(icf.i_SpottingSeed >= 0)
-      {
-          _random_engine.seed(icf.i_SpottingSeed);
-          //Rand.SetFixedSeed(icf.i_SpottingSeed);
-      }  else
-      {
-		  _random_engine.seed(_rd());
-      }
-   }
+    SetActualTimeStep(icf.f_FarsiteActualTimeStep);
+    this->SetDistRes(icf.f_FarsiteDistanceRes);
+    this->SetPerimRes(icf.f_FarsitePerimeterRes);
+    this->IgnitionDelay(icf.f_FarsiteSpotIgnitionDelay);
+    SetRastMake(true);
+    this->SetAccelerationON((icf.i_FarsiteAccelerationOn == 0) ? false : true);
+    this->EnableCrowning(1);
+    if (icf.f_FarsiteSpotProb <= 0.0) {
+        this->EnableSpotting(0);
+        this->EnableSpotFireGrowth(0);
+        this->PercentIgnition(icf.f_FarsiteSpotProb * 100.0); }
+    else  {
+        this->EnableSpotting(1);
+        this->EnableSpotFireGrowth(1);
+        this->PercentIgnition(icf.f_FarsiteSpotProb * 100.0);
+        if(icf.i_SpottingSeed >= 0)
+        {
+            _random_engine.seed(icf.i_SpottingSeed);
+            //Rand.SetFixedSeed(icf.i_SpottingSeed);
+        }  else
+        {
+            _random_engine.seed(_rd());
+        }
+    }
 
- /* If the Spot Grid Resolution input not found, use landscape resolution */
-  if ( icf.f_FarsiteSpotGridResolution == ei_ICFInit )
-     icf.f_FarsiteSpotGridResolution = 0.0;//this->GetCellResolutionX()/2;
+    /* If the Spot Grid Resolution input not found, use landscape resolution */
+    if ( icf.f_FarsiteSpotGridResolution == ei_ICFInit )
+        icf.f_FarsiteSpotGridResolution = 0.0;//this->GetCellResolutionX()/2;
 
 
-   LoadBurnPeriods();
+    LoadBurnPeriods();
 	LoadROSAdjustFile();
-   UseConditioningPeriod(1);              /* Have Condition Weather data */
+    UseConditioningPeriod(1);              /* Have Condition Weather data */
 
-   //set bounds for extinguishing near edge of landscape, also used for checking bounds in gridded winds from atm files
-      m_xHi = GetHiEast() - GetDistRes() / 2.0;
-      m_xLo = GetLoEast() + GetDistRes() / 2.0;
-      m_yHi = GetHiNorth() - GetDistRes() / 2.0;
-      m_yLo = GetLoNorth() + GetDistRes() / 2.0;
-   /* check if using atm file and load gridded winds from atm file */
-   if (strlen(icf.cr_FarsiteAtmFile) > 0)
-   {
+    //set bounds for extinguishing near edge of landscape, also used for checking bounds in gridded winds from atm files
+    m_xHi = GetHiEast() - GetDistRes() / 2.0;
+    m_xLo = GetLoEast() + GetDistRes() / 2.0;
+    m_yHi = GetHiNorth() - GetDistRes() / 2.0;
+    m_yLo = GetLoNorth() + GetDistRes() / 2.0;
+    /* check if using atm file and load gridded winds from atm file */
+    if (strlen(icf.cr_FarsiteAtmFile) > 0)
+    {
         int wStatus = m_windGrids.Create(icf.cr_FarsiteAtmFile);    /* create atm file gridded winds */
         if (wStatus != 1)
             return wStatus;
@@ -2056,27 +2056,27 @@ int i;
         wStatus = m_windGrids.CheckTimes(this);
         if (wStatus != 1)
             return wStatus;
-   }
+    }
 
-   return 1;
+    return 1;
 }
 
 char  *Farsite5::LoadInputError (int i_Num)
 {
-  return icf.ErrorMessage(i_Num);
+    return icf.ErrorMessage(i_Num);
 }
 
 bool Farsite5::SetInitialFuelMoistures(long Model, long t1, long t10, long t100,
-	long tlh, long tlw)
+                                       long tlh, long tlw)
 {
 	if (Model > 256 || Model < 1)
 		return false;
 
-        fm[Model].TL1   = max(t1, 2L);
-        fm[Model].TL10  = max(t10, 2L);
-        fm[Model].TL100 = max(t100, 2L);
-        fm[Model].TLLH  = max(tlh, 2L);
-        fm[Model].TLLW  = max(tlw, 2L);
+    fm[Model].TL1   = max(t1, 2L);
+    fm[Model].TL10  = max(t10, 2L);
+    fm[Model].TL100 = max(t100, 2L);
+    fm[Model].TLLH  = max(tlh, 2L);
+    fm[Model].TLLW  = max(tlw, 2L);
 
 	if (t1 > 1 && t10 > 1)
 		fm[Model].FuelMoistureIsHere = true;
@@ -2094,7 +2094,7 @@ bool Farsite5::SetInitialFuelMoistures(long Model, long t1, long t10, long t100,
 }
 
 bool Farsite5::GetInitialFuelMoistures(long Model, long* t1, long* t10, long* t100,
-	long* tlh, long* tlw)
+                                       long* tlh, long* tlw)
 {
 	if (Model > 256 || Model < 1)
 		return false;
@@ -2146,35 +2146,35 @@ bool Farsite5::InitialFuelMoistureIsHere(long Model)
 }
 
 /***********************************************************
-* Name: SetSpreadDirection
-* Desc: set the spread direction from inputs file.
-*       value comes in from input file switch
-*       SPREAD_DIRECTION_FROM_ (MAX or NORTH)
-*       Inputs should have been validate when read in.
-*   In: North >= 0 set Absolute. of if Max >= 0 set Relative
-*       Set both params to negative to do nothing and set to
-*       defualt - see below
-***********************************************************/
+ * Name: SetSpreadDirection
+ * Desc: set the spread direction from inputs file.
+ *       value comes in from input file switch
+ *       SPREAD_DIRECTION_FROM_ (MAX or NORTH)
+ *       Inputs should have been validate when read in.
+ *   In: North >= 0 set Absolute. of if Max >= 0 set Relative
+ *       Set both params to negative to do nothing and set to
+ *       defualt - see below
+ ***********************************************************/
 void Farsite5::SetSpreadDirection (double North, double Max)
 {
 	/*
-double d;
+      double d;
 
-  if ( North >= 0 ) {
-    this->SetOutputDirection ( ABSOLUTEDIR );
-    d = North;
-    if ( d == 0 )
+      if ( North >= 0 ) {
+      this->SetOutputDirection ( ABSOLUTEDIR );
+      d = North;
+      if ( d == 0 )
       d = 360.0;
-    this->SetOffsetFromMax(d); }
+      this->SetOffsetFromMax(d); }
 
-  else if ( Max >= 0 ) {
-    this->SetOutputDirection (RELATIVEDIR );
-    this->SetOffsetFromMax(Max); }
+      else if ( Max >= 0 ) {
+      this->SetOutputDirection (RELATIVEDIR );
+      this->SetOffsetFromMax(Max); }
 
- else {
-    this->SetOutputDirection (RELATIVEDIR );   // Default //
-    this->SetOffsetFromMax(0); }
-*/
+      else {
+      this->SetOutputDirection (RELATIVEDIR );   // Default //
+      this->SetOffsetFromMax(0); }
+    */
 }
 
 void Farsite5::SetFileOutputOptions(long FileType, bool YesNo)
@@ -2246,25 +2246,26 @@ bool Farsite5::GetFileOutputOptions(long FileType)
 
 void Farsite5::SetFoliarMoistureContent(long Percent)
 {
-     if(Percent<1)
-     	Percent=100;
-     if(Percent>300)
-     	Percent=300;
-	CanopyChx.FoliarMC=Percent;
+    if(Percent<1)
+        Percent=100;
+    if(Percent>300)
+        Percent=300;
+    
+    CanopyChx.FoliarMC=Percent;
 }
 
 /*{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}
-* Name: LoadFoliarMoist
-* Desc: Load the Foliar Moisture found in the command file, if none
-*       then set the default value.
-*   In:
-{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
+ * Name: LoadFoliarMoist
+ * Desc: Load the Foliar Moisture found in the command file, if none
+ *       then set the default value.
+ *   In:
+ {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
 void Farsite5::LoadFoliarMoist(int i_FolMoi)
 {
-  if ( i_FolMoi == ei_ICFInit )         /* none was set in cmd file */
-    SetFoliarMoistureContent (e_FM_Def);
-  else
-    SetFoliarMoistureContent (i_FolMoi);
+    if ( i_FolMoi == ei_ICFInit )         /* none was set in cmd file */
+        SetFoliarMoistureContent (e_FM_Def);
+    else
+        SetFoliarMoistureContent (i_FolMoi);
 }
 
 void Farsite5::SetRasterFileName(const char* FileName)
@@ -2463,13 +2464,13 @@ bool Farsite5::CalcFirstLastStreamData()
 		FirstWtr = (unsigned long)((GetJulianDays(FirstMonth[sn].wtr) + FirstDay[sn].wtr) * 1440.0);
 		fract = modf((double) FirstHour[sn].wnd / 100.0, &ipart);
 		FirstWnd = (unsigned long)((GetJulianDays(FirstMonth[sn].wnd) + FirstDay[sn].wnd) * 1440.0 +
-			ipart * 60.0 +
-			fract);
+                                   ipart * 60.0 +
+                                   fract);
 		LastWtr = (unsigned long)((GetJulianDays(LastMonth[sn].wtr) + LastDay[sn].wtr) * 1440.0);
 		fract = modf((double) LastHour[sn].wnd / 100.0, &ipart);
 		LastWnd = (unsigned long)((GetJulianDays(LastMonth[sn].wnd) + LastDay[sn].wnd) * 1440.0 +
-			ipart * 60.0 +
-			fract);
+                                  ipart * 60.0 +
+                                  fract);
 
 		if (FirstWtr > LastWtr)
 			LastWtr += (unsigned long)(365.0 * 1440.0);
@@ -2640,12 +2641,12 @@ bool Farsite5::SetAtmosphereGrid(long NumGrids)
 	if (NumGrids == 0)
 	{
 		/*
-		if(AtmGrid->AtmGridWTR)
-		{	NumWeatherStations=0;    // reset number of weather stations
-			NumWindStations=0;  	 // reset number of wind stations
-		}
-		else if(AtmGrid->AtmGridWND)
-			NumWindStations=0;  	 // reset number of wind stations
+          if(AtmGrid->AtmGridWTR)
+          {	NumWeatherStations=0;    // reset number of weather stations
+          NumWindStations=0;  	 // reset number of wind stations
+          }
+          else if(AtmGrid->AtmGridWND)
+          NumWindStations=0;  	 // reset number of wind stations
 		*/
 		if (AtmGrid)
 			delete AtmGrid;
@@ -2714,61 +2715,61 @@ long Farsite5::GetGridNorthDimension()
 }
 
 /*{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}
-* Name: LoadWeatherStream
-* Desc: Load into FlamMap the weather stream data that was previously
-*        read into the ICF class, the data could have come from a file(.wtr)
-*        or embedded directly in the cmd file.
-* Ret: 0 = OK
-*      else error number, see below
-{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
+ * Name: LoadWeatherStream
+ * Desc: Load into FlamMap the weather stream data that was previously
+ *        read into the ICF class, the data could have come from a file(.wtr)
+ *        or embedded directly in the cmd file.
+ * Ret: 0 = OK
+ *      else error number, see below
+ {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
 int  Farsite5::LoadWeatherStream (d_ICF *a_ICF)
 {
-int i, i_Mth, iX;
-long  StationNumber;
-d_Wtr *a;
+    int i, i_Mth, iX;
+    long  StationNumber;
+    d_Wtr *a;
 
-  if ( icf.iN_Wtr <= 0 )                 /* No Weather Data switches found    */
-    return 0;                           /*  That's ok                        */
+    if ( icf.iN_Wtr <= 0 )                 /* No Weather Data switches found    */
+        return 0;                           /*  That's ok                        */
 
-  FreeWeatherData(0);          /* Chk and free any previous 'new'   */
+    FreeWeatherData(0);          /* Chk and free any previous 'new'   */
 
-  StationNumber = AllocWeatherData (0, icf.iN_Wtr);
-  if ( StationNumber < 0 )
-    return e_EMS_Aloc;
+    StationNumber = AllocWeatherData (0, icf.iN_Wtr);
+    if ( StationNumber < 0 )
+        return e_EMS_Aloc;
 
-  a = icf.a_Wtr;
-  iX = -1;
+    a = icf.a_Wtr;
+    iX = -1;
 
 /* Load data for each observation PLUS and then load an extra 13 mth using   */
 /*  the last observation's data                                              */
-  for ( i = 0; i <= icf.iN_Wtr; i++ ) {
-    if ( i == icf.iN_Wtr )               /* done with obsrvation data         */
-      i_Mth = 13;                       /* Set month to 13                   */
-    else {
-      iX++;                             /* each stored struct of obsvrd data */
-      i_Mth = a[iX].i_Mth;
-   }
+    for ( i = 0; i <= icf.iN_Wtr; i++ ) {
+        if ( i == icf.iN_Wtr )               /* done with obsrvation data         */
+            i_Mth = 13;                       /* Set month to 13                   */
+        else {
+            iX++;                             /* each stored struct of obsvrd data */
+            i_Mth = a[iX].i_Mth;
+        }
 
-    SetWeatherData(   /* Load into FlamMap class           */
-               StationNumber,  /*        long StationNumber         */
-               i,              /*        long NumObs,               */
-               i_Mth,          /* month, long month,       Mth = month,                                     */
-               a[iX].i_Day,  /* day,   long day,         Day = day,                                       */
-               a[iX].i_Year,
-      (double) a[iX].f_Per,  /* ppt,   double rain,      Per = precip in 100th of inch (ex 10 = 0.1 inches*/
-               a[iX].i_mTH,  /* hmorn, long time1,       mTH = min_temp_hour 0-2400,                      */
-               a[iX].i_xTH,  /* haft,  long time2,       xTH = max_temp_hour 0 - 2400,                    */
-      (double) a[iX].f_mT,   /* Tmin,  double temp1,     mT  = min_temp,                                  */
-      (double) a[iX].f_xT,   /* Tmax,  double temp2,     xT  = max_temp,                                  */
-               a[iX].i_xH,   /* Hmax,  long humid1,      mH  = max_humidity,                              */
-               a[iX].i_mH,   /* Hmin,  long humid2,      xH  = min_humidity,                              */
-      (double) a[iX].i_Elv,  /* elref, double elevation  Elv = elevation,                                 */
-               a[iX].i_PST,  /* 0,     long tr1,         PST = precip_start_time 0-2400,                  */
-               a[iX].i_PET); /* 0);    long tr2)         PET = precip_end_time 0-2400)                    */
+        SetWeatherData(   /* Load into FlamMap class           */
+            StationNumber,  /*        long StationNumber         */
+            i,              /*        long NumObs,               */
+            i_Mth,          /* month, long month,       Mth = month,                                     */
+            a[iX].i_Day,  /* day,   long day,         Day = day,                                       */
+            a[iX].i_Year,
+            (double) a[iX].f_Per,  /* ppt,   double rain,      Per = precip in 100th of inch (ex 10 = 0.1 inches*/
+            a[iX].i_mTH,  /* hmorn, long time1,       mTH = min_temp_hour 0-2400,                      */
+            a[iX].i_xTH,  /* haft,  long time2,       xTH = max_temp_hour 0 - 2400,                    */
+            (double) a[iX].f_mT,   /* Tmin,  double temp1,     mT  = min_temp,                                  */
+            (double) a[iX].f_xT,   /* Tmax,  double temp2,     xT  = max_temp,                                  */
+            a[iX].i_xH,   /* Hmax,  long humid1,      mH  = max_humidity,                              */
+            a[iX].i_mH,   /* Hmin,  long humid2,      xH  = min_humidity,                              */
+            (double) a[iX].i_Elv,  /* elref, double elevation  Elv = elevation,                                 */
+            a[iX].i_PST,  /* 0,     long tr1,         PST = precip_start_time 0-2400,                  */
+            a[iX].i_PET); /* 0);    long tr2)         PET = precip_end_time 0-2400)                    */
 
-  } /* for i */
+    } /* for i */
 
-  return 0;
+    return 0;
 }
 
 void Farsite5::LoadBurnPeriods()
@@ -2786,10 +2787,10 @@ void Farsite5::LoadBurnPeriods()
 	for(long i = 0; i < icf.iN_BurnPeriods; i++)
 	{
 		SetBurnPeriod(i, icf.a_BurnPeriods[i].i_Month,
-                         icf.a_BurnPeriods[i].i_Day,
-                         icf.a_BurnPeriods[i].i_Year,
-                         icf.a_BurnPeriods[i].i_HourStart,
-                         icf.a_BurnPeriods[i].i_HourEnd);
+                      icf.a_BurnPeriods[i].i_Day,
+                      icf.a_BurnPeriods[i].i_Year,
+                      icf.a_BurnPeriods[i].i_HourStart,
+                      icf.a_BurnPeriods[i].i_HourEnd);
 	}
 }
 
@@ -2828,226 +2829,226 @@ int Farsite5::LoadCustomFuelFile(char *FileName)
 	int ret = 1;
 	SetCustFuelModelID(false);
 	char *ptr, dynamic[32]="", code[32]="";
-     char Line[256]="", head[64]="", ErrMsg[256]="", BackupFile[256]="", comment[256]="";
-     bool Metric=false, BadFile=false;
+    char Line[256]="", head[64]="", ErrMsg[256]="", BackupFile[256]="", comment[256]="";
+    bool Metric=false, BadFile=false;
 	long num, count, ModNum, FileFormat=0;
-     double s1, slh, slw;
-     NewFuel newfuel, newfuelm;
-     FILE *fout;
-     FILE *CurrentFile;
+    double s1, slh, slw;
+    NewFuel newfuel, newfuelm;
+    FILE *fout;
+    FILE *CurrentFile;
 
-     CurrentFile=fopen(FileName, "rt");
-     memset(&newfuel, 0x0, sizeof(NewFuel));
-     memset(&newfuelm, 0x0, sizeof(NewFuel));
-     do
-     {    rewind(CurrentFile);
+    CurrentFile=fopen(FileName, "rt");
+    memset(&newfuel, 0x0, sizeof(NewFuel));
+    memset(&newfuelm, 0x0, sizeof(NewFuel));
+    do
+    {    rewind(CurrentFile);
      	memset(head, 0x0, 64*sizeof(char));
      	memset(Line, 0x0, sizeof(Line));
-	     fgets(Line, 255, CurrentFile);
-     	sscanf(Line, "%s", head);
-	    	AccessFuelModelUnits(0);
-     	if(!strcasecmp(head, "METRIC"))
-	     {    Metric=true;
-     	     AccessFuelModelUnits(1);
-	     }
+        fgets(Line, 255, CurrentFile);
+        sscanf(Line, "%s", head);
+        AccessFuelModelUnits(0);
+        if(!strcasecmp(head, "METRIC"))
+        {    Metric=true;
+            AccessFuelModelUnits(1);
+        }
      	else if(strcasecmp(head, "ENGLISH"))   // no header in file
-	     {    if(atol(head)>256)
-     	     {     //::MessageBox(Client->HWindow, "Bad Header in File", "Custom Fuel Model File Error", MB_OK);
-          	     fclose(CurrentFile);
-
-	               return false;
-     	     }
-               memset(head, 0x0, 64*sizeof(char));
+        {    if(atol(head)>256)
+            {     //::MessageBox(Client->HWindow, "Bad Header in File", "Custom Fuel Model File Error", MB_OK);
+                fclose(CurrentFile);
+                 
+                return false;
+            }
+            memset(head, 0x0, 64*sizeof(char));
      		rewind(CurrentFile);
-	     }
-          if(FileFormat>0)
-          {    if(FileFormat==1)
-          	{  	strcat(BackupFile, FileName);
-	               strcat(BackupFile, ".old");
-     	          CopyFile( FileName,  BackupFile, false);
-          	     fclose(CurrentFile);
-               	CurrentFile=fopen(BackupFile, "r");
+        }
+        if(FileFormat>0)
+        {    if(FileFormat==1)
+            {  	strcat(BackupFile, FileName);
+                strcat(BackupFile, ".old");
+                CopyFile( FileName,  BackupFile, false);
+                fclose(CurrentFile);
+                CurrentFile=fopen(BackupFile, "r");
 #ifdef WIN32
-			     if((access(FileName, 02))==-1)
-			     {	SetFileAttributes( FileName, FILE_ATTRIBUTE_NORMAL);
-				     DeleteFile( FileName);
-			     }
+                if((access(FileName, 02))==-1)
+                {	SetFileAttributes( FileName, FILE_ATTRIBUTE_NORMAL);
+                    DeleteFile( FileName);
+                }
 #endif
-                    fout=fopen(FileName, "w");
-                    if(Metric)
-                    	fprintf(fout, "METRIC\n");
-                    else
-                    	fprintf(fout, "ENGLISH\n");
-               }
-               else
-               	fout=NULL;
-          	break;
-          }
+                fout=fopen(FileName, "w");
+                if(Metric)
+                    fprintf(fout, "METRIC\n");
+                else
+                    fprintf(fout, "ENGLISH\n");
+            }
+            else
+                fout=NULL;
+            break;
+        }
 
-	     memset(Line, 0x0, 256*sizeof(char));
-	     fgets(Line, 255, CurrentFile);
-	     if(feof(CurrentFile))
-	         	break;
-	     if(strlen(Line)==0 || !strncmp(Line, "\n", 1))
-	         	continue;
-	     num=sscanf(Line, "%ld %s %lf %lf %lf %lf %lf %s",
+        memset(Line, 0x0, 256*sizeof(char));
+        fgets(Line, 255, CurrentFile);
+        if(feof(CurrentFile))
+            break;
+        if(strlen(Line)==0 || !strncmp(Line, "\n", 1))
+            continue;
+        num=sscanf(Line, "%ld %s %lf %lf %lf %lf %lf %s",
 	               &ModNum, head, &newfuel.h10, &newfuel.h100,
 	               &newfuel.lh, &newfuel.lw, &s1, comment);
-          //if(!strcmp(_strlwr(comment), "dynamic"))
-          //  	FileFormat=2;
-          //else if(!strcmp(_strlwr(comment), "static"))
-          //	FileFormat=2;
-          //else
-          if(strstr(comment, "d") || strstr(comment, "D"))
+        //if(!strcmp(_strlwr(comment), "dynamic"))
+        //  	FileFormat=2;
+        //else if(!strcmp(_strlwr(comment), "static"))
+        //	FileFormat=2;
+        //else
+        if(strstr(comment, "d") || strstr(comment, "D"))
           	FileFormat=2;
-          else if(strstr(comment, "s") || strstr(comment,"S"))
+        else if(strstr(comment, "s") || strstr(comment,"S"))
           	FileFormat=2;
-          else
+        else
           	FileFormat=1;
-     } while(FileFormat>0);
+    } while(FileFormat>0);
 
-     rewind(CurrentFile);
-     memset(head, 0x0, 64*sizeof(char));
-     fgets(Line, 255, CurrentFile);
-    	sscanf(Line, "%s", head);
-    	if(strcasecmp(head, "METRIC") && strcasecmp(head, "ENGLISH")) {
-            // no header
-     	    rewind(CurrentFile);
-        }
-     count=0;
+    rewind(CurrentFile);
+    memset(head, 0x0, 64*sizeof(char));
+    fgets(Line, 255, CurrentFile);
+    sscanf(Line, "%s", head);
+    if(strcasecmp(head, "METRIC") && strcasecmp(head, "ENGLISH")) {
+        // no header
+        rewind(CurrentFile);
+    }
+    count=0;
 	while(!feof(CurrentFile))
 	{    memset(Line, 0x0, 256*sizeof(char));
      	fgets(Line, 255, CurrentFile);
-          if(strlen(Line)==0 || !strncmp(Line, "\n", 1))
+        if(strlen(Line)==0 || !strncmp(Line, "\n", 1))
           	continue;
-          //if(feof(CurrentFile))
-          //	break;
-          memset(comment, 0x0, 256*sizeof(char));
-          if(FileFormat==1)
-          {	num=sscanf(Line, "%ld %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %s",
-               	&ModNum, &newfuel.h1, &newfuel.h10, &newfuel.h100,
-	               &newfuel.lh, &newfuel.lw, &s1, &slh, &slw,
-     	          &newfuel.depth, &newfuel.xmext, &newfuel.heatd, &newfuel.heatl, comment);
+        //if(feof(CurrentFile))
+        //	break;
+        memset(comment, 0x0, 256*sizeof(char));
+        if(FileFormat==1)
+        {	num=sscanf(Line, "%ld %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %s",
+                       &ModNum, &newfuel.h1, &newfuel.h10, &newfuel.h100,
+                       &newfuel.lh, &newfuel.lw, &s1, &slh, &slw,
+                       &newfuel.depth, &newfuel.xmext, &newfuel.heatd, &newfuel.heatl, comment);
           	if(num<13)
           		break;
-               sprintf(newfuel.code, "FM%ld", ModNum);
-               newfuel.dynamic=0;
-          }
-          else
-          {    memset(code, 0x0, 32*sizeof(char));
+            sprintf(newfuel.code, "FM%ld", ModNum);
+            newfuel.dynamic=0;
+        }
+        else
+        {    memset(code, 0x0, 32*sizeof(char));
           	memset(dynamic, 0x0, 32*sizeof(char));
           	num=sscanf(Line, "%ld %s %lf %lf %lf %lf %lf %s %lf %lf %lf %lf %lf %lf %lf %s",
-               	&ModNum, code, &newfuel.h1, &newfuel.h10, &newfuel.h100,
-	               &newfuel.lh, &newfuel.lw, dynamic, &s1, &slh, &slw,
-     	          &newfuel.depth, &newfuel.xmext, &newfuel.heatd, &newfuel.heatl, comment);
+                       &ModNum, code, &newfuel.h1, &newfuel.h10, &newfuel.h100,
+                       &newfuel.lh, &newfuel.lw, dynamic, &s1, &slh, &slw,
+                       &newfuel.depth, &newfuel.xmext, &newfuel.heatd, &newfuel.heatl, comment);
           	if(num<15)
           		break;
-               //if(!strcmp(_strupr(dynamic), "DYNAMIC"))
-               //	newfuel.dynamic=1;
+            //if(!strcmp(_strupr(dynamic), "DYNAMIC"))
+            //	newfuel.dynamic=1;
           	if(strstr(dynamic, "d") || strstr(dynamic, "D"))
                	newfuel.dynamic=1;
-               else
+            else
                	newfuel.dynamic=0;
-               strncpy(newfuel.code, code, 7);
+            strncpy(newfuel.code, code, 7);
 		}
 
-          newfuel.sav1=(long) s1;
-          newfuel.savlh=(long) slh;
-          newfuel.savlw=(long) slw;
-          memset(newfuel.desc, 0x0, 256*sizeof(char));
-          if(strlen(comment)>0)
-	     {    ptr=strstr(Line, comment);
+        newfuel.sav1=(long) s1;
+        newfuel.savlh=(long) slh;
+        newfuel.savlw=(long) slw;
+        memset(newfuel.desc, 0x0, 256*sizeof(char));
+        if(strlen(comment)>0)
+        {    ptr=strstr(Line, comment);
           	strncpy(newfuel.desc, ptr, 64);
-          }
-          if(Metric)     // convert to english
-          {    memcpy(&newfuelm, &newfuel, sizeof(NewFuel));
+        }
+        if(Metric)     // convert to english
+        {    memcpy(&newfuelm, &newfuel, sizeof(NewFuel));
           	newfuel.h1/=2.2417;
-               newfuel.h10/=2.2417;
-               newfuel.h100/=2.2417;
-               newfuel.lh/=2.2417;
-               newfuel.lw/=2.2417;
-               newfuel.sav1=s1*30.480060960;
-               newfuel.savlh=slh*30.480060960;
-               newfuel.savlw=slw*30.480060960;
-               newfuel.depth/=30.480060960;
-               newfuel.heatd/=2.324375;
-               newfuel.heatl/=2.324375;
-          }
-          count++;
+            newfuel.h10/=2.2417;
+            newfuel.h100/=2.2417;
+            newfuel.lh/=2.2417;
+            newfuel.lw/=2.2417;
+            newfuel.sav1=s1*30.480060960;
+            newfuel.savlh=slh*30.480060960;
+            newfuel.savlw=slw*30.480060960;
+            newfuel.depth/=30.480060960;
+            newfuel.heatd/=2.324375;
+            newfuel.heatl/=2.324375;
+        }
+        count++;
 		if(ModNum<14 || ModNum>256)
 		{    sprintf(ErrMsg, "Model Data Error Line => %ld", count);
           	//::MessageBox(Client->HWindow, "Fuel Model Number >256 or <14", ErrMsg, MB_OK);
-               BadFile=true;
-			   ret = e_EMS_CF_FM;
+            BadFile=true;
+            ret = e_EMS_CF_FM;
 		}
 		else if(newfuel.xmext<=0.0)
 		{    sprintf(ErrMsg, "Model Data Error Line => %ld", count);
           	//::MessageBox(Client->HWindow, "Extinction Moisture = 0", ErrMsg, MB_OK);
-               BadFile=true;
-			   ret = e_EMS_CF_EM;
+            BadFile=true;
+            ret = e_EMS_CF_EM;
 		}
-          else if(newfuel.h1+newfuel.h10+newfuel.h100<=0.0)
-          {    sprintf(ErrMsg, "Model Data Error Line => %ld", count);
+        else if(newfuel.h1+newfuel.h10+newfuel.h100<=0.0)
+        {    sprintf(ErrMsg, "Model Data Error Line => %ld", count);
           	//::MessageBox(Client->HWindow, "Fuel Model Has No Dead Fuel", ErrMsg, MB_OK);
-               BadFile=true;
-			   ret = e_EMS_CF_DF;
-          }
+            BadFile=true;
+            ret = e_EMS_CF_DF;
+        }
 		else if(newfuel.depth<=0.0)
 		{    sprintf(ErrMsg, "Model Data Error Line => %ld", count);
           	//::MessageBox(Client->HWindow, "Depth = 0.0", ErrMsg, MB_OK);
-               BadFile=true;
-			   ret = e_EMS_CF_DEPTH;
+            BadFile=true;
+            ret = e_EMS_CF_DEPTH;
 		}
 		else if(newfuel.heatl<6000)
 		{    sprintf(ErrMsg, "Model Data Error Line => %ld", count);
           	//::MessageBox(Client->HWindow, "Live Heat Content Too Low", ErrMsg, MB_OK);
-               BadFile=true;
-			   ret = e_EMS_CF_LH;
+            BadFile=true;
+            ret = e_EMS_CF_LH;
 		}
 		else if(newfuel.heatd<4000)
 		{    sprintf(ErrMsg, "Model Data Error Line => %ld", count);
           	//::MessageBox(Client->HWindow, "Dead Heat Content Too Low", ErrMsg, MB_OK);
-               BadFile=true;
-			   ret = e_EMS_CF_DH;
+            BadFile=true;
+            ret = e_EMS_CF_DH;
 		}
 		else if(newfuel.sav1>4000 || newfuel.savlh>4000 || newfuel.savlw>4000)
 		{    sprintf(ErrMsg, "Model Data Error Line => %ld", count);
           	//::MessageBox(Client->HWindow, "SAV Ratios Out of Range", ErrMsg, MB_OK);
-               BadFile=true;
-			   ret = e_EMS_CF_SAV;
+            BadFile=true;
+            ret = e_EMS_CF_SAV;
 		}
 
-          if(BadFile)
-          {    fclose(CurrentFile);
+        if(BadFile)
+        {    fclose(CurrentFile);
 			return ret;
-          }
+        }
 		newfuel.xmext/=100.0;
-          newfuelm.xmext=newfuel.xmext;
-          newfuel.number=newfuelm.number=ModNum;
-          SetNewFuel(&newfuel);
-	     if(FileFormat==1 && fout!=NULL)
-          {    if(newfuel.dynamic==0)
+        newfuelm.xmext=newfuel.xmext;
+        newfuel.number=newfuelm.number=ModNum;
+        SetNewFuel(&newfuel);
+        if(FileFormat==1 && fout!=NULL)
+        {    if(newfuel.dynamic==0)
                	sprintf(dynamic, "static");
           	else
                	sprintf(dynamic, "dynamic");
           	if(Metric)
 	     		fprintf(fout, "%ld %s %lf %lf %lf %lf %lf %s %ld %ld %ld %lf %ld %lf %lf %s\n",
-     	          	newfuelm.number, newfuelm.code, newfuelm.h1, newfuelm.h10, newfuelm.h100,
-	     	          newfuelm.lh, newfuelm.lw, dynamic, newfuelm.sav1, newfuelm.savlh, newfuelm.savlw,
-     	     	     newfuelm.depth, (long) (newfuelm.xmext*100.0), newfuelm.heatd, newfuelm.heatl, newfuelm.desc);
-               else
+                        newfuelm.number, newfuelm.code, newfuelm.h1, newfuelm.h10, newfuelm.h100,
+                        newfuelm.lh, newfuelm.lw, dynamic, newfuelm.sav1, newfuelm.savlh, newfuelm.savlw,
+                        newfuelm.depth, (long) (newfuelm.xmext*100.0), newfuelm.heatd, newfuelm.heatl, newfuelm.desc);
+            else
 	     		fprintf(fout, "%ld %s %lf %lf %lf %lf %lf %s %ld %ld %ld %lf %ld %lf %lf %s\n",
-     	          	newfuel.number, newfuel.code, newfuel.h1, newfuel.h10, newfuel.h100,
-	     	          newfuel.lh, newfuel.lw, dynamic, newfuel.sav1, newfuel.savlh, newfuel.savlw,
-     	     	     newfuel.depth, (long) (newfuelm.xmext*100.0), newfuel.heatd, newfuel.heatl, newfuel.desc);
-          }
+                        newfuel.number, newfuel.code, newfuel.h1, newfuel.h10, newfuel.h100,
+                        newfuel.lh, newfuel.lw, dynamic, newfuel.sav1, newfuel.savlh, newfuel.savlw,
+                        newfuel.depth, (long) (newfuelm.xmext*100.0), newfuel.heatd, newfuel.heatl, newfuel.desc);
+        }
 	}
 	fclose(CurrentFile);
-     if(fout)
-     {	fclose(fout);
+    if(fout)
+    {	fclose(fout);
    		//::MessageBox(Client->HWindow, "Existing File Renamed with .OLD extension",
 		//	"Custom Fuel Model File Converted to new Format", MB_OK);
-     }
+    }
 
 	SetCustFuelModelID(true);
 
@@ -3058,56 +3059,56 @@ int Farsite5::LoadCustomFuelsData()
 {
 /* Load custom fuel File if we have a file name                           */
 	int ret = 1;
-   if ( strcmp (icf.cr_CFF,"" ))
-   {
-	   ret = LoadCustomFuelFile(icf.cr_CFF);
-   }
-   //maybe it was embedded in inputs file...
-   else if(icf.iN_CustomFuels > 0 && icf.a_customFuels != NULL)
-   {
-	   for(int f = 0; f < icf.iN_CustomFuels; f++)
-	   {
-		   NewFuel newfuel;
-		   newfuel.number = icf.a_customFuels[f].i_Model;
-		   newfuel.h1 = icf.a_customFuels[f].f_h1;
-		   newfuel.h10 = icf.a_customFuels[f].f_h10;
-		   newfuel.h100 = icf.a_customFuels[f].f_h100;
-		   newfuel.lh = icf.a_customFuels[f].f_lh;
-		   newfuel.lw = icf.a_customFuels[f].f_lw;
-		   newfuel.depth = icf.a_customFuels[f].f_depth;
-		   newfuel.xmext = icf.a_customFuels[f].f_xmext;
-		   newfuel.heatd = icf.a_customFuels[f].f_heatd;
-		   newfuel.heatl = icf.a_customFuels[f].f_heatl;
-		   newfuel.dynamic = 1;
-		   if(icf.a_customFuels[f].dynamic[0] != 'd' || icf.a_customFuels[f].dynamic[0] != 'D' )
-			   newfuel.dynamic = 0;
-		   strncpy(newfuel.code, icf.a_customFuels[f].cr_code, 7);
-		   newfuel.sav1 = icf.a_customFuels[f].f_sl;
-		   newfuel.savlh = icf.a_customFuels[f].f_slh;
-		   newfuel.savlw = icf.a_customFuels[f].f_slw;
-		   strncpy(newfuel.desc, icf.a_customFuels[f].cr_comment, 255);
+    if ( strcmp (icf.cr_CFF,"" ))
+    {
+        ret = LoadCustomFuelFile(icf.cr_CFF);
+    }
+    //maybe it was embedded in inputs file...
+    else if(icf.iN_CustomFuels > 0 && icf.a_customFuels != NULL)
+    {
+        for(int f = 0; f < icf.iN_CustomFuels; f++)
+        {
+            NewFuel newfuel;
+            newfuel.number = icf.a_customFuels[f].i_Model;
+            newfuel.h1 = icf.a_customFuels[f].f_h1;
+            newfuel.h10 = icf.a_customFuels[f].f_h10;
+            newfuel.h100 = icf.a_customFuels[f].f_h100;
+            newfuel.lh = icf.a_customFuels[f].f_lh;
+            newfuel.lw = icf.a_customFuels[f].f_lw;
+            newfuel.depth = icf.a_customFuels[f].f_depth;
+            newfuel.xmext = icf.a_customFuels[f].f_xmext;
+            newfuel.heatd = icf.a_customFuels[f].f_heatd;
+            newfuel.heatl = icf.a_customFuels[f].f_heatl;
+            newfuel.dynamic = 1;
+            if(icf.a_customFuels[f].dynamic[0] != 'd' || icf.a_customFuels[f].dynamic[0] != 'D' )
+                newfuel.dynamic = 0;
+            strncpy(newfuel.code, icf.a_customFuels[f].cr_code, 7);
+            newfuel.sav1 = icf.a_customFuels[f].f_sl;
+            newfuel.savlh = icf.a_customFuels[f].f_slh;
+            newfuel.savlw = icf.a_customFuels[f].f_slw;
+            strncpy(newfuel.desc, icf.a_customFuels[f].cr_comment, 255);
 			newfuel.xmext/=100.0;
-		   if(icf.cr_CustFuelUnits[0] == 'M' || icf.cr_CustFuelUnits[0] == 'm')//inputs were metric
-		   {
+            if(icf.cr_CustFuelUnits[0] == 'M' || icf.cr_CustFuelUnits[0] == 'm')//inputs were metric
+            {
          		newfuel.h1/=2.2417;
-               newfuel.h10/=2.2417;
-               newfuel.h100/=2.2417;
-               newfuel.lh/=2.2417;
-               newfuel.lw/=2.2417;
-               newfuel.sav1*=30.480060960;
-               newfuel.savlh*=30.480060960;
-               newfuel.savlw*=30.480060960;
-               newfuel.depth/=30.480060960;
-               newfuel.heatd/=2.324375;
-               newfuel.heatl/=2.324375;
-		   }
-          SetNewFuel(&newfuel);
+                newfuel.h10/=2.2417;
+                newfuel.h100/=2.2417;
+                newfuel.lh/=2.2417;
+                newfuel.lw/=2.2417;
+                newfuel.sav1*=30.480060960;
+                newfuel.savlh*=30.480060960;
+                newfuel.savlw*=30.480060960;
+                newfuel.depth/=30.480060960;
+                newfuel.heatd/=2.324375;
+                newfuel.heatl/=2.324375;
+            }
+            SetNewFuel(&newfuel);
 
-	   }
-   }
-   //if(ret == 1)
+        }
+    }
+    //if(ret == 1)
 	//return CheckCustomFuelsCoverage();
-   return ret;
+    return ret;
 }
 
 int Farsite5::CheckCustomFuelsCoverage()
@@ -3126,12 +3127,12 @@ int Farsite5::CheckCustomFuelsCoverage()
 					{
 						sprintf(icf.cr_ErrExt, "Fuel %d undefined", fuel);
 						/*printf("Header Fuels: %ld\n", Header.numfuel);
-						for(int i = 0; i < Header.numfuel; i++)
-						{
-                                printf("%ld\n", Header.fuels[i]);
-                                getchar();
+                          for(int i = 0; i < Header.numfuel; i++)
+                          {
+                          printf("%ld\n", Header.fuels[i]);
+                          getchar();
 
-						}*/
+                          }*/
 						return e_EMS_FUEL_UNDEFINED;
 					}
 				}
@@ -3142,128 +3143,128 @@ int Farsite5::CheckCustomFuelsCoverage()
 }
 
 /*{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}
-* Name: LoadWind_Table
-* Desc: Load the wind table with either the original type wind data
-*        or the new RAWS data.
-*       There should always be one or the other type of wind data, which
-*        should have been previously checked.
-*   In: a_ICF....inputs file data
-*  Ret: < 0 error
-{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*/
+ * Name: LoadWind_Table
+ * Desc: Load the wind table with either the original type wind data
+ *        or the new RAWS data.
+ *       There should always be one or the other type of wind data, which
+ *        should have been previously checked.
+ *   In: a_ICF....inputs file data
+ *  Ret: < 0 error
+ {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*/
 int  Farsite5::LoadWind_Table (d_ICF *a_ICF)
 {
-int i;
-  if ( icf.iN_RAWS != 0 ) {
-    i = this->LoadWind_RAWS(a_ICF);
-    return i; }
+    int i;
+    if ( icf.iN_RAWS != 0 ) {
+        i = this->LoadWind_RAWS(a_ICF);
+        return i; }
 
-  if ( icf.iN_Wnd != 0 ) {
-    i = this->LoadWind_Regular(a_ICF);
-    return i; }
+    if ( icf.iN_Wnd != 0 ) {
+        i = this->LoadWind_Regular(a_ICF);
+        return i; }
 
 /* Should always be doing one of the above */
-  return 0;
+    return 0;
 }
 
 
 /*{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}
-* Name: LoadWind_Regular
-* Desc: Load the wind table with the original wind data from the inputs file.
-* NOTE: see the LoadWind_RAWS() function, it loads the RAWS wind data.
-*  Ret: see below
-{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
+ * Name: LoadWind_Regular
+ * Desc: Load the wind table with the original wind data from the inputs file.
+ * NOTE: see the LoadWind_RAWS() function, it loads the RAWS wind data.
+ *  Ret: see below
+ {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
 int Farsite5::LoadWind_Regular (d_ICF *a_ICF)
 {
-int i, i_Mth, iX;
-long  StationNumber;
-d_Wnd *aWDS;
+    int i, i_Mth, iX;
+    long  StationNumber;
+    d_Wnd *aWDS;
 
-  if ( icf.iN_Wnd <= 0 )
-    return 0;
+    if ( icf.iN_Wnd <= 0 )
+        return 0;
 
-  FreeWindData(0);
+    FreeWindData(0);
 
-  StationNumber = AllocWindData (0, icf.iN_Wnd+1);
-  if ( StationNumber < 0 )
-    return e_EMS_Aloc;
+    StationNumber = AllocWindData (0, icf.iN_Wnd+1);
+    if ( StationNumber < 0 )
+        return e_EMS_Aloc;
 
-  aWDS = icf.a_Wnd;
-  iX = -1;
+    aWDS = icf.a_Wnd;
+    iX = -1;
 
 /* Load data for each observation PLUS and then load an extra 13 mth using   */
 /*  the last observation's data                                              */
-  for ( i = 0; i <= icf.iN_Wnd; i++ ) {
-    if ( i == icf.iN_Wnd )              /* done with obsrvation data         */
-      i_Mth = 13;                       /* Set month to 13                   */
-    else {
-      iX++;                             /* each stored struct of obsvrd data */
-      i_Mth = aWDS[iX].i_Mth;
-     _WDSConver(&aWDS[iX],icf.cr_WiDU);}/* Do any needed unit conversion     */
+    for ( i = 0; i <= icf.iN_Wnd; i++ ) {
+        if ( i == icf.iN_Wnd )              /* done with obsrvation data         */
+            i_Mth = 13;                       /* Set month to 13                   */
+        else {
+            iX++;                             /* each stored struct of obsvrd data */
+            i_Mth = aWDS[iX].i_Mth;
+            _WDSConver(&aWDS[iX],icf.cr_WiDU);}/* Do any needed unit conversion     */
 
-    SetWindData(               /* Load into FlamMap class           */
-               StationNumber,           /*        long StationNumber         */
-               i,                       /*        long NumObs,               */
-               i_Mth,                   /* month, long month,                */
-               aWDS[iX].i_Day,          /*  (long) day,                      */
-               aWDS[iX].i_Year,
-               aWDS[iX].i_Hr,           /*  (long) hhour,                    */
-               aWDS[iX].f_Spd,          /*  (long) wss,                      */
-               aWDS[iX].i_Dir,          /*  (long) wwwinddir,                */
-               aWDS[iX].i_CloCov);      /*  (long) cloudcover)               */
+        SetWindData(               /* Load into FlamMap class           */
+            StationNumber,           /*        long StationNumber         */
+            i,                       /*        long NumObs,               */
+            i_Mth,                   /* month, long month,                */
+            aWDS[iX].i_Day,          /*  (long) day,                      */
+            aWDS[iX].i_Year,
+            aWDS[iX].i_Hr,           /*  (long) hhour,                    */
+            aWDS[iX].f_Spd,          /*  (long) wss,                      */
+            aWDS[iX].i_Dir,          /*  (long) wwwinddir,                */
+            aWDS[iX].i_CloCov);      /*  (long) cloudcover)               */
 
-  } /* for i */
-  return 1;
+    } /* for i */
+    return 1;
 }
 
 /*{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}
-* Name: LoadWind_RAWS
-* Desc: Load the wind table with the RAWS data from inputs file
-*  Ret: see below
-{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*/
+ * Name: LoadWind_RAWS
+ * Desc: Load the wind table with the RAWS data from inputs file
+ *  Ret: see below
+ {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*/
 int Farsite5::LoadWind_RAWS (d_ICF *a_ICF)
 {
-int i, i_Mth, iX;
-long  StationNumber;
-d_RAWS *a;
+    int i, i_Mth, iX;
+    long  StationNumber;
+    d_RAWS *a;
 
-  if ( icf.iN_RAWS <= 0 )
-    return 0;
+    if ( icf.iN_RAWS <= 0 )
+        return 0;
 
-  FreeWindData(0);
+    FreeWindData(0);
 
-  StationNumber = AllocWindData (0, icf.iN_RAWS+1);
-  if ( StationNumber < 0 )
-    return e_EMS_Aloc;
+    StationNumber = AllocWindData (0, icf.iN_RAWS+1);
+    if ( StationNumber < 0 )
+        return e_EMS_Aloc;
 
 /* Farsite will use this even though we don't load RAWS weather data into Farsite because */
 /*  all it realy needs is the wind/cloud data */
-  this->NumWeatherStations = 1;
+    this->NumWeatherStations = 1;
 
-  a = icf.a_RAWS;
-  iX = -1;
+    a = icf.a_RAWS;
+    iX = -1;
 
 /* Load data for each observation PLUS and then load an extra 13 mth using   */
 /*  the last observation's data                                              */
-  for ( i = 0; i <= icf.iN_RAWS; i++ ) {
-    if ( i == icf.iN_RAWS )              /* done with obsrvation data         */
-      i_Mth = 13;                       /* Set month to 13                   */
-    else {
-      iX++;                             /* each stored struct of obsvrd data */
-      i_Mth = a[iX].i_Mth; }
+    for ( i = 0; i <= icf.iN_RAWS; i++ ) {
+        if ( i == icf.iN_RAWS )              /* done with obsrvation data         */
+            i_Mth = 13;                       /* Set month to 13                   */
+        else {
+            iX++;                             /* each stored struct of obsvrd data */
+            i_Mth = a[iX].i_Mth; }
 
-   SetWindData(               /* Load into FlamMap class           */
-               StationNumber,           /*        long StationNumber         */
-               i,                       /*        long NumObs,               */
-               i_Mth,                   /* month, long month,                */
-               a[iX].i_Day,            /*  (long) day,                      */
-               a[iX].i_Yr,
-               a[iX].i_Time,           /*  (long) hhour,                    */
-               (long) a[iX].f_WinSpd,          /*  (long) wss,                      */
-               (long) a[iX].f_WinDir,          /*  (long) wwwinddir,                */
-               (long) a[iX].f_CloCov);      /*  (long) cloudcover)               */
+        SetWindData(               /* Load into FlamMap class           */
+            StationNumber,           /*        long StationNumber         */
+            i,                       /*        long NumObs,               */
+            i_Mth,                   /* month, long month,                */
+            a[iX].i_Day,            /*  (long) day,                      */
+            a[iX].i_Yr,
+            a[iX].i_Time,           /*  (long) hhour,                    */
+            (long) a[iX].f_WinSpd,          /*  (long) wss,                      */
+            (long) a[iX].f_WinDir,          /*  (long) wwwinddir,                */
+            (long) a[iX].f_CloCov);      /*  (long) cloudcover)               */
 
-  } /* for i */
-  return 1;
+    } /* for i */
+    return 1;
 }
 
 
@@ -3274,11 +3275,11 @@ void Farsite5::FreeWeatherData(long StationNumber)
 {
 	if(wtrdt[StationNumber])
 	{    delete[] wtrdt[StationNumber];
-          MaxWeatherObs[StationNumber]=0;
+        MaxWeatherObs[StationNumber]=0;
 		NumWeatherStations--;
 	}
 	wtrdt[StationNumber]=0;
-     FirstMonth[StationNumber].wtr=0;
+    FirstMonth[StationNumber].wtr=0;
 	LastMonth[StationNumber].wtr=0;
 	FirstDay[StationNumber].wtr=0;
 	LastDay[StationNumber].wtr=0;
@@ -3293,18 +3294,18 @@ void Farsite5::FreeWindData(long StationNumber)
 
 	if (wddt[StationNumber]) {
 // `est
-   /*for ( i = 0; i < MaxWindObs[StationNumber]; i++ )
-   {
-	   if(wddt[StationNumber][i].a_FWN != NULL)
-			DeleteWindGrids (wddt[StationNumber][i].a_FWN, wddt[StationNumber][i].iS_WN);
-   }*/
+        /*for ( i = 0; i < MaxWindObs[StationNumber]; i++ )
+          {
+          if(wddt[StationNumber][i].a_FWN != NULL)
+          DeleteWindGrids (wddt[StationNumber][i].a_FWN, wddt[StationNumber][i].iS_WN);
+          }*/
 
-   delete[] wddt[StationNumber];
+        delete[] wddt[StationNumber];
 	 	NumWindStations--;
-   MaxWindObs[StationNumber]=0;	}
+        MaxWindObs[StationNumber]=0;	}
 
 	wddt[StationNumber]=0;
- FirstMonth[StationNumber].wnd=0;
+    FirstMonth[StationNumber].wnd=0;
 	LastMonth[StationNumber].wnd=0;
 	FirstDay[StationNumber].wnd=0;
 	LastDay[StationNumber].wnd=0;
@@ -3344,39 +3345,39 @@ long Farsite5::AllocWeatherData(long StatNum, long NumObs)
 }
 
 /*{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}
-* Name: _WSConver
-* Desc: Do any needed conversion to english if the data comes in as
-*       metric...conversions were take directly from the existing
-*       FlamMap::LoadWeatherdFile()
-*   In: aWS.....weather stream struct
-*       cr......Unit
-{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
+ * Name: _WSConver
+ * Desc: Do any needed conversion to english if the data comes in as
+ *       metric...conversions were take directly from the existing
+ *       FlamMap::LoadWeatherdFile()
+ *   In: aWS.....weather stream struct
+ *       cr......Unit
+ {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
 void  Farsite5::_WSConver (d_Wtr *a, char cr[])
 {
-  if ( !strcasecmp (cr,"METRIC")){
-    // Metric units - convert to English
-    a->f_Per *= 3.93;                 /*  ppt  *= 3.93;     */
-    a->f_mT  *= 1.8;                  /*  Tmin *= 1.8;      */
-    a->f_mT  += 32;                   /*  Tmin += 32;       */
-    a->f_xT  *= 1.8;                  /*  Tmax *= 1.8;      */
-    a->f_xT  += 32;                   /*  Tmax += 32;       */
-    a->i_Elv *= 3.28; }               /*  elref *= 3.28;    */
+    if ( !strcasecmp (cr,"METRIC")){
+        // Metric units - convert to English
+        a->f_Per *= 3.93;                 /*  ppt  *= 3.93;     */
+        a->f_mT  *= 1.8;                  /*  Tmin *= 1.8;      */
+        a->f_mT  += 32;                   /*  Tmin += 32;       */
+        a->f_xT  *= 1.8;                  /*  Tmax *= 1.8;      */
+        a->f_xT  += 32;                   /*  Tmax += 32;       */
+        a->i_Elv *= 3.28; }               /*  elref *= 3.28;    */
 
 /* Not sure about this but it was done in FlamMap code                       */
-  if ( a->i_mH > 99 )                  /*  if ( Hmax > 99 )  */
-    a->i_mH = 99;                      /*    Hmax = 99;      */
-  if ( a->i_xH > 99 )                  /*  if ( Hmin > 99)   */
-   a->i_xH = 99;                       /*    Hmin = 99;      */
+    if ( a->i_mH > 99 )                  /*  if ( Hmax > 99 )  */
+        a->i_mH = 99;                      /*    Hmax = 99;      */
+    if ( a->i_xH > 99 )                  /*  if ( Hmin > 99)   */
+        a->i_xH = 99;                       /*    Hmin = 99;      */
 
 }
 /********************************************************************
-* Note-1, added year 4-11-12,
-*         this might come in handy at some point i put it in when
-*         I was added year to the wind and burnperiod recs.
-********************************************************************/
+ * Note-1, added year 4-11-12,
+ *         this might come in handy at some point i put it in when
+ *         I was added year to the wind and burnperiod recs.
+ ********************************************************************/
 long Farsite5::SetWeatherData(long StationNumber, long NumObs, long month, long day,
-	long year, double rain, long time1, long time2, double temp1, double temp2,
-	long humid1, long humid2, double elevation, long tr1, long tr2)
+                              long year, double rain, long time1, long time2, double temp1, double temp2,
+                              long humid1, long humid2, double elevation, long tr1, long tr2)
 {
 	if (NumObs < MaxWeatherObs[StationNumber])
 	{
@@ -3415,59 +3416,59 @@ long Farsite5::SetWeatherData(long StationNumber, long NumObs, long month, long 
 }
 
 /***************************************************************************
-* Name: AllocWindData
-* Desc: Allocate wind table records.
-*
-****************************************************************************/
+ * Name: AllocWindData
+ * Desc: Allocate wind table records.
+ *
+ ****************************************************************************/
 long Farsite5::AllocWindData(long StatNum, long NumObs)
 {
 	long StationNumber = StatNum;
 
 	if (wddt[StationNumber])	{
 	 	delete[] wddt[StationNumber];
-		 wddt[StationNumber] = 0;
-		 MaxWindObs[StatNum] = 0;}
+        wddt[StationNumber] = 0;
+        MaxWindObs[StatNum] = 0;}
 	else	{
-		 StationNumber = GetOpenWindStation();
-		 if (StationNumber < 5)
-			  NumWindStations = StationNumber + 1;	}
+        StationNumber = GetOpenWindStation();
+        if (StationNumber < 5)
+            NumWindStations = StationNumber + 1;	}
 
 	if (StationNumber < 5 && NumObs > 0)	{
 
-	 	 size_t nmemb = MaxWindObs[StationNumber] = NumObs;
+        size_t nmemb = MaxWindObs[StationNumber] = NumObs;
 // Original code, Not sure why that times 2 was there ?
 //	 	size_t nmemb = MaxWindObs[StationNumber] = NumObs * 2;			// alloc 2* number needed
 
-		  if ((wddt[StationNumber] = new WindData[nmemb]) == NULL)
-			   StationNumber = -1;
+        if ((wddt[StationNumber] = new WindData[nmemb]) == NULL)
+            StationNumber = -1;
 
 // WN-Test
-    for (size_t i = 0; i < nmemb; i++ )
-       wddt[StationNumber][i].a_FWN = NULL;
+        for (size_t i = 0; i < nmemb; i++ )
+            wddt[StationNumber][i].a_FWN = NULL;
 
-  }
+    }
 
 	else
-		 StationNumber = -1;
+        StationNumber = -1;
 
 	return StationNumber;
 }
 /*{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}
-* Name: _WDSConver
-* Desc: do wind speed conversion if data comes in as metric
-*
-*   In:
-*  Ret:
-{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
+ * Name: _WDSConver
+ * Desc: do wind speed conversion if data comes in as metric
+ *
+ *   In:
+ *  Ret:
+ {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
 void Farsite5::_WDSConver (d_Wnd *a, char cr[])
 {
-  if ( !strcasecmp (cr,"METRIC")) /* if Metric                                  */
-    a->f_Spd *= 0.5402;     /* (0.62125/1.15) 10m wind kph to 20ft wind mph*/
+    if ( !strcasecmp (cr,"METRIC")) /* if Metric                                  */
+        a->f_Spd *= 0.5402;     /* (0.62125/1.15) 10m wind kph to 20ft wind mph*/
 }
 
 
 long Farsite5::SetWindData(long StationNumber, long NumObs, long month, long day,
-	long year, long hour, double windspd, long winddir, long cloudy)
+                           long year, long hour, double windspd, long winddir, long cloudy)
 {
 	if (NumObs < MaxWindObs[StationNumber])
 	{
@@ -3608,7 +3609,7 @@ bool Farsite5::IsNewFuelReserved(long number)
 
 
 void Farsite5::GetCurrentFuelMoistures(long fuelmod, long woodymod, double* mxin,
-	double* mxout, long NumMx)
+                                       double* mxout, long NumMx)
 {
 	bool Combine;
 	long i, NumClasses = 0;
@@ -3782,93 +3783,93 @@ bool Farsite5::LoadAirCraft(char* FileName, bool AppendList)
 
 	if ((AirAttackFile = fopen(FileName, "r")) != NULL)
 	{
-		long i, j;
-		j = GetNumAirCraft();
-		if (!AppendList)
-		{
-			for (i = 0; i < j; i++)
-				FreeAirCraft(i);
-		}
-		ch[0] = getc(AirAttackFile);
-		do
-		{
-			memset(garbage, 0x0, sizeof(garbage));
-			fgets(garbage, 255, AirAttackFile);
-			if (feof(AirAttackFile))
-				break;
-			craftnumber = SetNewAirCraft();
-			if (craftnumber == -1)
-				return false;
-			aircraft[craftnumber] = GetAirCraft(craftnumber);
-			memset(aircraft[craftnumber]->AirCraftName, 0x0,
-				sizeof(aircraft[craftnumber]->AirCraftName));
-			strncpy(aircraft[craftnumber]->AirCraftName, garbage,
-				strlen(garbage) - 2);
+    long i, j;
+    j = GetNumAirCraft();
+    if (!AppendList)
+    {
+    for (i = 0; i < j; i++)
+    FreeAirCraft(i);
+    }
+    ch[0] = getc(AirAttackFile);
+    do
+    {
+    memset(garbage, 0x0, sizeof(garbage));
+    fgets(garbage, 255, AirAttackFile);
+    if (feof(AirAttackFile))
+    break;
+    craftnumber = SetNewAirCraft();
+    if (craftnumber == -1)
+    return false;
+    aircraft[craftnumber] = GetAirCraft(craftnumber);
+    memset(aircraft[craftnumber]->AirCraftName, 0x0,
+    sizeof(aircraft[craftnumber]->AirCraftName));
+    strncpy(aircraft[craftnumber]->AirCraftName, garbage,
+    strlen(garbage) - 2);
 
-			fgets(garbage, 255, AirAttackFile);
-			sscanf(garbage, "%s", str);
-			std::transform(str, str+strlen(str), str, toupper);
-			if (!strcmp(str, "METERS"))
-				aircraft[craftnumber]->Units = 0;
-			else if (!strcmp(str, "FEET"))
-				aircraft[craftnumber]->Units = 1;
-			else
-			{
-				//::MessageBox(HWindow, "Units Not 'Feet' or 'Meters'", "Error, Unrecognized Units", MB_OK);
-				aircraft[craftnumber]->Units = 0;    // default to meters
-			}
-			for (i = 0; i < 6; i++)
-			{
-				fgets(garbage, 255, AirAttackFile);
-				sscanf(garbage, "%ld %lf", &covlev, &patlen);
-				if (covlev < 99)
-				{
-					if (covlev > 0 && covlev < 5)
-						aircraft[craftnumber]->PatternLength[covlev - 1] = (long)
-							patlen;
-					else if (covlev == 6)
-						aircraft[craftnumber]->PatternLength[4] = (long)
-							patlen;
-					else if (covlev == 8)
-						aircraft[craftnumber]->PatternLength[5] = (long)
-							patlen;
-				}
-				else
-					break;
-			}
-			ch[0] = getc(AirAttackFile);
-			if ((toupper(ch[0])=='R') || (toupper(ch[0])=='C'))
-			{
-				fgets(garbage, 255, AirAttackFile);
-				sscanf(garbage, "%s %lf", str, &patlen);
-				std::transform(str, str+strlen(str), str, toupper) ;
-				if (!strcmp(str, "ETURN_TIME"))
-					aircraft[craftnumber]->ReturnTime = patlen;
-				else if (!strcmp(str, "OST"))
-					aircraft[craftnumber]->Cost = patlen;
-				ch[0] = getc(AirAttackFile);
-				if ((toupper(ch[0])=='R') || (toupper(ch[0])=='C'))
-				{
-					fgets(garbage, 255, AirAttackFile);
-					sscanf(garbage, "%s %lf", str, &patlen);
-					std::transform(str, str+strlen(str), str, toupper) ;
-					if (!strcmp(str, "ETURN_TIME"))
-						aircraft[craftnumber]->ReturnTime = patlen;
-					else if (!strcmp(str, "OST"))
-						aircraft[craftnumber]->Cost = patlen;
-					ch[0] = getc(AirAttackFile);
-				}
-			}
-			else // set return time and cost to unknown values
-			{
-				aircraft[craftnumber]->ReturnTime = 60.0;
-				aircraft[craftnumber]->Cost = 1000.0;
-			}
-		}
-		while (!feof(AirAttackFile));//strncmp(ch, "#", 1));  //(!feof(AirAttackFile));
-		fclose(AirAttackFile);
+    fgets(garbage, 255, AirAttackFile);
+    sscanf(garbage, "%s", str);
+    std::transform(str, str+strlen(str), str, toupper);
+    if (!strcmp(str, "METERS"))
+    aircraft[craftnumber]->Units = 0;
+    else if (!strcmp(str, "FEET"))
+    aircraft[craftnumber]->Units = 1;
+    else
+    {
+    //::MessageBox(HWindow, "Units Not 'Feet' or 'Meters'", "Error, Unrecognized Units", MB_OK);
+    aircraft[craftnumber]->Units = 0;    // default to meters
+    }
+    for (i = 0; i < 6; i++)
+    {
+    fgets(garbage, 255, AirAttackFile);
+    sscanf(garbage, "%ld %lf", &covlev, &patlen);
+    if (covlev < 99)
+    {
+    if (covlev > 0 && covlev < 5)
+    aircraft[craftnumber]->PatternLength[covlev - 1] = (long)
+    patlen;
+    else if (covlev == 6)
+    aircraft[craftnumber]->PatternLength[4] = (long)
+    patlen;
+    else if (covlev == 8)
+    aircraft[craftnumber]->PatternLength[5] = (long)
+    patlen;
+    }
+    else
+    break;
+    }
+    ch[0] = getc(AirAttackFile);
+    if ((toupper(ch[0])=='R') || (toupper(ch[0])=='C'))
+    {
+    fgets(garbage, 255, AirAttackFile);
+    sscanf(garbage, "%s %lf", str, &patlen);
+    std::transform(str, str+strlen(str), str, toupper) ;
+    if (!strcmp(str, "ETURN_TIME"))
+    aircraft[craftnumber]->ReturnTime = patlen;
+    else if (!strcmp(str, "OST"))
+    aircraft[craftnumber]->Cost = patlen;
+    ch[0] = getc(AirAttackFile);
+    if ((toupper(ch[0])=='R') || (toupper(ch[0])=='C'))
+    {
+    fgets(garbage, 255, AirAttackFile);
+    sscanf(garbage, "%s %lf", str, &patlen);
+    std::transform(str, str+strlen(str), str, toupper) ;
+    if (!strcmp(str, "ETURN_TIME"))
+    aircraft[craftnumber]->ReturnTime = patlen;
+    else if (!strcmp(str, "OST"))
+    aircraft[craftnumber]->Cost = patlen;
+    ch[0] = getc(AirAttackFile);
+    }
+    }
+    else // set return time and cost to unknown values
+    {
+    aircraft[craftnumber]->ReturnTime = 60.0;
+    aircraft[craftnumber]->Cost = 1000.0;
+    }
+    }
+    while (!feof(AirAttackFile));//strncmp(ch, "#", 1));  //(!feof(AirAttackFile));
+    fclose(AirAttackFile);
 
-		return true;
+    return true;
 	}*/
 
 	return false;
@@ -3925,7 +3926,7 @@ void Farsite5::SetNumAirAttacks(long NumAtk)
 }
 
 long Farsite5::SetupAirAttack(long AirCraftNumber, long CoverageLevel, long Duration,
-	double* startpoint)
+                              double* startpoint)
 {
 	long i;
 
@@ -3934,7 +3935,7 @@ long Farsite5::SetupAirAttack(long AirCraftNumber, long CoverageLevel, long Dura
 		if (NumAirAttacks == 0)
 		{
 			if ((FirstAirAttack = (AirAttackData *) calloc(1,
-														sizeof(AirAttackData))) !=
+                                                           sizeof(AirAttackData))) !=
 				NULL)
 			{
 				CurAirAttack = FirstAirAttack;
@@ -4226,23 +4227,23 @@ void Farsite5::WriteAirAttackLog(AirAttackData* atk)
 
 		if (atk->EffectiveDuration > 0.0)
 			fprintf(airatklog, "%s, %s %ld, %s %lf %s, %s %ld %s\n",
-				aircraft[atk->AirCraftNumber]->AirCraftName,
-				"Coverage Level:", covlevel, "Line Length:",
-				aircraft[atk->AirCraftNumber]->PatternLength[atk->CoverageLevel],
-				units, "Duration:", (long)
-				atk->EffectiveDuration, "mins");
+                    aircraft[atk->AirCraftNumber]->AirCraftName,
+                    "Coverage Level:", covlevel, "Line Length:",
+                    aircraft[atk->AirCraftNumber]->PatternLength[atk->CoverageLevel],
+                    units, "Duration:", (long)
+                    atk->EffectiveDuration, "mins");
 		else
 			fprintf(airatklog, "%s, %s %ld, %s %lf %s, %s\n",
-				aircraft[atk->AirCraftNumber]->AirCraftName,
-				"Coverage Level:", covlevel, "Line Length:",
-				aircraft[atk->AirCraftNumber]->PatternLength[atk->CoverageLevel],
-				units, "Duration: Unlimited");
+                    aircraft[atk->AirCraftNumber]->AirCraftName,
+                    "Coverage Level:", covlevel, "Line Length:",
+                    aircraft[atk->AirCraftNumber]->PatternLength[atk->CoverageLevel],
+                    units, "Duration: Unlimited");
 
 		fclose(airatklog);
 	}
 }
 long Farsite5::SetupGroupAirAttack(long AircraftNumber, long CoverageLevel,
-	long Duration, double* line, long FireNum, char* GroupName)
+                                   long Duration, double* line, long FireNum, char* GroupName)
 {
 	long i;
 	GroupAirAttack* gp;
@@ -4252,8 +4253,8 @@ long Farsite5::SetupGroupAirAttack(long AircraftNumber, long CoverageLevel,
 		if (NumGroupAttacks == 0)
 		{
 			if ((FirstGroupAttack = (GroupAttackData *)
-				calloc(1,
-					sizeof(GroupAttackData))) !=
+                 calloc(1,
+                        sizeof(GroupAttackData))) !=
 				NULL)
 				CurGroupAttack = FirstGroupAttack;
 			else
@@ -4268,7 +4269,7 @@ long Farsite5::SetupGroupAirAttack(long AircraftNumber, long CoverageLevel,
 	}
 
 	if ((NextGroupAttack = (GroupAttackData *) calloc(1,
-												sizeof(GroupAttackData))) !=
+                                                      sizeof(GroupAttackData))) !=
 		NULL)
 	{
 		NumGroupAttacks++;
@@ -4347,8 +4348,8 @@ void Farsite5::LoadGroupAttack(GroupAttackData gatk)
 		if (NumGroupAttacks == 0)
 		{
 			if ((FirstGroupAttack = (GroupAttackData *)
-				calloc(1,
-					sizeof(GroupAttackData))) !=
+                 calloc(1,
+                        sizeof(GroupAttackData))) !=
 				NULL)
 				CurGroupAttack = FirstGroupAttack;
 			else
@@ -4363,7 +4364,7 @@ void Farsite5::LoadGroupAttack(GroupAttackData gatk)
 	}
 
 	if ((NextGroupAttack = (GroupAttackData *) calloc(1,
-												sizeof(GroupAttackData))) !=
+                                                      sizeof(GroupAttackData))) !=
 		NULL)
 	{
 		NumGroupAttacks++;
@@ -4376,39 +4377,39 @@ void Farsite5::LoadGroupAttack(GroupAttackData gatk)
 			CurGroupAttack->IndirectLine = (double *)
 				calloc(4, sizeof(double));
 			memcpy(CurGroupAttack->IndirectLine, gatk.IndirectLine,
-				4 * sizeof(double));
+                   4 * sizeof(double));
 		}
 		else
 		{
 			CurGroupAttack->IndirectLine = (double *)
 				calloc(gatk.NumPoints * 2,
-														sizeof(double));
+                       sizeof(double));
 			memcpy(CurGroupAttack->IndirectLine, gatk.IndirectLine,
-				gatk.NumPoints * 2 * sizeof(double));
+                   gatk.NumPoints * 2 * sizeof(double));
 		}
 		CurGroupAttack->CoverageLevel = (long *) calloc(gatk.NumTotalAircraft,
-													sizeof(long));
+                                                        sizeof(long));
 		CurGroupAttack->EffectiveDuration = (long *)
 			calloc(gatk.NumTotalAircraft,
-														sizeof(long));
+                   sizeof(long));
 		CurGroupAttack->AircraftNumber = (long *)
 			calloc(gatk.NumTotalAircraft,
-													sizeof(long));
+                   sizeof(long));
 		CurGroupAttack->WaitTime = (double *) calloc(gatk.NumTotalAircraft,
-												sizeof(double));
+                                                     sizeof(double));
 		memcpy(CurGroupAttack->CoverageLevel, gatk.CoverageLevel,
-			gatk.NumCurrentAircraft * sizeof(long));
+               gatk.NumCurrentAircraft * sizeof(long));
 		memcpy(CurGroupAttack->EffectiveDuration, gatk.EffectiveDuration,
-			gatk.NumCurrentAircraft * sizeof(long));
+               gatk.NumCurrentAircraft * sizeof(long));
 		memcpy(CurGroupAttack->AircraftNumber, gatk.AircraftNumber,
-			gatk.NumCurrentAircraft * sizeof(long));
+               gatk.NumCurrentAircraft * sizeof(long));
 		memcpy(CurGroupAttack->WaitTime, gatk.WaitTime,
-			gatk.NumCurrentAircraft * sizeof(double));
+               gatk.NumCurrentAircraft * sizeof(double));
 		CurGroupAttack->NumTotalAircraft = gatk.NumTotalAircraft;
 		CurGroupAttack->NumCurrentAircraft = gatk.NumCurrentAircraft;
 		CurGroupAttack->Suspended = gatk.Suspended;
 		memcpy(CurGroupAttack->GroupName, gatk.GroupName,
-			256 * sizeof(char));
+               256 * sizeof(char));
 		CurGroupAttack->NumPoints = gatk.NumPoints;
 		CurGroupAttack->FireNumber = gatk.FireNumber;
 	}
@@ -4482,7 +4483,7 @@ GroupAttackData* Farsite5::GetGroupAttackByOrder(long OrdinalAttackNumber)
 
 
 GroupAttackData* Farsite5::GetGroupAttackForFireNumber(long NumFire,
-	long StartAttackNum, long* LastAttackNumber)
+                                                       long StartAttackNum, long* LastAttackNumber)
 {
 	for (long i = 0; i < NumGroupAttacks; i++)
 	{
@@ -4683,7 +4684,7 @@ void Farsite5::FreeFireRing(long RingNum)
 				delete[] CurRing->firering[curplace].mergepoints;
 			CurRing->firering[curplace].mergepoints = 0;
 			CurRing->firering[curplace].OriginalFireNumber = -(CurRing->firering[curplace].OriginalFireNumber +
-				1);
+                                                               1);
 		}
 		catch (...)
 		{
@@ -4698,15 +4699,15 @@ FireRing* Farsite5::GetRing(long RingNum)
 	double Ring;
 
 	if (RingNum < 0) //original JAS!
-	//if (RingNum <= 0)   //Modified JAS!
+        //if (RingNum <= 0)   //Modified JAS!
 		return (FireRing *) NULL;
 
 	modf(((double) RingNum / (double) RINGS_PER_STRUCT), &Ring);
 	ThisRing = (long) Ring;
 	curplace = RingNum - ThisRing * RINGS_PER_STRUCT;//-1;
-        CurRing->StructNum = 0;  //added JAS!
+    CurRing->StructNum = 0;  //added JAS!
 
-        if (CurRing->StructNum != ThisRing)
+    if (CurRing->StructNum != ThisRing)
 	{
 		CurRing = FirstRing;
 		for (i = 0; i < ThisRing; i++)
@@ -4788,7 +4789,7 @@ void Farsite5::CondenseRings(long RingNum)
 					continue;
 				if (ring2->perimpoints)
 				{
-                                     //TotalPts = ring2->NumPoints[ring2->NumFires - 1];
+                    //TotalPts = ring2->NumPoints[ring2->NumFires - 1];
 					ring1->perimpoints = ring2->perimpoints;
 					ring1->NumPoints = ring2->NumPoints;
 					ring2->perimpoints = 0;
@@ -4891,8 +4892,8 @@ long Farsite5::GetNumRings()
 }
 
 bool Farsite5::AddToCurrentFireRing(FireRing* firering, long PointNum,
-	long SurfFuelType, long WoodyModel, double DuffLoad, double* mx,
-	double CrownLoadingBurned)
+                                    long SurfFuelType, long WoodyModel, double DuffLoad, double* mx,
+                                    double CrownLoadingBurned)
 {
 	if (!firering)
 		return false;
@@ -5003,7 +5004,7 @@ void Farsite5::FreeAllCoarseWoody()
 }
 
 bool Farsite5::SetWoodyData(long ModelNumber, long ClassNumber, WoodyData* wd,
-	long units)
+                            long units)
 {
 	if (ModelNumber > MAXNUM_COARSEWOODY_MODELS - 1)
 		return false;
@@ -5016,7 +5017,7 @@ bool Farsite5::SetWoodyData(long ModelNumber, long ClassNumber, WoodyData* wd,
 
 	//coarsewoody[ModelNumber-1].TotalWeight=0.0;
 	memcpy(&coarsewoody[ModelNumber - 1].wd[ClassNumber], wd,
-		sizeof(WoodyData));
+           sizeof(WoodyData));
 	coarsewoody[ModelNumber - 1].Units = units;
 	//for(i=0; i<=ClassNumber; i++)
 	Total = coarsewoody[ModelNumber - 1].TotalWeight + wd[0].Load;//coarsewoody[ModelNumber-1].wd[i];
@@ -5038,7 +5039,7 @@ bool Farsite5::SetWoodyDataDepth(long ModelNumber, double depth, const char* Des
 
 	coarsewoody[ModelNumber - 1].Depth = depth;
 	memcpy(coarsewoody[ModelNumber - 1].Description, Description,
-		64 * sizeof(char));
+           64 * sizeof(char));
 
 	return true;
 }
@@ -5079,7 +5080,7 @@ bool Farsite5::SetNFFLWoody()
 				NULL)
 				return false;
 			//ZeroMemory(NFFLWoody[i].wd,NFFLWoody[i].NumClasses * sizeof(WoodyData));
-                       	memset(NFFLWoody[i].wd,0x0,NFFLWoody[i].NumClasses * sizeof(WoodyData));
+            memset(NFFLWoody[i].wd,0x0,NFFLWoody[i].NumClasses * sizeof(WoodyData));
 			k = 0;
 			if (newfuels[i + 1].h1 > 0.0)
 			{
@@ -5123,244 +5124,244 @@ bool Farsite5::SetNFFLWoody()
 
 	/*
 	// fuel model 1
-		NFFLWoody[i].NumClasses=3;
-		 NFFLWoody[i].Depth=1.0;
-		 NFFLWoody[i].Units=1;
+    NFFLWoody[i].NumClasses=3;
+    NFFLWoody[i].Depth=1.0;
+    NFFLWoody[i].Units=1;
 	//     if((NFFLWoody[i].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
-		 if((NFFLWoody[i].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
-		 	return false;
+    if((NFFLWoody[i].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
+    return false;
 //		 ZeroMemory(NFFLWoody[i].wd, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 memset(NFFLWoody[i].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 NFFLWoody[i].wd[0].SurfaceAreaToVolume=3500.0;
-		 NFFLWoody[i].wd[0].Load=0.74;
-		 NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
-		 NFFLWoody[i].wd[1].Load=0.0;
-		 NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
-		 NFFLWoody[i++].wd[2].Load=0.0;
-	// fuel model 2
-		NFFLWoody[i].NumClasses=4;
-		 NFFLWoody[i].Depth=1.0;
-		 NFFLWoody[i].Units=1;
-	//     if((NFFLWoody[1].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
-		 if((NFFLWoody[1].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
-		 	return false;
-	//     if((NFFLWoody[1].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
+memset(NFFLWoody[i].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
+NFFLWoody[i].wd[0].SurfaceAreaToVolume=3500.0;
+NFFLWoody[i].wd[0].Load=0.74;
+NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
+NFFLWoody[i].wd[1].Load=0.0;
+NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
+NFFLWoody[i++].wd[2].Load=0.0;
+// fuel model 2
+NFFLWoody[i].NumClasses=4;
+NFFLWoody[i].Depth=1.0;
+NFFLWoody[i].Units=1;
+//     if((NFFLWoody[1].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
+if((NFFLWoody[1].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
+return false;
+//     if((NFFLWoody[1].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
 //		 ZeroMemory(NFFLWoody[1].wd, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 memset(NFFLWoody[1].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 NFFLWoody[i].wd[0].SurfaceAreaToVolume=3000.0;
-		 NFFLWoody[i].wd[0].Load=2.00;
-		 NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
-		 NFFLWoody[i].wd[1].Load=1.00;
-		 NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
-		 NFFLWoody[i].wd[2].Load=0.50;
-		 NFFLWoody[i].wd[3].SurfaceAreaToVolume=1500.0;
-		 NFFLWoody[i++].wd[3].Load=0.50;
-	// fuel model 3
-		NFFLWoody[i].NumClasses=3;
-		 NFFLWoody[i].Depth=2.5;
-		 NFFLWoody[i].Units=1;
-	//     if((NFFLWoody[2].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
-	//     if((NFFLWoody[2].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
-		 if((NFFLWoody[2].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
-		 	return false;
+memset(NFFLWoody[1].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
+NFFLWoody[i].wd[0].SurfaceAreaToVolume=3000.0;
+NFFLWoody[i].wd[0].Load=2.00;
+NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
+NFFLWoody[i].wd[1].Load=1.00;
+NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
+NFFLWoody[i].wd[2].Load=0.50;
+NFFLWoody[i].wd[3].SurfaceAreaToVolume=1500.0;
+NFFLWoody[i++].wd[3].Load=0.50;
+// fuel model 3
+NFFLWoody[i].NumClasses=3;
+NFFLWoody[i].Depth=2.5;
+NFFLWoody[i].Units=1;
+//     if((NFFLWoody[2].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
+//     if((NFFLWoody[2].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
+if((NFFLWoody[2].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
+return false;
 //		 ZeroMemory(NFFLWoody[2].wd, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 memset(NFFLWoody[2].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 NFFLWoody[i].wd[0].SurfaceAreaToVolume=1500.0;
-		 NFFLWoody[i].wd[0].Load=3.01;
-		 NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
-		 NFFLWoody[i].wd[1].Load=0.0;
-		 NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
-		 NFFLWoody[i++].wd[2].Load=0.0;
-	// fuel model 4
-		NFFLWoody[i].NumClasses=4;
-		 NFFLWoody[i].Depth=6.0;
-		 NFFLWoody[i].Units=1;
-	//     if((NFFLWoody[3].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
-	//     if((NFFLWoody[3].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
-	//     	return false;
-		 if((NFFLWoody[3].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
-		 	return false;
+memset(NFFLWoody[2].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
+NFFLWoody[i].wd[0].SurfaceAreaToVolume=1500.0;
+NFFLWoody[i].wd[0].Load=3.01;
+NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
+NFFLWoody[i].wd[1].Load=0.0;
+NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
+NFFLWoody[i++].wd[2].Load=0.0;
+// fuel model 4
+NFFLWoody[i].NumClasses=4;
+NFFLWoody[i].Depth=6.0;
+NFFLWoody[i].Units=1;
+//     if((NFFLWoody[3].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
+//     if((NFFLWoody[3].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
+//     	return false;
+if((NFFLWoody[3].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
+return false;
 //		 ZeroMemory(NFFLWoody[3].wd, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 memset(NFFLWoody[3].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 NFFLWoody[i].wd[0].SurfaceAreaToVolume=2000.0;
-		 NFFLWoody[i].wd[0].Load=5.01;
-		 NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
-		 NFFLWoody[i].wd[1].Load=4.01;
-		 NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
-		 NFFLWoody[i].wd[2].Load=2.00;
-		 NFFLWoody[i].wd[3].SurfaceAreaToVolume=1500.0;
-		 NFFLWoody[i++].wd[3].Load=5.01;
-	// fuel model 5
-		NFFLWoody[i].NumClasses=4;
-		 NFFLWoody[i].Depth=2.0;
-		 NFFLWoody[i].Units=1;
-	//     if((NFFLWoody[4].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
-	//     if((NFFLWoody[4].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
-	//     	return false;
-		 if((NFFLWoody[4].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
-		 	return false;
+memset(NFFLWoody[3].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
+NFFLWoody[i].wd[0].SurfaceAreaToVolume=2000.0;
+NFFLWoody[i].wd[0].Load=5.01;
+NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
+NFFLWoody[i].wd[1].Load=4.01;
+NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
+NFFLWoody[i].wd[2].Load=2.00;
+NFFLWoody[i].wd[3].SurfaceAreaToVolume=1500.0;
+NFFLWoody[i++].wd[3].Load=5.01;
+// fuel model 5
+NFFLWoody[i].NumClasses=4;
+NFFLWoody[i].Depth=2.0;
+NFFLWoody[i].Units=1;
+//     if((NFFLWoody[4].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
+//     if((NFFLWoody[4].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
+//     	return false;
+if((NFFLWoody[4].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
+return false;
 //		 ZeroMemory(NFFLWoody[4].wd, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 memset(NFFLWoody[4].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 NFFLWoody[i].wd[0].SurfaceAreaToVolume=2000.0;
-		 NFFLWoody[i].wd[0].Load=1.00;
-		 NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
-		 NFFLWoody[i].wd[1].Load=0.5;
-		 NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
-		 NFFLWoody[i].wd[2].Load=0.00;
-		 NFFLWoody[i].wd[3].SurfaceAreaToVolume=1500.0;
-		 NFFLWoody[i++].wd[3].Load=2.00;
-	// fuel model 6
-		NFFLWoody[i].NumClasses=3;
-		 NFFLWoody[i].Depth=2.5;
-		 NFFLWoody[i].Units=1;
-	//     if((NFFLWoody[5].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
-	//     if((NFFLWoody[5].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
-	//     	return false;
-		 if((NFFLWoody[5].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
-		 	return false;
+memset(NFFLWoody[4].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
+NFFLWoody[i].wd[0].SurfaceAreaToVolume=2000.0;
+NFFLWoody[i].wd[0].Load=1.00;
+NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
+NFFLWoody[i].wd[1].Load=0.5;
+NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
+NFFLWoody[i].wd[2].Load=0.00;
+NFFLWoody[i].wd[3].SurfaceAreaToVolume=1500.0;
+NFFLWoody[i++].wd[3].Load=2.00;
+// fuel model 6
+NFFLWoody[i].NumClasses=3;
+NFFLWoody[i].Depth=2.5;
+NFFLWoody[i].Units=1;
+//     if((NFFLWoody[5].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
+//     if((NFFLWoody[5].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
+//     	return false;
+if((NFFLWoody[5].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
+return false;
 //		 ZeroMemory(NFFLWoody[5].wd, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 memset(NFFLWoody[5].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 NFFLWoody[i].wd[0].SurfaceAreaToVolume=1750.0;
-		 NFFLWoody[i].wd[0].Load=1.50;
-		 NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
-		 NFFLWoody[i].wd[1].Load=2.5;
-		 NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
-		 NFFLWoody[i++].wd[2].Load=2.0;
-	// fuel model 7
-		NFFLWoody[i].NumClasses=4;
-		 NFFLWoody[i].Depth=2.5;
-		 NFFLWoody[i].Units=1;
-	//     if((NFFLWoody[6].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
-	//     if((NFFLWoody[6].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
-	//     	return false;
-		 if((NFFLWoody[6].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
-		 	return false;
+memset(NFFLWoody[5].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
+NFFLWoody[i].wd[0].SurfaceAreaToVolume=1750.0;
+NFFLWoody[i].wd[0].Load=1.50;
+NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
+NFFLWoody[i].wd[1].Load=2.5;
+NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
+NFFLWoody[i++].wd[2].Load=2.0;
+// fuel model 7
+NFFLWoody[i].NumClasses=4;
+NFFLWoody[i].Depth=2.5;
+NFFLWoody[i].Units=1;
+//     if((NFFLWoody[6].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
+//     if((NFFLWoody[6].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
+//     	return false;
+if((NFFLWoody[6].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
+return false;
 //		 ZeroMemory(NFFLWoody[6].wd, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 memset(NFFLWoody[6].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 NFFLWoody[i].wd[0].SurfaceAreaToVolume=1750.0;
-		 NFFLWoody[i].wd[0].Load=1.13;
-		 NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
-		 NFFLWoody[i].wd[1].Load=1.87;
-		 NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
-		 NFFLWoody[i].wd[2].Load=1.5;
-		 NFFLWoody[i].wd[3].SurfaceAreaToVolume=1500.0;
-		 NFFLWoody[i++].wd[3].Load=0.37;
-	// fuel model 8
-		NFFLWoody[i].NumClasses=3;
-		 NFFLWoody[i].Depth=0.2;
-		 NFFLWoody[i].Units=1;
-	//     if((NFFLWoody[7].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
-	//     if((NFFLWoody[7].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
-	//     	return false;
-		 if((NFFLWoody[7].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
-		 	return false;
+memset(NFFLWoody[6].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
+NFFLWoody[i].wd[0].SurfaceAreaToVolume=1750.0;
+NFFLWoody[i].wd[0].Load=1.13;
+NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
+NFFLWoody[i].wd[1].Load=1.87;
+NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
+NFFLWoody[i].wd[2].Load=1.5;
+NFFLWoody[i].wd[3].SurfaceAreaToVolume=1500.0;
+NFFLWoody[i++].wd[3].Load=0.37;
+// fuel model 8
+NFFLWoody[i].NumClasses=3;
+NFFLWoody[i].Depth=0.2;
+NFFLWoody[i].Units=1;
+//     if((NFFLWoody[7].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
+//     if((NFFLWoody[7].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
+//     	return false;
+if((NFFLWoody[7].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
+return false;
 //		 ZeroMemory(NFFLWoody[7].wd, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 memset(NFFLWoody[7].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 NFFLWoody[i].wd[0].SurfaceAreaToVolume=2000.0;
-		 NFFLWoody[i].wd[0].Load=1.50;
-		 NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
-		 NFFLWoody[i].wd[1].Load=1.00;
-		 NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
-		 NFFLWoody[i++].wd[2].Load=2.5;
-	// fuel model 9
-		NFFLWoody[i].NumClasses=3;
-		 NFFLWoody[i].Depth=0.2;
-		 NFFLWoody[i].Units=1;
-	//     if((NFFLWoody[8].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
-	//     if((NFFLWoody[8].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
-	//     	return false;
-		 if((NFFLWoody[8].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
-		 	return false;
+memset(NFFLWoody[7].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
+NFFLWoody[i].wd[0].SurfaceAreaToVolume=2000.0;
+NFFLWoody[i].wd[0].Load=1.50;
+NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
+NFFLWoody[i].wd[1].Load=1.00;
+NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
+NFFLWoody[i++].wd[2].Load=2.5;
+// fuel model 9
+NFFLWoody[i].NumClasses=3;
+NFFLWoody[i].Depth=0.2;
+NFFLWoody[i].Units=1;
+//     if((NFFLWoody[8].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
+//     if((NFFLWoody[8].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
+//     	return false;
+if((NFFLWoody[8].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
+return false;
 //		 ZeroMemory(NFFLWoody[8].wd, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 memset(NFFLWoody[8].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 NFFLWoody[i].wd[0].SurfaceAreaToVolume=2500.0;
-		 NFFLWoody[i].wd[0].Load=2.92;
-		 NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
-		 NFFLWoody[i].wd[1].Load=0.41;
-		 NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
-		 NFFLWoody[i++].wd[2].Load=0.15;
-	// fuel model 10
-		NFFLWoody[i].NumClasses=4;
-		 NFFLWoody[i].Depth=1.0;
-		 NFFLWoody[i].Units=1;
-	//     if((NFFLWoody[9].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
-	//     if((NFFLWoody[9].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
-	//     	return false;
-		 if((NFFLWoody[9].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
-		 	return false;
+memset(NFFLWoody[8].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
+NFFLWoody[i].wd[0].SurfaceAreaToVolume=2500.0;
+NFFLWoody[i].wd[0].Load=2.92;
+NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
+NFFLWoody[i].wd[1].Load=0.41;
+NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
+NFFLWoody[i++].wd[2].Load=0.15;
+// fuel model 10
+NFFLWoody[i].NumClasses=4;
+NFFLWoody[i].Depth=1.0;
+NFFLWoody[i].Units=1;
+//     if((NFFLWoody[9].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
+//     if((NFFLWoody[9].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
+//     	return false;
+if((NFFLWoody[9].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
+return false;
 //		 ZeroMemory(NFFLWoody[9].wd, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 memset(NFFLWoody[9].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 NFFLWoody[i].wd[0].SurfaceAreaToVolume=2000.0;
-		 NFFLWoody[i].wd[0].Load=3.01;
-		 NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
-		 NFFLWoody[i].wd[1].Load=2.0;
-		 NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
-		 NFFLWoody[i].wd[2].Load=5.01;
-		 NFFLWoody[i].wd[3].SurfaceAreaToVolume=1500.0;
-		 NFFLWoody[i++].wd[3].Load=2.00;
-	// fuel model 11
-		NFFLWoody[i].NumClasses=3;
-		 NFFLWoody[i].Depth=1.0;
-		 NFFLWoody[i].Units=1;
-	//     if((NFFLWoody[10].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
-	//     if((NFFLWoody[10].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
-	//     	return false;
-		 if((NFFLWoody[10].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
-		 	return false;
+memset(NFFLWoody[9].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
+NFFLWoody[i].wd[0].SurfaceAreaToVolume=2000.0;
+NFFLWoody[i].wd[0].Load=3.01;
+NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
+NFFLWoody[i].wd[1].Load=2.0;
+NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
+NFFLWoody[i].wd[2].Load=5.01;
+NFFLWoody[i].wd[3].SurfaceAreaToVolume=1500.0;
+NFFLWoody[i++].wd[3].Load=2.00;
+// fuel model 11
+NFFLWoody[i].NumClasses=3;
+NFFLWoody[i].Depth=1.0;
+NFFLWoody[i].Units=1;
+//     if((NFFLWoody[10].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
+//     if((NFFLWoody[10].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
+//     	return false;
+if((NFFLWoody[10].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
+return false;
 //		 ZeroMemory(NFFLWoody[10].wd, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 memset(NFFLWoody[10].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 NFFLWoody[i].wd[0].SurfaceAreaToVolume=1500.0;
-		 NFFLWoody[i].wd[0].Load=1.50;
-		 NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
-		 NFFLWoody[i].wd[1].Load=4.51;
-		 NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
-		 NFFLWoody[i++].wd[2].Load=5.51;
-	// fuel model 12
-		NFFLWoody[i].NumClasses=3;
-		 NFFLWoody[i].Depth=2.3;
-		 NFFLWoody[i].Units=1;
-	//     if((NFFLWoody[11].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
-	//     if((NFFLWoody[11].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
-	//     	return false;
-		 if((NFFLWoody[11].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
-		 	return false;
+memset(NFFLWoody[10].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
+NFFLWoody[i].wd[0].SurfaceAreaToVolume=1500.0;
+NFFLWoody[i].wd[0].Load=1.50;
+NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
+NFFLWoody[i].wd[1].Load=4.51;
+NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
+NFFLWoody[i++].wd[2].Load=5.51;
+// fuel model 12
+NFFLWoody[i].NumClasses=3;
+NFFLWoody[i].Depth=2.3;
+NFFLWoody[i].Units=1;
+//     if((NFFLWoody[11].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
+//     if((NFFLWoody[11].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
+//     	return false;
+if((NFFLWoody[11].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
+return false;
 //		 ZeroMemory(NFFLWoody[11].wd, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 memset(NFFLWoody[11].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 NFFLWoody[i].wd[0].SurfaceAreaToVolume=1500.0;
-		 NFFLWoody[i].wd[0].Load=4.01;
-		 NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
-		 NFFLWoody[i].wd[1].Load=14.03;
-		 NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
-		 NFFLWoody[i++].wd[2].Load=16.53;
-	// fuel model 13
-		NFFLWoody[i].NumClasses=3;
-		 NFFLWoody[i].Depth=3.0;
-		 NFFLWoody[i].Units=1;
-	//     if((NFFLWoody[12].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
-	//     if((NFFLWoody[12].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
-	//     	return false;
-		 if((NFFLWoody[12].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
-		 	return false;
+memset(NFFLWoody[11].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
+NFFLWoody[i].wd[0].SurfaceAreaToVolume=1500.0;
+NFFLWoody[i].wd[0].Load=4.01;
+NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
+NFFLWoody[i].wd[1].Load=14.03;
+NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
+NFFLWoody[i++].wd[2].Load=16.53;
+// fuel model 13
+NFFLWoody[i].NumClasses=3;
+NFFLWoody[i].Depth=3.0;
+NFFLWoody[i].Units=1;
+//     if((NFFLWoody[12].wd=(WoodyData *) calloc(NFFLWoody[i].NumClasses, sizeof(WoodyData)))==NULL)
+//     if((NFFLWoody[12].wd=(WoodyData *) GlobalAlloc(GMEM_FIXED |  GMEM_ZEROINIT, NFFLWoody[i].NumClasses*sizeof(WoodyData)))==NULL)
+//     	return false;
+if((NFFLWoody[12].wd=new WoodyData[NFFLWoody[i].NumClasses])==NULL)
+return false;
 //		 ZeroMemory(NFFLWoody[12].wd, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 memset(NFFLWoody[12].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
-		 NFFLWoody[i].wd[0].SurfaceAreaToVolume=1500.0;
-		 NFFLWoody[i].wd[0].Load=7.01;
-		 NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
-		 NFFLWoody[i].wd[1].Load=23.04;
-		 NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
-		 NFFLWoody[i].wd[2].Load=28.05;
-		 long j;
-		 // convert all to metric
-		 for(i=0; i<13; i++)
-		 {	NFFLWoody[i].Depth/=3.280839895;
-		 	for(j=0; j<NFFLWoody[i].NumClasses; j++)
-			  {	NFFLWoody[i].wd[j].SurfaceAreaToVolume*=3.280839895;
-			  	NFFLWoody[i].wd[j].Load*=0.224169061;
-				   NFFLWoody[i].wd[j].HeatContent=8000.0*2.32599;
-				   NFFLWoody[i].wd[j].Density=513.0;
-				   NFFLWoody[i].TotalWeight+=NFFLWoody[i].wd[j].Load;
-			  }
-		 }
+memset(NFFLWoody[12].wd,0x0, NFFLWoody[i].NumClasses*sizeof(WoodyData));
+NFFLWoody[i].wd[0].SurfaceAreaToVolume=1500.0;
+NFFLWoody[i].wd[0].Load=7.01;
+NFFLWoody[i].wd[1].SurfaceAreaToVolume=109.0;
+NFFLWoody[i].wd[1].Load=23.04;
+NFFLWoody[i].wd[2].SurfaceAreaToVolume=30.0;
+NFFLWoody[i].wd[2].Load=28.05;
+long j;
+// convert all to metric
+for(i=0; i<13; i++)
+{	NFFLWoody[i].Depth/=3.280839895;
+for(j=0; j<NFFLWoody[i].NumClasses; j++)
+{	NFFLWoody[i].wd[j].SurfaceAreaToVolume*=3.280839895;
+NFFLWoody[i].wd[j].Load*=0.224169061;
+NFFLWoody[i].wd[j].HeatContent=8000.0*2.32599;
+NFFLWoody[i].wd[j].Density=513.0;
+NFFLWoody[i].TotalWeight+=NFFLWoody[i].wd[j].Load;
+}
+}
 	*/
 	return true;
 }
@@ -5381,14 +5382,14 @@ double Farsite5::GetWoodyFuelMoisture(long ModelNumber, long SizeClass)
 long Farsite5::GetWoodyDataUnits(long ModelNumber, char* Description)
 {
 	memcpy(Description, coarsewoody[ModelNumber - 1].Description,
-		64 * sizeof(char));
+           64 * sizeof(char));
 
 	return coarsewoody[ModelNumber - 1].Units;
 }
 
 
 void Farsite5::GetWoodyData(long WoodyModelNumber, long SurfModelNumber,
-	long* NumClasses, WoodyData* woody, double* depth, double* load)
+                            long* NumClasses, WoodyData* woody, double* depth, double* load)
 {
 	bool Combine = false;
 
@@ -5421,7 +5422,7 @@ void Farsite5::GetWoodyData(long WoodyModelNumber, long SurfModelNumber,
 			*depth = NFFLWoody[SurfModelNumber - 1].Depth; //tempwoody.Depth=
 			*load = NFFLWoody[SurfModelNumber - 1].TotalWeight;//tempwoody.TotalWeight=
 			memcpy(woody, NFFLWoody[SurfModelNumber - 1].wd,
-				NFFLWoody[SurfModelNumber - 1].NumClasses * sizeof(WoodyData));
+                   NFFLWoody[SurfModelNumber - 1].NumClasses * sizeof(WoodyData));
 		}
 		else if (SurfModelNumber > 0)
 		{
@@ -5480,8 +5481,8 @@ void Farsite5::GetWoodyData(long WoodyModelNumber, long SurfModelNumber,
 		if (coarsewoody[WoodyModelNumber - 1].wd)
 		{
 			memcpy(&woody[*NumClasses],
-				coarsewoody[WoodyModelNumber - 1].wd,
-				coarsewoody[WoodyModelNumber - 1].NumClasses * sizeof(WoodyData));
+                   coarsewoody[WoodyModelNumber - 1].wd,
+                   coarsewoody[WoodyModelNumber - 1].NumClasses * sizeof(WoodyData));
 			*NumClasses += coarsewoody[WoodyModelNumber - 1].NumClasses;
 			*depth = coarsewoody[WoodyModelNumber - 1].Depth;
 			*load += coarsewoody[WoodyModelNumber - 1].TotalWeight;
@@ -5554,8 +5555,8 @@ void Farsite5::ResetFuelConversions()
 	long i;
 
 	for (i = 0;
-		i < 257;
-		i++)   		  		// could also read default file here
+         i < 257;
+         i++)   		  		// could also read default file here
 		fuelconversion.Type[i] = i;
 	fuelconversion.Type[0] = -1;
 	for (i = 91; i < 100; i++)
@@ -5567,15 +5568,15 @@ void Farsite5::ResetFuelConversions()
 void Farsite5::ResetCustomFuelModels()
 {
 	/*
-		long Changes;
-		for(Changes=0; Changes<9; Changes++)
-			FuelMod.OrderToFuel[Changes]=0;
-		for(Changes=0; Changes<37; Changes++)
-		{	SetFuel(Changes, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "");
-			FuelMod.ModelIsHere[Changes]=false;
-		}
-		FuelMod.NumChanges=0;
-		HAVE_CUST_MODELS=false;
+      long Changes;
+      for(Changes=0; Changes<9; Changes++)
+      FuelMod.OrderToFuel[Changes]=0;
+      for(Changes=0; Changes<37; Changes++)
+      {	SetFuel(Changes, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "");
+      FuelMod.ModelIsHere[Changes]=false;
+      }
+      FuelMod.NumChanges=0;
+      HAVE_CUST_MODELS=false;
 	*/
 }
 int Farsite5::GetFuelConversion(int fuel)
@@ -6107,9 +6108,9 @@ long Farsite5::ResetDirectAttack(AttackData* atk, long FireNum, double* coords)
 			}
 		}
 		else if (atk->CurrentPoint -
-			atk->NextPoint <
-			(double) GetNumPoints(atk->FireNumber) /
-			2.0)
+                 atk->NextPoint <
+                 (double) GetNumPoints(atk->FireNumber) /
+                 2.0)
 		{
 			atk->Reverse = true;
 			//  		  	else
@@ -6132,9 +6133,9 @@ long Farsite5::ResetDirectAttack(AttackData* atk, long FireNum, double* coords)
 		if ((atk->IndirectLine1 = new double[3]) != NULL)//(double *) calloc(3, sizeof(double)))!=NULL)
 		{
 			atk->IndirectLine1[0] = GetPerimeter1Value(atk->FireNumber,
-										atk->CurrentPoint, XCOORD);
+                                                       atk->CurrentPoint, XCOORD);
 			atk->IndirectLine1[1] = GetPerimeter1Value(atk->FireNumber,
-										atk->CurrentPoint, YCOORD);
+                                                       atk->CurrentPoint, YCOORD);
 			atk->IndirectLine1[2] = -1.0;
 		}
 		else
@@ -6149,9 +6150,9 @@ long Farsite5::ResetDirectAttack(AttackData* atk, long FireNum, double* coords)
 		if ((atk->IndirectLine2 = new double[3]) != NULL)//(double *) calloc(3, sizeof(double)))!=NULL)
 		{
 			atk->IndirectLine2[0] = GetPerimeter1Value(atk->FireNumber,
-										atk->CurrentPoint, XCOORD);
+                                                       atk->CurrentPoint, XCOORD);
 			atk->IndirectLine2[1] = GetPerimeter1Value(atk->FireNumber,
-										atk->CurrentPoint, YCOORD);
+                                                       atk->CurrentPoint, YCOORD);
 			atk->IndirectLine2[2] = -1.0;
 		}
 		else
@@ -6189,7 +6190,7 @@ long Farsite5::GetFireNumberForAttack(long AttackCounter)
 
 
 AttackData* Farsite5::GetAttackForFireNumber(long NumFire, long StartAttackNum,
-	long* LastAttackNumber)
+                                             long* LastAttackNumber)
 {
 	for (long i = 0; i < NumAttacks; i++)
 	{
@@ -6404,37 +6405,37 @@ void Farsite5::WriteAttackLog(AttackData* atk, long type, long var1, long var2)
 		case 0:
 			// end of attack
 			fprintf(atklog,
-				"%s, %s, %ld %s, %ld %s, $%ld since last instruction\n",
-				GetCrew(atk->CrewNum)->CrewName, AttackType,
-				(long) atk->AttackTime, "mins", (long) atk->LineBuilt, "m",
-				(long) (GetCrew(atk->CrewNum)->Cost * atk->AttackTime / 60.0));
+                    "%s, %s, %ld %s, %ld %s, $%ld since last instruction\n",
+                    GetCrew(atk->CrewNum)->CrewName, AttackType,
+                    (long) atk->AttackTime, "mins", (long) atk->LineBuilt, "m",
+                    (long) (GetCrew(atk->CrewNum)->Cost * atk->AttackTime / 60.0));
 			break;
 		case 1:
 			// reassign attack crew
 			fprintf(atklog, "%s reassigned %s\n", crew[var1]->CrewName,
-				AttackType);
+                    AttackType);
 			break;
 		case 2:
 			// crew moved to different compound crew
 			fprintf(atklog, "%s moved to %s\n", crew[var1]->CrewName,
-				crew[var2]->CrewName);
+                    crew[var2]->CrewName);
 			break;
 		case 3:
 			fprintf(atklog, "%s exceeded flamelength limit, direct attack\n",
-				GetCrew(atk->CrewNum)->CrewName);
+                    GetCrew(atk->CrewNum)->CrewName);
 			break;
 		case 4:
 			// crew removed from group
 			fprintf(atklog, "%s removed from group %s\n",
-				crew[var1]->CrewName, crew[var2]->CrewName);
+                    crew[var1]->CrewName, crew[var2]->CrewName);
 			break;
 		case 5:
 			// end of attack
 			fprintf(atklog,
-				"%s, %s, %s, %ld %s, %ld %s, $%ld since last instruction\n",
-				GetCrew(atk->CrewNum)->CrewName, "Crew Added", AttackType,
-				(long) atk->AttackTime, "mins", (long) atk->LineBuilt, "m",
-				(long) (GetCrew(atk->CrewNum)->Cost * atk->AttackTime / 60.0));
+                    "%s, %s, %s, %ld %s, %ld %s, $%ld since last instruction\n",
+                    GetCrew(atk->CrewNum)->CrewName, "Crew Added", AttackType,
+                    (long) atk->AttackTime, "mins", (long) atk->LineBuilt, "m",
+                    (long) (GetCrew(atk->CrewNum)->Cost * atk->AttackTime / 60.0));
 			break;
 		}
 		fclose(atklog);
@@ -6452,83 +6453,83 @@ bool Farsite5::LoadCrews(char* FileName, bool AppendList)
 
 	if ((crewfile = fopen(FileName, "r")) != NULL)
 	{
-		long i, j;
-		j = GetNumCrews();
-		if (!AppendList)
-		{
-			for (i = 0; i < j; i++)
-				FreeCrew(0);
-		}
+    long i, j;
+    j = GetNumCrews();
+    if (!AppendList)
+    {
+    for (i = 0; i < j; i++)
+    FreeCrew(0);
+    }
 
-		fgets(garbage, 255, crewfile);
-		do
-		{
-			if (feof(crewfile))
-				break;
-			strncpy(ch, garbage, 1);
-			if (strcmp(ch, "#"))
-				break;
-			crewnumber = SetNewCrew();
-			if (crewnumber == -1)
-				return false;
-			crew[crewnumber] = GetCrew(crewnumber);
-			crew[crewnumber]->Compound = -1;
-			memset(crew[crewnumber]->CrewName, 0x0,
-				sizeof(crew[crewnumber]->CrewName));
-			for (i = 1; i < (int)strlen(garbage) - 2; i++)
-				strncat(crew[crewnumber]->CrewName, &garbage[i], 1);
-			fgets(garbage, 255, crewfile);
-			sscanf(garbage, "%s", data);
-			std::transform(data, data+strlen(data), data, toupper) ;
-			if (!strcmp(data, "CHAINS_PER_HOUR"))
-			{
-				crew[crewnumber]->Units = 3;
-				RateMult = 0.3048 * 1.1;
-			}
-			else if (!strcmp(data, "METERS_PER_MINUTE"))
-			{
-				crew[crewnumber]->Units = 1;
-				RateMult = 1.0;
-			}
-			else if (!strcmp(data, "FEET_PER_MINUTE"))
-			{
-				crew[crewnumber]->Units = 2;
-				RateMult = 0.3048;
-			}
-			fgets(garbage, 255, crewfile);
-			sscanf(garbage, "%s %lf", data, &test);
-			std::transform(data, data+strlen(data), data, toupper) ;
-			if (!strcmp(data, "FLAME_LIMIT"))
-				crew[crewnumber]->FlameLimit = test;
-			if (crew[crewnumber]->Units == 2 || crew[crewnumber]->Units == 3)
-				crew[crewnumber]->FlameLimit *= 0.3048;
-			do
-			{
-				fgets(garbage, 255, crewfile);
-				sscanf(garbage, "%ld %lf", &fuelnumber, &rate);
-				if (fuelnumber < 51)
-					crew[crewnumber]->LineProduction[fuelnumber - 1] = rate * RateMult;
-				else if (fuelnumber == 99)
-					break;
-			}
-			while (!feof(crewfile));
-			fgets(garbage, 255, crewfile);
-			sscanf(garbage, "%s", data);
-			std::transform(data, data+strlen(data), data, toupper) ;
-			if (!strcmp(data, "COST_PER_HOUR"))
-			{
-				sscanf(garbage, "%s %lf", data, &test);
-				crew[crewnumber]->Cost = test;
-				fgets(garbage, 255, crewfile);
-			}
-			else
-				crew[crewnumber]->Cost = -1.0;
-		}
-		while (!feof(crewfile));
-		fclose(crewfile);
+    fgets(garbage, 255, crewfile);
+    do
+    {
+    if (feof(crewfile))
+    break;
+    strncpy(ch, garbage, 1);
+    if (strcmp(ch, "#"))
+    break;
+    crewnumber = SetNewCrew();
+    if (crewnumber == -1)
+    return false;
+    crew[crewnumber] = GetCrew(crewnumber);
+    crew[crewnumber]->Compound = -1;
+    memset(crew[crewnumber]->CrewName, 0x0,
+    sizeof(crew[crewnumber]->CrewName));
+    for (i = 1; i < (int)strlen(garbage) - 2; i++)
+    strncat(crew[crewnumber]->CrewName, &garbage[i], 1);
+    fgets(garbage, 255, crewfile);
+    sscanf(garbage, "%s", data);
+    std::transform(data, data+strlen(data), data, toupper) ;
+    if (!strcmp(data, "CHAINS_PER_HOUR"))
+    {
+    crew[crewnumber]->Units = 3;
+    RateMult = 0.3048 * 1.1;
+    }
+    else if (!strcmp(data, "METERS_PER_MINUTE"))
+    {
+    crew[crewnumber]->Units = 1;
+    RateMult = 1.0;
+    }
+    else if (!strcmp(data, "FEET_PER_MINUTE"))
+    {
+    crew[crewnumber]->Units = 2;
+    RateMult = 0.3048;
+    }
+    fgets(garbage, 255, crewfile);
+    sscanf(garbage, "%s %lf", data, &test);
+    std::transform(data, data+strlen(data), data, toupper) ;
+    if (!strcmp(data, "FLAME_LIMIT"))
+    crew[crewnumber]->FlameLimit = test;
+    if (crew[crewnumber]->Units == 2 || crew[crewnumber]->Units == 3)
+    crew[crewnumber]->FlameLimit *= 0.3048;
+    do
+    {
+    fgets(garbage, 255, crewfile);
+    sscanf(garbage, "%ld %lf", &fuelnumber, &rate);
+    if (fuelnumber < 51)
+    crew[crewnumber]->LineProduction[fuelnumber - 1] = rate * RateMult;
+    else if (fuelnumber == 99)
+    break;
+    }
+    while (!feof(crewfile));
+    fgets(garbage, 255, crewfile);
+    sscanf(garbage, "%s", data);
+    std::transform(data, data+strlen(data), data, toupper) ;
+    if (!strcmp(data, "COST_PER_HOUR"))
+    {
+    sscanf(garbage, "%s %lf", data, &test);
+    crew[crewnumber]->Cost = test;
+    fgets(garbage, 255, crewfile);
+    }
+    else
+    crew[crewnumber]->Cost = -1.0;
+    }
+    while (!feof(crewfile));
+    fclose(crewfile);
 	}
 	else
-		return false;
+    return false;
 */
 	return true;
 }
@@ -6550,7 +6551,7 @@ void Farsite5::SetInputMode(long ModeCode, bool Pending)
 }
 
 void Farsite5::SetShapeFileChx(const char* ShapeName, long VisOnly, long Polygons,
-	long BarriersSep)
+                               long BarriersSep)
 {
 	memset(ShapeFileName, 0x0, sizeof(ShapeFileName));
 	strcpy(ShapeFileName, ShapeName);
@@ -6573,29 +6574,29 @@ char* Farsite5::GetShapeFileChx(long* VisOnly, long* Polygons, long* BarriersSep
 // Determines actual date and time from SIMTIME variable
 long Farsite5::Chrono(double SIMTIME, long* hour, double* hours, bool RelCondit)
 {
-long date, month, day, min;
-double mins, days;
+    long date, month, day, min;
+    double mins, days;
 
  	*hours = SIMTIME / 60.0;
  	*hour = (long) * hours; 					  // truncates time to nearest hour
  	min = (long) ((*hours - *hour) * 60);
-        mins = (*hours - *hour) * 60.0;
-        if (RelCondit && UseConditioningPeriod(GETVAL))
+    mins = (*hours - *hour) * 60.0;
+    if (RelCondit && UseConditioningPeriod(GETVAL))
 	  	*hours = ((double) * hour) * 100.0;   			  // elapsed time in hours
-        else
+    else
 	  	*hours = ((double) * hour) * 100.0 + (double) GetStartHour() +	GetStartMin();	// elapsed time in hours
-        days = *hours / 2400.0;
-        day = (long) days;
-        if (RelCondit && UseConditioningPeriod(GETVAL)){
-		  date = day + GetConditDay();
+    days = *hours / 2400.0;
+    day = (long) days;
+    if (RelCondit && UseConditioningPeriod(GETVAL)){
+        date = day + GetConditDay();
 	  	month = GetJulianDays(GetConditMonth());}
-	 else {
-		  date = day + GetStartDay();
+    else {
+        date = day + GetStartDay();
 	  	month = GetJulianDays(GetStartMonth());}
 
  	date = date + month;
  	if (date > 365)
-		  date -= 365;
+        date -= 365;
  	days = day;
  	*hour = (long) (*hours - days * 2400) + min;		 // integer hour
  	*hours = (*hours - days * 2400.0) + mins;   		 // double precision hours
@@ -6676,11 +6677,11 @@ void Farsite5::SetMoistCalcInterval(long FM_SIZECLASS, long CATEGORY, long Val)
 
 
 /***************************************************************************
-* Name: ConvertActualTimeToSimTime
-* Desc: Return the time in minutes of the difference between the send in
-*        date/times and the start/cond date/time
-*  Ret: number of minutes
-***************************************************************************/
+ * Name: ConvertActualTimeToSimTime
+ * Desc: Return the time in minutes of the difference between the send in
+ *        date/times and the start/cond date/time
+ *  Ret: number of minutes
+ ***************************************************************************/
 double Farsite5::ConvertActualTimeToSimtime(long mo, long dy, long hr, long mn,	bool FromCondit)
 {
 	double SimTime, RefStart;
@@ -6740,7 +6741,7 @@ double Farsite5::ConvertActualTimeToSimtime(long mo, long dy, long hr, long mn,	
 
 
 void Farsite5::ConvertSimtimeToActualTime(double SimTime, long* mo, long* dy, long* hr,
-	long* mn, bool FromCondit)
+                                          long* mn, bool FromCondit)
 {
 	long months, days, hours, mins, ndays;
 	double fday, fhour;
@@ -6766,7 +6767,7 @@ void Farsite5::ConvertSimtimeToActualTime(double SimTime, long* mo, long* dy, lo
 		hours -= 24;
 		days++;
 	}
-        if (hours < 0)
+    if (hours < 0)
 	{
 		hours += 24;
 		days--;
@@ -7583,7 +7584,7 @@ void Farsite5::InitializeNewFuel()
 	newfuels[163].heatd = 8000.000000;
 	newfuels[163].heatl = 8000.000000;
 	strcpy(newfuels[163].desc,
-		"Moderate load, humid climate timber-grass-shrub");
+           "Moderate load, humid climate timber-grass-shrub");
 
 	newfuels[164].number = 164;
 	strcpy(newfuels[164].code, "TU4");
@@ -7822,7 +7823,7 @@ void Farsite5::InitializeNewFuel()
 	newfuels[203].heatd = 8000.000000;
 	newfuels[203].heatl = 8000.000000;
 	strcpy(newfuels[203].desc,
-		"High load activity fuel or moderate load blowdown");
+           "High load activity fuel or moderate load blowdown");
 
 	newfuels[204].number = 204;
 	strcpy(newfuels[204].code, "SB4");
@@ -8100,10 +8101,10 @@ void Farsite5::CountFires()
 	}
 	CountTotalFires -= VectorBarriers;
 	/* DDE.NumFires=CountTotalFires;
-	 DDE.NumBarriers=VectorBarriers;
-	 DDE.StartStatus=(long) SIMULATE_GO;
-	 DDE.ResumeStatus=(long) FARSITE_GO;
-	 */
+       DDE.NumBarriers=VectorBarriers;
+       DDE.StartStatus=(long) SIMULATE_GO;
+       DDE.ResumeStatus=(long) FARSITE_GO;
+    */
 }
 
 
@@ -8152,26 +8153,26 @@ void Farsite5::CheckSteps()
 		burn.rastmake = GetRastMake();					// update decision to make raster file
 		SetNumFires(GetNewFires());				// newfires set from mouse or from file
 		/*long oldequal = PrimaryVisEqual; 			// recalc PrimaryVisEqual from new visual and actual ts
-		if (oldequal !=
-			(PrimaryVisEqual = (long)
-			(GetVisibleTimeStep() / GetActualTimeStep())))
-		{
-			PrimaryVisCount = 0;					// reset visible interval to 0;
-			SecondaryVisCount = 0;  				  // reset secondary visible interval to 0;
-		}
-		if (GetSecondaryVisibleTimeStep() != -1)
-			SecondaryVisEqual = (long)
-				(GetSecondaryVisibleTimeStep() / GetActualTimeStep());
-		else
-			SecondaryVisCount = SecondaryVisEqual - 1;*/
+          if (oldequal !=
+          (PrimaryVisEqual = (long)
+          (GetVisibleTimeStep() / GetActualTimeStep())))
+          {
+          PrimaryVisCount = 0;					// reset visible interval to 0;
+          SecondaryVisCount = 0;  				  // reset secondary visible interval to 0;
+          }
+          if (GetSecondaryVisibleTimeStep() != -1)
+          SecondaryVisEqual = (long)
+          (GetSecondaryVisibleTimeStep() / GetActualTimeStep());
+          else
+          SecondaryVisCount = SecondaryVisEqual - 1;*/
 		//if (!VISDIM)
-			maximum = (long)GetSimulationDuration();//numaximum;
+        maximum = (long)GetSimulationDuration();//numaximum;
 		//else						  			 // maximum time is determined by visual time steps
 		//	maximum = GetSimulationDuration() * GetVisibleTimeStep();
 		/*if (DistanceCheckMethod(GETVAL) == DISTCHECK_FIRELEVEL)
-			OutputVectsAsGrown = ShowFiresAsGrown(GETVAL);
-		else
-			OutputVectsAsGrown = 0;*/
+          OutputVectsAsGrown = ShowFiresAsGrown(GETVAL);
+          else
+          OutputVectsAsGrown = 0;*/
 		CheckThreadNumbers();
 	}
 	// DDE.StartStatus=(long) SIMULATE_GO;
@@ -8219,14 +8220,14 @@ bool Farsite5::GetShapeMake()
 }
 
 /*****************************************************************************************
-* THIS FUNCTION ACTIVATES THE FARSITE LOOP AND CHECKS FOR MESSAGES BETWEEN ITERATIONS
-*
-* Ret: 1 = ok
-*      < 0 Error Number, use icf.ErrorMessage()
-******************************************************************************************/
+ * THIS FUNCTION ACTIVATES THE FARSITE LOOP AND CHECKS FOR MESSAGES BETWEEN ITERATIONS
+ *
+ * Ret: 1 = ok
+ *      < 0 Error Number, use icf.ErrorMessage()
+ ******************************************************************************************/
 int  Farsite5::FarsiteSimulationLoop()
 {
-int i_Ret,  CondSw = 0;
+    int i_Ret,  CondSw = 0;
 //bool b;
 //char cr_ErrMes[1000];
 
@@ -8237,12 +8238,12 @@ int i_Ret,  CondSw = 0;
 	{
 	    //char nullStr[16] = "";
 		m_BSG.Init( GetLoEast(), GetHiEast(),
-			GetLoNorth(), GetHiNorth(),
-			icf.f_FarsiteSpotGridResolution); // A file name here creates a test output file
+                    GetLoNorth(), GetHiNorth(),
+                    icf.f_FarsiteSpotGridResolution); // A file name here creates a test output file
 		AddIgnitionToSpotGrid();
 	}
 
-     m_FPC.SetTimeSlice (0,this);
+    m_FPC.SetTimeSlice (0,this);
 
     m_FPC.Set_CondRunning(); /* Progress Class Conditioning will start */
 
@@ -8252,53 +8253,53 @@ int i_Ret,  CondSw = 0;
 	systime2 = systime1 + 1;					// keep systime2-systime1>0.0
 
 /*.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-..-*/
-	 while (burn.SIMTIME <= maximum)	{
+    while (burn.SIMTIME <= maximum)	{
 
-		  if (maximum > 0)
-			   SetFarsiteProgress (burn.SIMTIME / (double)maximum);
+        if (maximum > 0)
+            SetFarsiteProgress (burn.SIMTIME / (double)maximum);
 
-		  if (LEAVEPROCESS)				// allows exit from FARSITE process control
+        if (LEAVEPROCESS)				// allows exit from FARSITE process control
 		   	break;
 
-		  systime = clock();
+        systime = clock();
 
-		  if (SimRequest != SIMREQ_NULL) 	{
+        if (SimRequest != SIMREQ_NULL) 	{
 		   	CanModifyInputs(true);
-			   break ;	}
+            break ;	}
 
-		  CanModifyInputs(false);
-		  CheckSteps();
+        CanModifyInputs(false);
+        CheckSteps();
 
-		  if (FARSITE_GO)		{
-	  		 if (PreCalcMoistures(GETVAL)) {
-        if ( CondSw == 0 ) {             /* Do once to do all conditioning */
+        if (FARSITE_GO)		{
+            if (PreCalcMoistures(GETVAL)) {
+                if ( CondSw == 0 ) {             /* Do once to do all conditioning */
 //          SetFarsiteRunStatus (e_Condition);
-          i_Ret = this->Run_CondDLL();       /* Run Moisture Cond, load/check inputs, run */
+                    i_Ret = this->Run_CondDLL();       /* Run Moisture Cond, load/check inputs, run */
 
-          m_FPC.Set_FarsiteRunning();  /* Notify Process Class, Farsite is runnin */
+                    m_FPC.Set_FarsiteRunning();  /* Notify Process Class, Farsite is runnin */
 
 //          SetFarsiteRunStatus (e_Farsite);
-          if ( i_Ret < 0 )              /* Error or terminate requested */
-            break;
+                    if ( i_Ret < 0 )              /* Error or terminate requested */
+                        break;
 
-          CondSw++;                     /* Set one time only switch */
+                    CondSw++;                     /* Set one time only switch */
 //        this->cfmc.ExportMoistureDataText("C:/larryf/stutest/Test.txt", "");
-        }
+                }
 
 // Original...............
 //	 PreCalculateFuelMoisturesNoUI();
 //----------------------------------------------------------
 
-			  	  if (!FARSITE_GO)	{  // can happen if moistures are canceled
-				   	  FARSITE_GO = true;
-				   	  SimRequest = SIMREQ_RESUMESUSPEND;
-					     continue;	}
-			   }
+                if (!FARSITE_GO)	{  // can happen if moistures are canceled
+                    FARSITE_GO = true;
+                    SimRequest = SIMREQ_RESUMESUSPEND;
+                    continue;	}
+            }
 
 			else	{
 // This original code never gets called so - ok to comment out
 //			 	burn.env->CalcMapFuelMoistures(burn.SIMTIME +	GetActualTimeStep());
-				 LastFMCalcTime = burn.SIMTIME + GetActualTimeStep();	}
+                LastFMCalcTime = burn.SIMTIME + GetActualTimeStep();	}
 
 			if (ProcNum < 3) 				// if all inputs ready for FARSITE model
 			{
@@ -8347,8 +8348,8 @@ int i_Ret,  CondSw = 0;
 				if (!OutputVectsAsGrown && NextFireAfterInterrupt == 0)
 				{
 					for (CurrentFire = 0;
-						CurrentFire < GetNumFires();
-						CurrentFire++)
+                         CurrentFire < GetNumFires();
+                         CurrentFire++)
 					{
 						if (GetInout(CurrentFire) == 0)
 							continue;
@@ -8428,12 +8429,12 @@ int i_Ret,  CondSw = 0;
 		{
 			FARSITE_GO = false;
 			/*if (GetRastMake()) {
-				WriteGISLogFile(0);
-			}
-			if (GetVectMake())
-				WriteGISLogFile(1);
-			if (GetShapeMake())
-				WriteGISLogFile(2);*/
+              WriteGISLogFile(0);
+              }
+              if (GetVectMake())
+              WriteGISLogFile(1);
+              if (GetShapeMake())
+              WriteGISLogFile(2);*/
 			//EB commentsout 1 line
 			//printf("  End of Run    Simulation Completed\n");
 			sprintf(MBStatus, "    %s", "SIMULATION COMPLETED");
@@ -8461,22 +8462,22 @@ int i_Ret,  CondSw = 0;
 	//progress = 1.0;
 	// write raster files at end of timestep...
 	/*if (GetRastMake()) {
-		burn.rast->SelectMemOutputs(GetRastFormat());	// write to raster file
-	}	*/
+      burn.rast->SelectMemOutputs(GetRastFormat());	// write to raster file
+      }	*/
 
 	//std::cerr << "In FarsiteBurnLoop()" << burn.SIMTIME << std::endl ;
 /*	if (burn.SIMTIME > maximum)
 	{
-		FARSITE_GO = false;
-		if (GetRastMake())
-			WriteGISLogFile(0);
-		if (GetVectMake())
-			WriteGISLogFile(1);
-		if (GetShapeMake())
-			WriteGISLogFile(2);
-		//printf("End of Run Simulation Completed\n");
+    FARSITE_GO = false;
+    if (GetRastMake())
+    WriteGISLogFile(0);
+    if (GetVectMake())
+    WriteGISLogFile(1);
+    if (GetShapeMake())
+    WriteGISLogFile(2);
+    //printf("End of Run Simulation Completed\n");
 	}*/
-   return i_Ret;
+    return i_Ret;
 }
 
 /**********************************************************************************/
@@ -8494,25 +8495,25 @@ void Farsite5::ResetThreads()
 	FreeFarsiteEvents(EVENT_INTEG_THREAD);
 	FreeFarsiteEvents(EVENT_CROSS_THREAD);
 	AllocFarsiteEvents(EVENT_BURN, GetMaxThreads(), "SyncEventBurn", false,
-		false);
+                       false);
 	AllocFarsiteEvents(EVENT_MOIST, GetMaxThreads(), "SyncEventMoist", false,
-		false);
+                       false);
 	AllocFarsiteEvents(EVENT_BURNUP, GetMaxThreads(), "SyncEventBurnup",
-		false, false);
+                       false, false);
 	AllocFarsiteEvents(EVENT_INTEG, GetMaxThreads(), "SyncEventInteg", false,
-		false);
+                       false);
 	AllocFarsiteEvents(EVENT_CROSS, GetMaxThreads(), "SyncEventCross", false,
-		false);
+                       false);
 	AllocFarsiteEvents(EVENT_BURN_THREAD, GetMaxThreads(),
-		"SyncEventBurnThread", true, false);
+                       "SyncEventBurnThread", true, false);
 	AllocFarsiteEvents(EVENT_MOIST_THREAD, GetMaxThreads(),
-		"SyncEventMoistThread", true, false);
+                       "SyncEventMoistThread", true, false);
 	AllocFarsiteEvents(EVENT_BURNUP_THREAD, GetMaxThreads(),
-		"SyncEventBurnupThread", true, false);
+                       "SyncEventBurnupThread", true, false);
 	AllocFarsiteEvents(EVENT_INTEG_THREAD, GetMaxThreads(),
-		"SyncEventIntegThread", true, false);
+                       "SyncEventIntegThread", true, false);
 	AllocFarsiteEvents(EVENT_CROSS_THREAD, GetMaxThreads(),
-		"SyncEventCrossThread", true, false);
+                       "SyncEventCrossThread", true, false);
 #endif
 	NumSimThreads = GetMaxThreads();
 }
@@ -8520,7 +8521,7 @@ void Farsite5::ResetThreads()
 
 
 bool Farsite5::FarsiteProcess1()
-	// THIS FUNCTION CONTAINS THE FARSITE PROCESS CONTROL
+// THIS FUNCTION CONTAINS THE FARSITE PROCESS CONTROL
 {
 	long InOut, FireNum;
 
@@ -8534,7 +8535,7 @@ bool Farsite5::FarsiteProcess1()
 			if (burn.prod.cuumslope[1] > 1e-9)
 				sarea = (a1 - firesizeh) /
 					(cos(atan((PI * burn.prod.cuumslope[0] / 180.0) /
-							burn.prod.cuumslope[1])));
+                              burn.prod.cuumslope[1])));
 			else
 				sarea = 0.0;
 			sarea = firesizes + sarea;
@@ -8588,7 +8589,7 @@ bool Farsite5::FarsiteProcess1()
 			if (burn.prod.cuumslope[1] > 1e-9)
 				sarea = (a1 - firesizeh) /
 					(cos(atan((PI * burn.prod.cuumslope[0] / 180.0) /
-							burn.prod.cuumslope[1])));
+                              burn.prod.cuumslope[1])));
 			else
 				sarea = 0.0;
 			sarea = firesizes + sarea;
@@ -8610,8 +8611,8 @@ bool Farsite5::FarsiteProcess1()
 			p2 = 0.0;
 		}
 		for (CurrentFire = NextFireAfterInterrupt;
-			CurrentFire < GetNumFires();
-			CurrentFire++)			// for all fires
+             CurrentFire < GetNumFires();
+             CurrentFire++)			// for all fires
 		{
 			if ((InOut = GetInout(CurrentFire)) == 0)
 				continue;
@@ -8644,7 +8645,7 @@ bool Farsite5::FarsiteProcess1()
 			return false;
 		NextFireAfterInterrupt = 0;
 		AddDownTime(-1.0);
-     }
+    }
 
 	while (GetNumFires() < GetNewFires())   		// condense array of fire perimeter pointers
 	{
@@ -8662,7 +8663,7 @@ bool Farsite5::FarsiteProcess1()
 				burn.RePositionFire(&CurrentFire);
 				if (CheckPostFrontal(GETVAL))
 					SetNewFireNumber(FireNum, CurrentFire,
-						burn.post.AccessReferenceRingNum(1, GETVAL));
+                                     burn.post.AccessReferenceRingNum(1, GETVAL));
 			}
 		}
 		IncNumFires(1);				   // increment number of active fires
@@ -8673,7 +8674,7 @@ bool Farsite5::FarsiteProcess1()
 	if (burn.prod.cuumslope[1] > 1e-9)
 		sarea = (a1 - firesizeh) /
 			(cos(atan((PI * burn.prod.cuumslope[0] / 180.0) /
-					burn.prod.cuumslope[1])));
+                      burn.prod.cuumslope[1])));
 	else
 		sarea = 0.0;
 	sarea = firesizes + sarea;
@@ -8685,13 +8686,13 @@ bool Farsite5::FarsiteProcess1()
 
 
 bool Farsite5::FarsiteProcessSpots()
-	// THIS FUNCTION CONTAINS THE FARSITE PROCESS CONTROL
-	{
-		 if(!IN_BURNPERIOD)
-			  return true;
+// THIS FUNCTION CONTAINS THE FARSITE PROCESS CONTROL
+{
+    if(!IN_BURNPERIOD)
+        return true;
 
-	double Actual;
-	double simtime = burn.SIMTIME;
+    double Actual;
+    double simtime = burn.SIMTIME;
 	double cuumtime = burn.CuumTimeIncrement;
 	double TempStep = 0.0;
 	bool SpotActivityChanged = false;
@@ -8710,8 +8711,8 @@ bool Farsite5::FarsiteProcessSpots()
 		TempStep = GetTemporaryTimeStep();
 
 	for (CurrentFire = 0;
-		CurrentFire < burn.TotalSpots;
-		CurrentFire++)			// for all fires
+         CurrentFire < burn.TotalSpots;
+         CurrentFire++)			// for all fires
 	{
 		curspot = burn.GetSpotData(Actual);
 		if (curspot == NULL)
@@ -8782,7 +8783,7 @@ bool Farsite5::FarsiteProcessSpots()
 				burn.RePositionFire(&CurrentFire);
 				if (CheckPostFrontal(GETVAL))
 					SetNewFireNumber(FireNum, CurrentFire,
-						burn.post.AccessReferenceRingNum(1, GETVAL));
+                                     burn.post.AccessReferenceRingNum(1, GETVAL));
 			}
 		}
 		IncNumFires(1);				   // increment number of active fires
@@ -8793,7 +8794,7 @@ bool Farsite5::FarsiteProcessSpots()
 	if (burn.prod.cuumslope[1] > 1e-9)
 		sarea = (a1 - firesizeh) /
 			(cos(atan((PI * burn.prod.cuumslope[0] / 180.0) /
-					burn.prod.cuumslope[1])));
+                      burn.prod.cuumslope[1])));
 	else
 		sarea = 0.0;
 	sarea = firesizes + sarea;
@@ -8841,10 +8842,10 @@ bool Farsite5::FarsiteProcess2()
 	//ATLTRACE("OldNumSpots = %ld, numspots = %ld\n", OldNumSpots, numspots);
 	if(this->EnableSpotFireGrowth(GETVAL))
 		NumLocalSpots = OldNumSpots + burn.SpotFires;				  // sum OldNumSpots and new numspots, after DrawSpots()
-		//numspots = OldNumSpots + burn.SpotFires;				  // sum OldNumSpots and new numspots, after DrawSpots()
+    //numspots = OldNumSpots + burn.SpotFires;				  // sum OldNumSpots and new numspots, after DrawSpots()
 	else
 		NumLocalSpots = OldNumSpots + burn.TotalSpots;				  // sum OldNumSpots and new numspots, after DrawSpots()
-		//numspots = OldNumSpots + burn.TotalSpots;				  // sum OldNumSpots and new numspots, after DrawSpots()
+    //numspots = OldNumSpots + burn.TotalSpots;				  // sum OldNumSpots and new numspots, after DrawSpots()
 
 	//numspots += OldNumSpots;				  // sum OldNumSpots and new numspots, after DrawSpots()
 	//IncNewFires(burn.TotalSpots);//embers.SpotFires); 	// add spotfires to total number to check for mergers
@@ -8867,21 +8868,21 @@ bool Farsite5::FarsiteProcess2()
 
 
 void Farsite5::FarsiteProcess3()
-	// THIS FUNCTION PROCESSES FIRE MERGERS
+// THIS FUNCTION PROCESSES FIRE MERGERS
 {
 	long i, j, NewFires, NewPts;
 	double mx[10] =
-	{
-		90.0, 90.0, 90.0, 90.0, 90.0, 90.0, 90.0, 90.0, 90.0, 90.0
-	};
+        {
+            90.0, 90.0, 90.0, 90.0, 90.0, 90.0, 90.0, 90.0, 90.0, 90.0
+        };
 	AttackData* atk;
 	AirAttackData* aatk;
 	FireRing* firering;
 
 
 	for (i = 0;
-		i < GetNumAttacks();
-		i++)   	 // perform indirect attack after all fires have burned
+         i < GetNumAttacks();
+         i++)   	 // perform indirect attack after all fires have burned
 	{
 		if ((atk = GetAttackByOrder(i, true)) != 0)
 		{
@@ -8896,18 +8897,18 @@ void Farsite5::FarsiteProcess3()
 				i--;	  // need to decrement counter because numattacks has changed
 			}   		   // and order in GetAttackByOrder() has also changed
 			/*else
-									{	//burn.ReorderPerimeter(atk->FireNumber, burn.FindExternalPoint(atk->FireNumber, 0));
-									burn.FindOuterFirePerimeter(atk->FireNumber);
-									NewPts=GetNumPoints(atk->FireNumber);
-									FreePerimeter1(atk->FireNumber);
-									AllocPerimeter1(atk->FireNumber, NewPts+1);
-									burn.tranz(atk->FireNumber, NewPts);
-										 Atk.BoundingBox();
-									}*/
+              {	//burn.ReorderPerimeter(atk->FireNumber, burn.FindExternalPoint(atk->FireNumber, 0));
+              burn.FindOuterFirePerimeter(atk->FireNumber);
+              NewPts=GetNumPoints(atk->FireNumber);
+              FreePerimeter1(atk->FireNumber);
+              AllocPerimeter1(atk->FireNumber, NewPts+1);
+              burn.tranz(atk->FireNumber, NewPts);
+              Atk.BoundingBox();
+              }*/
 			if (NewFires < GetNewFires())
 			{
 				burn.ReorderPerimeter(NewFires,
-						burn.FindExternalPoint(NewFires, 0));
+                                      burn.FindExternalPoint(NewFires, 0));
 				burn.FindOuterFirePerimeter(NewFires);
 				NewPts = GetNumPoints(NewFires);
 				FreePerimeter1(NewFires);
@@ -8919,10 +8920,10 @@ void Farsite5::FarsiteProcess3()
 					if (CheckPostFrontal(GETVAL))
 					{
 						firering = burn.post.SetupFireRing(NewFires,
-												burn.SIMTIME +
-												burn.CuumTimeIncrement,
-												burn.SIMTIME +
-												burn.CuumTimeIncrement);
+                                                           burn.SIMTIME +
+                                                           burn.CuumTimeIncrement,
+                                                           burn.SIMTIME +
+                                                           burn.CuumTimeIncrement);
 						for (j = 0; j < NewPts; j++)
 							AddToCurrentFireRing(firering, j, 0, 0, 0, mx, 0.0);
 					}
@@ -8939,8 +8940,8 @@ void Farsite5::FarsiteProcess3()
 		}
 	}
 	for (i = 0;
-		i < GetNumAirAttacks();
-		i++)		  // check air attack effectiveness
+         i < GetNumAirAttacks();
+         i++)		  // check air attack effectiveness
 	{
 		aatk = GetAirAttackByOrder(i);
 		if (!AAtk.CheckEffectiveness(aatk, GetActualTimeStep()))
@@ -8978,9 +8979,9 @@ void Farsite5::FarsiteProcess3()
 	{
 		CondenseRings(burn.post.AccessReferenceRingNum(1, GETVAL));
 		burn.post.bup.BurnFireRings(burn.post.AccessReferenceRingNum(1, GETVAL),
-						GetNumRings());
+                                    GetNumRings());
 		burn.post.ComputePostFrontal(burn.SIMTIME + burn.CuumTimeIncrement,
-					&smolder, &flaming);
+                                     &smolder, &flaming);
 		//CondenseRings(0);	// done in burn.post.ComputePostFrontal()
 		burn.post.AccessReferenceRingNum(1, GetNumRings()); // could set to -1 for automatic
 		//DrawPostFrontal();
@@ -9026,7 +9027,7 @@ void Farsite5::FarsiteProcess3()
 			burn.CuumTimeIncrement = 0.0;
 
 			pfdata.SetData(burn.SIMTIME, flaming / GetActualTimeStep() * 60.0,
-					smolder / GetActualTimeStep() * 60.0);
+                           smolder / GetActualTimeStep() * 60.0);
 			smolder = 0.0;
 			flaming = 0.0;
 		}
@@ -9077,60 +9078,60 @@ void Farsite5::WriteVectorOutputs()
 
 
 /*******************************************************************************************
-*
-*  NOTE as of Nov 11 2010 - This functions DOESN'T REALLY do anything yet.
-*
-*******************************************************************************************/
+ *
+ *  NOTE as of Nov 11 2010 - This functions DOESN'T REALLY do anything yet.
+ *
+ *******************************************************************************************/
 void Farsite5::WriteOutputs(int type)
 {
 	// if area and perimeter calculations are desired
 	//	if (WStation.Number > 0)
 	//		CurrentWeather();
 	WriteClocks();						// update the clocks if they're visible
- 		if (GetNumStations() > 1 || AtmosphereGridExists() > 0)
-		{
-			//			CmWindGaugeControl();
-		}
-		else
-		{
-			EnvironmentData env;
-			//headdata hd=GetHeaderInformation();
+    if (GetNumStations() > 1 || AtmosphereGridExists() > 0)
+    {
+        //			CmWindGaugeControl();
+    }
+    else
+    {
+        EnvironmentData env;
+        //headdata hd=GetHeaderInformation();
 
-			burn.fe->GetLandscapeData(GetLoEast() + GetNumEast() / 2,
-						GetLoNorth() + GetNumNorth() / 2);
-			burn.fe->ld.elev = (short)
-				(GetLoElev() + (GetHiElev() - GetLoElev()) / 2);
+        burn.fe->GetLandscapeData(GetLoEast() + GetNumEast() / 2,
+                                  GetLoNorth() + GetNumNorth() / 2);
+        burn.fe->ld.elev = (short)
+            (GetLoElev() + (GetHiElev() - GetLoElev()) / 2);
 
-			burn.fe->ld.slope = 0;
-			burn.fe->ld.aspect = 0;
-			burn.fe->ld.fuel = -1;//(short) GetFuelConversion(hd.fuels[1]);   // make sure that there is fuel there
-			burn.fe->ld.cover = 0;   // make sure that there is fuel there
+        burn.fe->ld.slope = 0;
+        burn.fe->ld.aspect = 0;
+        burn.fe->ld.fuel = -1;//(short) GetFuelConversion(hd.fuels[1]);   // make sure that there is fuel there
+        burn.fe->ld.cover = 0;   // make sure that there is fuel there
 
 //		burn.fe->GetFireEnvironment(burn.env, burn.SIMTIME, false);
 		burn.fe->GetFireEnvironment( burn.SIMTIME, false);
 
-			burn.fe->GetEnvironmentData(&env);
+        burn.fe->GetEnvironmentData(&env);
 
 
-			//WindGauge->tws = env.tws;
-			//WindGauge->winddir = env.winddir;
-			//	InvalidateRect(WindGauge->HWindow, NULL, true);
-			//	UpdateWindow(WindGauge->HWindow);
-		}
-     /*
-	adata.SetData(a1 * type, sarea * type);    	// type determines the color of the output
-	pdata.SetData(p1 * type, p2 * type);			// if visible timestep, then red else blue
-	fdata.count = CountInwardFires;
-	fdata.count = 0;
-	for (int i = 0;
-		i < GetNumFires();
-		i++)  	// counting is now done in ::CountFires
-	{
-		if (GetInout(i) == 2)
-			fdata.count++;
-	}
-	fdata.SetData(GetNumFires() * type, numspots * type, fdata.count * type);
-     */
+        //WindGauge->tws = env.tws;
+        //WindGauge->winddir = env.winddir;
+        //	InvalidateRect(WindGauge->HWindow, NULL, true);
+        //	UpdateWindow(WindGauge->HWindow);
+    }
+    /*
+      adata.SetData(a1 * type, sarea * type);    	// type determines the color of the output
+      pdata.SetData(p1 * type, p2 * type);			// if visible timestep, then red else blue
+      fdata.count = CountInwardFires;
+      fdata.count = 0;
+      for (int i = 0;
+      i < GetNumFires();
+      i++)  	// counting is now done in ::CountFires
+      {
+      if (GetInout(i) == 2)
+      fdata.count++;
+      }
+      fdata.SetData(GetNumFires() * type, numspots * type, fdata.count * type);
+    */
 	//if (burn.SIMTIME > 0)
 	//	fdata.SetData((CountTotalFires + numspots) * type, numspots * type,
 	//			fdata.count * type);
@@ -9155,178 +9156,178 @@ void Farsite5::WriteOutputs(int type)
 
 void Farsite5::WriteGISLogFile(long LogType)
 {
-		char LogFile[256];
-		memset(LogFile, 0x0, sizeof(LogFile));
-		long len;
-		//SYSTEMTIME SysTime;
+    char LogFile[256];
+    memset(LogFile, 0x0, sizeof(LogFile));
+    long len;
+    //SYSTEMTIME SysTime;
 
-		//GetLocalTime(&SysTime);
-		if (LogType == 0)
-		{
-			len = strlen(GetRasterFileName(0));
-			strncpy(LogFile, GetRasterFileName(0), len - 3);
-			strcat(LogFile, "LGR");
-		}
-		else if (LogType == 1)
-		{
-			len = strlen(GetVectorFileName());
-			strncpy(LogFile, GetVectorFileName(), len - 3);
-			strcat(LogFile, "LGV");
-		}
-		else if (LogType == 2)
-		{
-			if (!shape.GetShapeFileName())
-				return;
-			len = strlen(shape.GetShapeFileName());
-			strncpy(LogFile, shape.GetShapeFileName(), len - 3);
-			strcat(LogFile, "LGS");
-		}
-		else
-			return;
+    //GetLocalTime(&SysTime);
+    if (LogType == 0)
+    {
+        len = strlen(GetRasterFileName(0));
+        strncpy(LogFile, GetRasterFileName(0), len - 3);
+        strcat(LogFile, "LGR");
+    }
+    else if (LogType == 1)
+    {
+        len = strlen(GetVectorFileName());
+        strncpy(LogFile, GetVectorFileName(), len - 3);
+        strcat(LogFile, "LGV");
+    }
+    else if (LogType == 2)
+    {
+        if (!shape.GetShapeFileName())
+            return;
+        len = strlen(shape.GetShapeFileName());
+        strncpy(LogFile, shape.GetShapeFileName(), len - 3);
+        strcat(LogFile, "LGS");
+    }
+    else
+        return;
 
-		FILE* logfile = fopen(LogFile, "w");
+    FILE* logfile = fopen(LogFile, "w");
 #if 0
-		if (logfile == NULL)
-		{
-			//SetFileAttributes(LogFile, FILE_ATTRIBUTE_NORMAL);
-			chmod(LogFile,S_IRWXO);
-			logfile = fopen(LogFile, "w");
-		}
+    if (logfile == NULL)
+    {
+        //SetFileAttributes(LogFile, FILE_ATTRIBUTE_NORMAL);
+        chmod(LogFile,S_IRWXO);
+        logfile = fopen(LogFile, "w");
+    }
 #endif
-		fprintf(logfile, "%s %s\n", "Log File: ", LogFile);
-		//fprintf(logfile, "%s %02u%s%02u%s%d\n", "Date File Created:",
-		//	SysTime.wMonth, "\\", SysTime.wDay, "\\", SysTime.wYear);
-		//fprintf(logfile, "%s %02u%s%02u\n\n", "Time File Created:",
-		//	SysTime.wHour, ":", SysTime.wMinute);
-		if (LogType < 2)
-		{
-			if (AccessOutputUnits(GETVAL) == 0)
-				fprintf(logfile, "File units: Metric\n");
-			else
-				fprintf(logfile, "File units: English\n");
-		}
-		fprintf(logfile, "%s %s\n", "Landscape File: ",
+    fprintf(logfile, "%s %s\n", "Log File: ", LogFile);
+    //fprintf(logfile, "%s %02u%s%02u%s%d\n", "Date File Created:",
+    //	SysTime.wMonth, "\\", SysTime.wDay, "\\", SysTime.wYear);
+    //fprintf(logfile, "%s %02u%s%02u\n\n", "Time File Created:",
+    //	SysTime.wHour, ":", SysTime.wMinute);
+    if (LogType < 2)
+    {
+        if (AccessOutputUnits(GETVAL) == 0)
+            fprintf(logfile, "File units: Metric\n");
+        else
+            fprintf(logfile, "File units: English\n");
+    }
+    fprintf(logfile, "%s %s\n", "Landscape File: ",
 			LandFName);
-		for (len = 0; len < GetNumStations(); len++)
-		{
-			fprintf(logfile, "%s %ld: %s\n", "Weather File", len + 1,
+    for (len = 0; len < GetNumStations(); len++)
+    {
+        fprintf(logfile, "%s %ld: %s\n", "Weather File", len + 1,
 				"KRAP");//Inputs.WeatherFile[len]);
-			fprintf(logfile, "%s %ld: %s\n", "Wind File", len + 1,
+        fprintf(logfile, "%s %ld: %s\n", "Wind File", len + 1,
 				"KRAP");//Inputs.WindFile[len]);
-			if (len > 4)
-				break;
-		}
-		fprintf(logfile, "%s %s\n", "Adjustment File: ", "KRAP");//Inputs.AdjustmentFile);
-		fprintf(logfile, "%s %s\n", "Fuel Moisture File: ",
+        if (len > 4)
+            break;
+    }
+    fprintf(logfile, "%s %s\n", "Adjustment File: ", "KRAP");//Inputs.AdjustmentFile);
+    fprintf(logfile, "%s %s\n", "Fuel Moisture File: ",
 			"KRAP");//Inputs.FuelMoistureFile);
-		if (HaveFuelConversions())
-			fprintf(logfile, "%s %s\n", "Conversion File: ",
+    if (HaveFuelConversions())
+        fprintf(logfile, "%s %s\n", "Conversion File: ",
 				"KRAP");//Inputs.ConvertFile);
-		else
-			fprintf(logfile, "%s %s\n", "Conversion File: ", "None");
-		if (HaveCustomFuelModels())
-			fprintf(logfile, "%s %s\n", "Custom Fuel Model File: ",
+    else
+        fprintf(logfile, "%s %s\n", "Conversion File: ", "None");
+    if (HaveCustomFuelModels())
+        fprintf(logfile, "%s %s\n", "Custom Fuel Model File: ",
 				"KRAP");//Inputs.FuelModelFile);
-		else
-			fprintf(logfile, "%s %s\n", "Custom Fuel Model File: ", "None");
-		if (EnableCrowning(GETVAL))
-		{
-			fprintf(logfile, "%s\n", "Crown Fire: Enabled");
-			if (LinkDensityWithCrownCover(GETVAL))
-				fprintf(logfile, "%s\n", "Crown Density LINKED to Crown Cover");
-			else
-				fprintf(logfile, "%s\n",
+    else
+        fprintf(logfile, "%s %s\n", "Custom Fuel Model File: ", "None");
+    if (EnableCrowning(GETVAL))
+    {
+        fprintf(logfile, "%s\n", "Crown Fire: Enabled");
+        if (LinkDensityWithCrownCover(GETVAL))
+            fprintf(logfile, "%s\n", "Crown Density LINKED to Crown Cover");
+        else
+            fprintf(logfile, "%s\n",
 					"Crown Density NOT LINKED to Crown Cover");
-		}
-		else
-			fprintf(logfile, "%s\n", "Crown Fire: Disabled");
-		if (EnableSpotting(GETVAL))
-		{
-			fprintf(logfile, "%s\n", "Ember Generation: Enabled");
-			if (EnableSpotFireGrowth(GETVAL))
-				fprintf(logfile, "%s\n", "Spot Growth: Enabled");
-			else
-				fprintf(logfile, "%s\n", "Spot Growth: Disabled");
-		}
-		else
-			fprintf(logfile, "%s\n", "Ember Generation: Disabled");
-		if (ConstantBackingSpreadRate(GETVAL))
-			fprintf(logfile, "%s\n",
+    }
+    else
+        fprintf(logfile, "%s\n", "Crown Fire: Disabled");
+    if (EnableSpotting(GETVAL))
+    {
+        fprintf(logfile, "%s\n", "Ember Generation: Enabled");
+        if (EnableSpotFireGrowth(GETVAL))
+            fprintf(logfile, "%s\n", "Spot Growth: Enabled");
+        else
+            fprintf(logfile, "%s\n", "Spot Growth: Disabled");
+    }
+    else
+        fprintf(logfile, "%s\n", "Ember Generation: Disabled");
+    if (ConstantBackingSpreadRate(GETVAL))
+        fprintf(logfile, "%s\n",
 				"Backing Spread: Calculated from No Wind/No Slope");
-		else
-			fprintf(logfile, "%s\n",
+    else
+        fprintf(logfile, "%s\n",
 				"Backing Spread: Calculated from Elliptical Dimensions");
-		if (AccelerationON())
-		{
-			/*	if (strlen(TransAccelData.Dat.AccelLoad) > 0)
+    if (AccelerationON())
+    {
+        /*	if (strlen(TransAccelData.Dat.AccelLoad) > 0)
 			{
-				if (strlen(TransAccelData.Dat.AccelSave) > 0)
-					fprintf(logfile, "%s %s\n", "Acceleration File Used: ",
-						TransAccelData.Dat.AccelSave);
-				else
-					fprintf(logfile, "%s %s\n", "Acceleration File Used: ",
-						TransAccelData.Dat.AccelLoad);
+            if (strlen(TransAccelData.Dat.AccelSave) > 0)
+            fprintf(logfile, "%s %s\n", "Acceleration File Used: ",
+            TransAccelData.Dat.AccelSave);
+            else
+            fprintf(logfile, "%s %s\n", "Acceleration File Used: ",
+            TransAccelData.Dat.AccelLoad);
 			}
 			else
-				fprintf(logfile, "%s %s\n", "Acceleration File Used: ",
-					"Default Values");
-						  */
-		}
-		else
-			fprintf(logfile, "%s %s\n", "Acceleration File Used: ",
+            fprintf(logfile, "%s %s\n", "Acceleration File Used: ",
+            "Default Values");
+        */
+    }
+    else
+        fprintf(logfile, "%s %s\n", "Acceleration File Used: ",
 				"None (feature toggled off)");
-		fprintf(logfile, "\n");
-		fprintf(logfile, "%s %ld%s%ld %ld:00\n",
+    fprintf(logfile, "\n");
+    fprintf(logfile, "%s %ld%s%ld %ld:00\n",
 			"Simulation Started (Day Hour:Min):", GetStartMonth(), "/",
 			GetStartDay(), GetStartHour() / 100);
-		fprintf(logfile, "%s %s\n", "Simulation Ended (Day Hour:Min):",
+    fprintf(logfile, "%s %s\n", "Simulation Ended (Day Hour:Min):",
 			CurTime);
-		fprintf(logfile, "%s %s\n\n", "Elapsed Time (Days Hours:Mins):",
+    fprintf(logfile, "%s %s\n\n", "Elapsed Time (Days Hours:Mins):",
 			ElTime);
-		fprintf(logfile, "%s %lf\n", "Actual Time Step (min):",
+    fprintf(logfile, "%s %lf\n", "Actual Time Step (min):",
 			GetActualTimeStep());
-		fprintf(logfile, "%s %lf\n", "Visible Time Step (min):",
+    fprintf(logfile, "%s %lf\n", "Visible Time Step (min):",
 			GetVisibleTimeStep());
-		fprintf(logfile, "%s %lf\n", "Perimeter Resolution (m):",
+    fprintf(logfile, "%s %lf\n", "Perimeter Resolution (m):",
 			GetPerimRes());
-		fprintf(logfile, "%s %lf\n", "Distance Resolution (m):", GetDistRes());
-		fclose(logfile);
-		//free(LogFile);
+    fprintf(logfile, "%s %lf\n", "Distance Resolution (m):", GetDistRes());
+    fclose(logfile);
+    //free(LogFile);
 }
 void Farsite5::ProcessSimRequest()
 {
 	switch (SimRequest)
 	{
-			case SIMREQ_NULL:
-			break;
-			case SIMREQ_INITIATETERMINATE:
-			//FARSITE_GO=true;
-			SimRequest = SIMREQ_NULL;
-			ResetFarsite();
-			Execute_InitiateTerminate();  	// doesn't work with multithreading ?? who knows why
-			//::SendMessage(Client->HWindow, WM_COMMAND, CM_EXECUTETERMINATE, NULL);
-			break;
-			case SIMREQ_STARTRESTART:
-			FARSITE_GO = true;
-			SimRequest = SIMREQ_NULL;
-			Execute_StartRestart();
-			//::SendMessage(Client->HWindow, WM_COMMAND, CM_EXECUTERESTART, NULL);
-			break;
-			case SIMREQ_RESUMESUSPEND:
-			//FARSITE_GO=true;
-			SimRequest=SIMREQ_NULL;
-			Execute_ResumeSuspend();
-			break;
-			case SIMREQ_RESET:
-			FARSITE_GO = true;
-			SimRequest = SIMREQ_NULL;
-			Execute_Reset();
-			//::SendMessage(Client->HWindow, WM_COMMAND, CM_EXECUTERESET, NULL);
-			break;
+    case SIMREQ_NULL:
+        break;
+    case SIMREQ_INITIATETERMINATE:
+        //FARSITE_GO=true;
+        SimRequest = SIMREQ_NULL;
+        ResetFarsite();
+        Execute_InitiateTerminate();  	// doesn't work with multithreading ?? who knows why
+        //::SendMessage(Client->HWindow, WM_COMMAND, CM_EXECUTETERMINATE, NULL);
+        break;
+    case SIMREQ_STARTRESTART:
+        FARSITE_GO = true;
+        SimRequest = SIMREQ_NULL;
+        Execute_StartRestart();
+        //::SendMessage(Client->HWindow, WM_COMMAND, CM_EXECUTERESTART, NULL);
+        break;
+    case SIMREQ_RESUMESUSPEND:
+        //FARSITE_GO=true;
+        SimRequest=SIMREQ_NULL;
+        Execute_ResumeSuspend();
+        break;
+    case SIMREQ_RESET:
+        FARSITE_GO = true;
+        SimRequest = SIMREQ_NULL;
+        Execute_Reset();
+        //::SendMessage(Client->HWindow, WM_COMMAND, CM_EXECUTERESET, NULL);
+        break;
 	}
 	//SIM_SUSPENDED = false;
 	//if (hWaitEvent != NULL)
-		//SetEvent(hWaitEvent);
+    //SetEvent(hWaitEvent);
 	CanModifyInputs(true);
 }
 
@@ -9423,7 +9424,7 @@ void Farsite5::CheckStopLocations()
 					//printf("Do you want to suspend the simulation?? Fire Encountered Stop Location\n");
 					found = true;
 					//if (response == IDYES)
-						//SimRequest = SIMREQ_RESUMESUSPEND;
+                    //SimRequest = SIMREQ_RESUMESUSPEND;
 				}
 			}
 		}
@@ -9448,234 +9449,234 @@ bool Farsite5::WritePFData()
 }
 
 void Farsite5::ResetFarsite()
-	// resets data structures for model
+// resets data structures for model
 {
 	/*
-	long i;
-	a1 = p1 = p2 = 0.0;
-	sarea = firesizeh = firesizes = 0.0;
-	burn.prod.cuumslope[0] = burn.prod.cuumslope[1] = 0.0;
-	burn.SetSpotLocation(-3);			// destroy all remaining spot fires
-	for (i = 0; i < NUM_FUEL_SIZES; i++)
-	burn.env->ResetData(i);
-	memset(FMMFileName, 0x0, 256 * sizeof(char));
-	memset(FMMDescription, 0x0, 512 * sizeof(char));
-	burn.ResetIntersectionArrays();
-	//burn.post.ResetAllThreads();
-	if (WARROWS_ON)
-	{
-	//WARROWS_ON=false;
-	if (WData)
-	delete[] WData;					 // reset stored wind data
-	WData = 0;
-	NumWData = 0;
-	}
-	if (GetRastMake())
-	{
-	WriteGISLogFile(0);
-	burn.rast.RasterReset();
-	}
-	if (GetVectMake())
-	{
-	if (GetVectVisOnly())
-	{
-	if (PrimaryVisCount == PrimaryVisEqual)    // visible timestep
-	{
-		for (i = 0; i < GetNumFires(); i++)
-		{
-			if (GetInout(i) == 0)   		  // if fire exists
-				continue;
-			if (ExcludeBarriersFromVectorFiles(GETVAL) &&
-				GetInout(i) == 3)
-				continue;
-			vect.VectData(i, burn.SIMTIME);
-		}   							   // write last perim array that was not shown
-	}
-	}
-	else
-	{
-	for (i = 0; i < GetNumFires(); i++)
-	{
-		if (GetInout(i) == 0)   		  // if fire exists
-			continue;
-		if (ExcludeBarriersFromVectorFiles(GETVAL) && GetInout(i) == 3)
-			continue;
-		vect.VectData(i, burn.SIMTIME);
-	}
-	}
-	vect.VectData(-1, burn.SIMTIME);	 // terminate vector file if present
-	SetVectMake(false); 				// reset vector output
-	WriteGISLogFile(1);
-	}
-	if (GetShapeMake())
-	{
-	bool WriteVect = false;
-	if (!shape.VisOnly)
-	WriteVect = true;
-	else if (PrimaryVisCount == PrimaryVisEqual)
-	WriteVect = true;
-	if (WriteVect)
-	{
-	for (i = 0; i < GetNumFires(); i++)
-	{
-		if (GetInout(i) == 0)
-			continue;
-		if (ExcludeBarriersFromVectorFiles(GETVAL) && GetInout(i) == 3)
-			continue;
-		shape.ShapeData(i, burn.SIMTIME);	// write fires
-	}
-	 if(DDE.AdviseLoopActive)	// DDE every fire as it is written
-						{    if(GetInout(CurrentFire)<3)
-							{    if(!DDE.PostAdvise(DDE_FIREFILE, shape.GetShapeFileName()))
-																	printf(" No Data Sent  DDE connection Error\n");						}
-							 else
-							{    if(!DDE.PostAdvise(DDE_BARRIERFILE, ""));
-							 		printf(" No Data Sent  DDE connection Error\n");						}
-						}
+      long i;
+      a1 = p1 = p2 = 0.0;
+      sarea = firesizeh = firesizes = 0.0;
+      burn.prod.cuumslope[0] = burn.prod.cuumslope[1] = 0.0;
+      burn.SetSpotLocation(-3);			// destroy all remaining spot fires
+      for (i = 0; i < NUM_FUEL_SIZES; i++)
+      burn.env->ResetData(i);
+      memset(FMMFileName, 0x0, 256 * sizeof(char));
+      memset(FMMDescription, 0x0, 512 * sizeof(char));
+      burn.ResetIntersectionArrays();
+      //burn.post.ResetAllThreads();
+      if (WARROWS_ON)
+      {
+      //WARROWS_ON=false;
+      if (WData)
+      delete[] WData;					 // reset stored wind data
+      WData = 0;
+      NumWData = 0;
+      }
+      if (GetRastMake())
+      {
+      WriteGISLogFile(0);
+      burn.rast.RasterReset();
+      }
+      if (GetVectMake())
+      {
+      if (GetVectVisOnly())
+      {
+      if (PrimaryVisCount == PrimaryVisEqual)    // visible timestep
+      {
+      for (i = 0; i < GetNumFires(); i++)
+      {
+      if (GetInout(i) == 0)   		  // if fire exists
+      continue;
+      if (ExcludeBarriersFromVectorFiles(GETVAL) &&
+      GetInout(i) == 3)
+      continue;
+      vect.VectData(i, burn.SIMTIME);
+      }   							   // write last perim array that was not shown
+      }
+      }
+      else
+      {
+      for (i = 0; i < GetNumFires(); i++)
+      {
+      if (GetInout(i) == 0)   		  // if fire exists
+      continue;
+      if (ExcludeBarriersFromVectorFiles(GETVAL) && GetInout(i) == 3)
+      continue;
+      vect.VectData(i, burn.SIMTIME);
+      }
+      }
+      vect.VectData(-1, burn.SIMTIME);	 // terminate vector file if present
+      SetVectMake(false); 				// reset vector output
+      WriteGISLogFile(1);
+      }
+      if (GetShapeMake())
+      {
+      bool WriteVect = false;
+      if (!shape.VisOnly)
+      WriteVect = true;
+      else if (PrimaryVisCount == PrimaryVisEqual)
+      WriteVect = true;
+      if (WriteVect)
+      {
+      for (i = 0; i < GetNumFires(); i++)
+      {
+      if (GetInout(i) == 0)
+      continue;
+      if (ExcludeBarriersFromVectorFiles(GETVAL) && GetInout(i) == 3)
+      continue;
+      shape.ShapeData(i, burn.SIMTIME);	// write fires
+      }
+      if(DDE.AdviseLoopActive)	// DDE every fire as it is written
+      {    if(GetInout(CurrentFire)<3)
+      {    if(!DDE.PostAdvise(DDE_FIREFILE, shape.GetShapeFileName()))
+      printf(" No Data Sent  DDE connection Error\n");						}
+      else
+      {    if(!DDE.PostAdvise(DDE_BARRIERFILE, ""));
+      printf(" No Data Sent  DDE connection Error\n");						}
+      }
 
 
-			}
-			WriteGISLogFile(2);
-		}
-		shape.ResetShape();
-		SetShapeMake(false);
-		PrimaryVisEqual = 0;
-		PrimaryVisCount = 0;
-		SecondaryVisEqual = -1;
-		SecondaryVisCount = 0;
-		SetRastMake(false); 					 // reset raster output
-		TransOutputData.ResetData(false);
-		if (VisPerimSize)
-			SaveVisPerimeter(); 		  	// save diskcopy of visible fire perimeters
-		ResetVisPerimFile();
-		//-----------------------------
-		// NOT NEEDED IN VERSION 4.0
-		//if(ProcNum==2)
-		//	burn.embers.SpotReset(GetNumFires()-NextFireAfterInterrupt, burn.embers.CurSpot);
-		//-----------------------------
-		ClearAllFires();
-		if (CheckPostFrontal(GETVAL))
-		{
-			// finish outputs for post frontal, then...
-			FreeAllFireRings();
-		}
-		SetNumFires(0);
-		SetNewFires(0);
-		SetSkipFires(0);
-		CurrentFire = 0;
-		//-----------------------------
-		//burn.embers.CarryOverEmbers=0;		 // no carry over embers
-		//burn.embers.EmberReset();
-		//-----------------------------
-		//pdata.ReSet();
-		//adata.ReSet();
-		//fdata.ReSet();
-		//pfdata.ResetData();
-		burn.SIMTIME = 0.0;
-		SetTemporaryTimeStep(0.0);
-		burn.CuumTimeIncrement = 0.0;
-		numspots = 0;
-		if (DurationResetAtRestart(GETVAL))
-		{
-			maximum = 0; // numaximum=
-			ResetDuration();
-		}
-		TimeKeepCurrent.ReSet();		   	  	// global time keeping structures
-		TimeKeepElapsed.ReSet();
-		sprintf(ElTime, "%02d %02d%s%02d", 0, 0, ":", 0);
-		sprintf(CurTime, "%02d%s%02d  %02d%s%02d", GetStartMonth(), "/",
-			GetStartDay(), GetStartHour() / 100, ":", GetStartMin());
-		for (i = 0; i < 5; i++) 	// reset weather stats for wind gauges
-			WStat[i].tws = -1.0;
-		WStation.ReSet();
-		sprintf(MBStatus, "    %s", "SIMULATION RESET");
-		//WriteMessageBar(0);
-		ResetBitmap(2);
-		ResetBitmap(3);
-		SetFuelsAltered(0);
-		LEAVEPROCESS = true;
-		FARSITE_GO = false;
-		ProcNum = 1;							   // process number 1 in simulation
-		NextFireAfterInterrupt = 0; 			   // reset beginning of burn-loop
-		OldFireAfterInterrupt = 0;
-		FreeAllAttacks();					 // eliminate all attacks on fires
-		FreeAllAirAttacks();
-		FreeAllGroupAirAttacks();
-		//FreeAllCompoundCrews();			// can't do it here, because may need them
-		StepThrough = false;
-		//DDE.DDE_SIMCOMMAND=false;
-		FreeElev();
-		CountFires();
-		CanSetRasterResolution(1);  	  // false
-		SIM_SUSPENDED = false;
-		EndSimThread();
-		CanModifyInputs(true);
-		NumSimThreads = 0;
-		for (i = 0; i < GetNumStopLocations(); i++)
-			EnableStopLocation(i, true);
+      }
+      WriteGISLogFile(2);
+      }
+      shape.ResetShape();
+      SetShapeMake(false);
+      PrimaryVisEqual = 0;
+      PrimaryVisCount = 0;
+      SecondaryVisEqual = -1;
+      SecondaryVisCount = 0;
+      SetRastMake(false); 					 // reset raster output
+      TransOutputData.ResetData(false);
+      if (VisPerimSize)
+      SaveVisPerimeter(); 		  	// save diskcopy of visible fire perimeters
+      ResetVisPerimFile();
+      //-----------------------------
+      // NOT NEEDED IN VERSION 4.0
+      //if(ProcNum==2)
+      //	burn.embers.SpotReset(GetNumFires()-NextFireAfterInterrupt, burn.embers.CurSpot);
+      //-----------------------------
+      ClearAllFires();
+      if (CheckPostFrontal(GETVAL))
+      {
+      // finish outputs for post frontal, then...
+      FreeAllFireRings();
+      }
+      SetNumFires(0);
+      SetNewFires(0);
+      SetSkipFires(0);
+      CurrentFire = 0;
+      //-----------------------------
+      //burn.embers.CarryOverEmbers=0;		 // no carry over embers
+      //burn.embers.EmberReset();
+      //-----------------------------
+      //pdata.ReSet();
+      //adata.ReSet();
+      //fdata.ReSet();
+      //pfdata.ResetData();
+      burn.SIMTIME = 0.0;
+      SetTemporaryTimeStep(0.0);
+      burn.CuumTimeIncrement = 0.0;
+      numspots = 0;
+      if (DurationResetAtRestart(GETVAL))
+      {
+      maximum = 0; // numaximum=
+      ResetDuration();
+      }
+      TimeKeepCurrent.ReSet();		   	  	// global time keeping structures
+      TimeKeepElapsed.ReSet();
+      sprintf(ElTime, "%02d %02d%s%02d", 0, 0, ":", 0);
+      sprintf(CurTime, "%02d%s%02d  %02d%s%02d", GetStartMonth(), "/",
+      GetStartDay(), GetStartHour() / 100, ":", GetStartMin());
+      for (i = 0; i < 5; i++) 	// reset weather stats for wind gauges
+      WStat[i].tws = -1.0;
+      WStation.ReSet();
+      sprintf(MBStatus, "    %s", "SIMULATION RESET");
+      //WriteMessageBar(0);
+      ResetBitmap(2);
+      ResetBitmap(3);
+      SetFuelsAltered(0);
+      LEAVEPROCESS = true;
+      FARSITE_GO = false;
+      ProcNum = 1;							   // process number 1 in simulation
+      NextFireAfterInterrupt = 0; 			   // reset beginning of burn-loop
+      OldFireAfterInterrupt = 0;
+      FreeAllAttacks();					 // eliminate all attacks on fires
+      FreeAllAirAttacks();
+      FreeAllGroupAirAttacks();
+      //FreeAllCompoundCrews();			// can't do it here, because may need them
+      StepThrough = false;
+      //DDE.DDE_SIMCOMMAND=false;
+      FreeElev();
+      CountFires();
+      CanSetRasterResolution(1);  	  // false
+      SIM_SUSPENDED = false;
+      EndSimThread();
+      CanModifyInputs(true);
+      NumSimThreads = 0;
+      for (i = 0; i < GetNumStopLocations(); i++)
+      EnableStopLocation(i, true);
 	*/
 }
 void Farsite5::Execute_InitiateTerminate()
-	// DISPLAYS LANDSCAPE WINDOW AND ENABLES/DISABLES MENU SELECTIONS
+// DISPLAYS LANDSCAPE WINDOW AND ENABLES/DISABLES MENU SELECTIONS
 {
 	//bool CanGo = true;
 	if (F_ON)
 	{
-	      // 	Beep(24000, 150);
+        // 	Beep(24000, 150);
 		//int Response = IDYES;
 	}
 	else
 	{	/*	if (!Inputs.LandID)
 			{
-				printf("Load Landscape File (.lcp) Data Input Incomplete\n");				CanGo = false;
+            printf("Load Landscape File (.lcp) Data Input Incomplete\n");				CanGo = false;
 			}
 			else if (!Inputs.WtrID)
 			{
-				printf("Load Weather File (.wtr) Data Input Incomplete\n");				CanGo = false;
+            printf("Load Weather File (.wtr) Data Input Incomplete\n");				CanGo = false;
 			}
 			else if (!Inputs.WndID)
 			{
-				printf("Load Wind File (.wnd) Data Input Incomplete\n");				CanGo = false;
+            printf("Load Wind File (.wnd) Data Input Incomplete\n");				CanGo = false;
 			}
 			else if (!Inputs.FuelMoisID)
 			{
-				printf("Load Initial Fuel Moistures (.fms) Data Input Incomplete\n");				 	CanGo = false;
+            printf("Load Initial Fuel Moistures (.fms) Data Input Incomplete\n");				 	CanGo = false;
 			}
 			else if (!Inputs.AdjID)
 			{
-				printf("Load Adjustment File (.adj) Data Input Incomplete\n");				CanGo = false;
+            printf("Load Adjustment File (.adj) Data Input Incomplete\n");				CanGo = false;
 			}
 			else if (NeedCustFuelModels() && !HaveCustomFuelModels())
 			{
-				printf("Load Custom Fuel Models (.fmd) Data Input Incomplete\n");				 	CanGo = false;
+            printf("Load Custom Fuel Models (.fmd) Data Input Incomplete\n");				 	CanGo = false;
 			}
 			else if (NeedConvFuelModels() && !HaveFuelConversions())
 			{
-				printf("Load Fuel Conversions (.cnv) Data Input Incomplete\n");				CanGo = false;
+            printf("Load Fuel Conversions (.cnv) Data Input Incomplete\n");				CanGo = false;
 			}
 			if (CanGo)
 			{*/
-				Initiate() ;
-			//}
-		}
-		StepThrough = false;
+        Initiate() ;
+        //}
+    }
+    StepThrough = false;
 	//SaveSettingsToFile("./Settings.txt");    //JAS  added 9/30/05
 }
 
 /**********************************************************************************
-* THIS FUNCTION MAKES STARTS SIMULATION PROCESS LOOP
-* Ret: 1 ok
-*      < 0 Error,  use icf.ErrorMessage(errnum)
-***********************************************************************************/
+ * THIS FUNCTION MAKES STARTS SIMULATION PROCESS LOOP
+ * Ret: 1 ok
+ *      < 0 Error,  use icf.ErrorMessage(errnum)
+ ***********************************************************************************/
 int Farsite5::Execute_StartRestart()
 {
-int i_Ret;
+    int i_Ret;
 
 	/*     if(DDE.DDE_SIMCOMMAND)   	// delay response for dde return
-				 {    Sleep(500);
-					  DDE.DDE_SIMCOMMAND=false;
-				 }
-			*/
+           {    Sleep(500);
+           DDE.DDE_SIMCOMMAND=false;
+           }
+    */
 	if (SIMULATE_GO)
 	{
 		//Beep(24000, 150);
@@ -9686,12 +9687,12 @@ int i_Ret;
 		//	Response = IDYES;
 		//printf("? Are You Sure You Want To Restart The Simulation ? RESTART FARSITE SIMULATION ?\n");		if (Response == IDYES)
 		//{
-			Execute_Reset();
-			//  							  //CmSimulateRestart();
-			// reset the simulation to beginning
-			if (IgnitionResetAtRestart(GETVAL))
-				LoadIgnitions();
-			CountFires();
+        Execute_Reset();
+        //  							  //CmSimulateRestart();
+        // reset the simulation to beginning
+        if (IgnitionResetAtRestart(GETVAL))
+            LoadIgnitions();
+        CountFires();
 		//}
 	}
 	else
@@ -9725,17 +9726,17 @@ int i_Ret;
 					LandscapeTheme* grid;
 
 					/*
-															for(i=14;  i<257; i++)
-															{	if(!IsNewFuelReserved(i) && GetNewFuel(i, 0))
-																 {	if(!InitialFuelMoistureIsHere(i))
-																	{	NEEDMX=true;
-																		sprintf(msg, "Custom Fuel Model %ld Has No Initial Fuel Moisture", i);
-																		   sprintf(msg2, "Update File %s before continuing", Inputs.MBMois);
-																		   break;
-																	}
-															   }
-															}
-															*/
+                      for(i=14;  i<257; i++)
+                      {	if(!IsNewFuelReserved(i) && GetNewFuel(i, 0))
+                      {	if(!InitialFuelMoistureIsHere(i))
+                      {	NEEDMX=true;
+                      sprintf(msg, "Custom Fuel Model %ld Has No Initial Fuel Moisture", i);
+                      sprintf(msg2, "Update File %s before continuing", Inputs.MBMois);
+                      break;
+                      }
+                      }
+                      }
+                    */
 
 					if (!NEEDMX)
 					{
@@ -9767,9 +9768,9 @@ int i_Ret;
 								CheckPostFrontal(GETVAL))
 							{
 								sprintf(msg,
-									"Post-frontal combustion enabled, but missing CWD file");
+                                        "Post-frontal combustion enabled, but missing CWD file");
 								sprintf(msg2,
-									"Add .CWD File to Project before continuing");
+                                        "Add .CWD File to Project before continuing");
 								NEEDMX = true;
 							}
 						}
@@ -9812,7 +9813,7 @@ int i_Ret;
 
 					i_Ret = FarsiteSimulationLoop();
 					if ( i_Ret < 0 )  /* See notes in function heading */
-                      return i_Ret ;
+                        return i_Ret ;
 
                     // start FARSITE process and check message loop between iteratations
 				}
@@ -9859,7 +9860,7 @@ void Farsite5::Execute_ResumeSuspend()
 					FARSITE_GO = true;
 					//mb->NULLHintTextPointer();
 					//if (!StepThrough)
-						//Beep(24000, 150);
+                    //Beep(24000, 150);
 					//if(burn.SIMTIME>=maximum)	 // if duration has been extended
 					//CopyDDEFileInfo();
 					ConvertAbsoluteToRelativeBurnPeriod();
@@ -9922,11 +9923,11 @@ void Farsite5::Terminate()
 	CloseLandFile();
 	if(F_ON==true)
 	{
-	//	Inputs.LandID=false;
-	//	Inputs.WtrID=false;
-	//	Inputs.WndID=false;
-	//	Inputs.AdjID=false;
-	//	Inputs.FuelMoisID=false;
+        //	Inputs.LandID=false;
+        //	Inputs.WtrID=false;
+        //	Inputs.WndID=false;
+        //	Inputs.AdjID=false;
+        //	Inputs.FuelMoisID=false;
 		for(i=0; i<5; i++)    // initialize strings for fileanmes
 		{
 			//Inputs.WeatherFile[i][0] = 0;//bfs::path() ;
@@ -10134,11 +10135,11 @@ bool Farsite5::InquireInBurnPeriod(double SimTime)
 	return false;
 }
 /**********************************************************************
-* NOTE: This function will handle end of year wrap.
-* Calculates number of minutes from the Farsite Start date/time
-* to the start date/time of the burn periods and stores them - see
-* code below.
-**********************************************************************/
+ * NOTE: This function will handle end of year wrap.
+ * Calculates number of minutes from the Farsite Start date/time
+ * to the start date/time of the burn periods and stores them - see
+ * code below.
+ **********************************************************************/
 void Farsite5::ConvertAbsoluteToRelativeBurnPeriod()
 {
 	long i, days;
@@ -10255,24 +10256,24 @@ void Farsite5::FlatSimulateInitiateTerminate()
 }
 
 /**************************************************************************
-*
-* Ret: 1 OK,
-*      < 0 Error Number, to get error message use CFarsite.GetErrorMessage(errnum)
-*         or icf.ErrorMessage(errnum) to get error text
-***************************************************************************/
+ *
+ * Ret: 1 OK,
+ *      < 0 Error Number, to get error message use CFarsite.GetErrorMessage(errnum)
+ *         or icf.ErrorMessage(errnum) to get error text
+ ***************************************************************************/
 int Farsite5::LaunchFarsite(void)
 {
-int i_Ret;
+    int i_Ret;
 	if(!Ignition.GetLightsLandscape())
 		return e_EMS_FARSITE_NO_IGNITION;
-   Ignition.ShapeInput();
-   if(strlen(icf.cr_FarsiteBarrier) > 0)
-   {
-	   SetBarrier(icf.cr_FarsiteBarrier);
+    Ignition.ShapeInput();
+    if(strlen(icf.cr_FarsiteBarrier) > 0)
+    {
+        SetBarrier(icf.cr_FarsiteBarrier);
 		//ShapefileBarrier barrier(this);
 		//barrier.setFileName(icf.cr_FarsiteBarrier);
 		//barrier.load();
-   }
+    }
 	AllocStationGrid(1, 1);   	   // initialize station grid to 1
 	ResetDuration();
 	FlatSimulateInitiateTerminate();
@@ -10281,7 +10282,7 @@ int i_Ret;
 	SetEndDate(GetJulianDays(GetEndMonth()) + GetEndDay());
 	SetStartDate(GetJulianDays(GetStartMonth()) + GetStartDay());//+GetStartHour()/100);
 	SetSimulationDuration(ConvertActualTimeToSimtime(GetEndMonth(),
-							GetEndDay(), GetEndHour(), GetEndMin(), false));
+                                                     GetEndDay(), GetEndHour(), GetEndMin(), false));
 	//time(&timeLaunchFarsite);
 	timeLaunchFarsite = clock();
 
@@ -10307,71 +10308,71 @@ bool Farsite5::AllocBurnPeriod(long Num)
 
 	//long i, FirstDay, StartDay, EndDay, NumDays, LastDay;
 /*	long i,FirstDay, NumDays, LastDay;
-	//long mo, dy, JDay, maxdy;
-	long mo, dy, JDay;
+//long mo, dy, JDay, maxdy;
+long mo, dy, JDay;
 
-	FirstDay = GetJulianDays(GetMinMonth());
-	FirstDay += GetMinDay();
-	LastDay = GetJulianDays(GetMaxMonth());
-	LastDay += GetMaxDay();
-	if (FirstDay < LastDay)
-		NumDays = LastDay - FirstDay;
-	else
-		NumDays = 365 - FirstDay + LastDay;
-	if (Num < NumDays)
-		Num = NumDays;
+FirstDay = GetJulianDays(GetMinMonth());
+FirstDay += GetMinDay();
+LastDay = GetJulianDays(GetMaxMonth());
+LastDay += GetMaxDay();
+if (FirstDay < LastDay)
+NumDays = LastDay - FirstDay;
+else
+NumDays = 365 - FirstDay + LastDay;
+if (Num < NumDays)
+Num = NumDays;
 
-	abp = new AbsoluteBurnPeriod[Num];
-	if (abp == NULL)
-		return false;
-	memset(abp, 0x0, Num * sizeof(AbsoluteBurnPeriod));
-	NumAbsoluteData = Num;
+abp = new AbsoluteBurnPeriod[Num];
+if (abp == NULL)
+return false;
+memset(abp, 0x0, Num * sizeof(AbsoluteBurnPeriod));
+NumAbsoluteData = Num;
 
-	mo = GetMinMonth();
-	dy = GetMinDay();
-	for (i = 0; i < NumDays; i++)
-	{
-		abp[i].Month = mo;
-		abp[i].Day = dy;
-		abp[i].Start = 0;
-		abp[i].End = 2400;
-		dy++;
-		JDay = dy + GetJulianDays(mo);
-		if (mo < 12)
-		{
-			if (JDay > GetJulianDays(mo + 1))
-			{
-				dy = 1;
-				mo++;
-			}
-		}
-		else
-		{
-			if (JDay > 365)
-			{
-				dy = 1;
-				mo = 1;
-			}
-		}
-	}*/
+mo = GetMinMonth();
+dy = GetMinDay();
+for (i = 0; i < NumDays; i++)
+{
+abp[i].Month = mo;
+abp[i].Day = dy;
+abp[i].Start = 0;
+abp[i].End = 2400;
+dy++;
+JDay = dy + GetJulianDays(mo);
+if (mo < 12)
+{
+if (JDay > GetJulianDays(mo + 1))
+{
+dy = 1;
+mo++;
+}
+}
+else
+{
+if (JDay > 365)
+{
+dy = 1;
+mo = 1;
+}
+}
+}*/
 
 	return true;
 }
 
 
 /*void Farsite5::FreeBurnPeriod()
-{
-	NumRelativeData = 0;
-	NumAbsoluteData = 0;
-	if (abp)
-		delete[] abp;	//free(abp);
-	abp = 0;
-	if (rbp)
-		delete[] rbp;	//free(rbp);
-	rbp = 0;
-	DownTime = 0.0;
-	LastAccess = -1;
-}*/
+  {
+  NumRelativeData = 0;
+  NumAbsoluteData = 0;
+  if (abp)
+  delete[] abp;	//free(abp);
+  abp = 0;
+  if (rbp)
+  delete[] rbp;	//free(rbp);
+  rbp = 0;
+  DownTime = 0.0;
+  LastAccess = -1;
+  }*/
 
 
 void Farsite5::SetBurnPeriod(long num, long mo, long dy, long yr, long start, long end)
@@ -10445,128 +10446,128 @@ int Farsite5::SetBarrier(char *_barrierFileName)
 	{
 		return 0;//must load ignitions first!
 	}
-        long i, j, NumPts, NumSeg, cellx, celly; // NumAlloc
-		double x, y, x1, x2, y1, y2, dx, dy, dist, fract, res, linedist;
-		res = Header.XResol;
-		dist=res/IGNITON_GRID_LINEDIST_DIVISOR;
-		double tWest = GetLoEast();
-		double tSouth = GetHiNorth();
-		//westUTM = pFarsite->ConvertEastingOffsetToUtm(West);//*MetersToKm);
-			//fprintf(otpfile, "%s %lf\n", "YLLCORNER",
-		//southUTM = pFarsite->ConvertNorthingOffsetToUtm(South);//*MetersToKm);
-		double west = ConvertEastingOffsetToUtm(tWest), north = ConvertNorthingOffsetToUtm(tSouth), *pts = NULL;
-		long NumCols = ignitionCols, NumRows = ignitionRows;
-		SHPHandle	hSHP;
-		double 	adfMinBound[4], adfMaxBound[4];
-		SHPObject *pShape;
-		int nShapes, shapeType;
-		hSHP = SHPOpen( _barrierFileName, "rb" );
-		if( hSHP == NULL )
-		{
-			return FALSE;
-		}
-		SHPGetInfo( hSHP, &nShapes, &shapeType, adfMinBound, adfMaxBound );
-		//NumAlloc=0;
-		for(int s = 0; s < nShapes; s++ )
-		{
-			pShape = SHPReadObject( hSHP, s );
-			//NumPts=0;
-			switch(pShape->nSHPType)
-			{
-			case SHPT_POINT:
-			{
-				x = pShape->padfX[0];
-				y = pShape->padfY[0];
-				//MTT_RotateVectorPoint(&x, &y, true);
-				cellx=(long) ((x-west)/res);     // zero based
-				celly=(long) ((north-y)/res);//-1;
-				//celly=(long) ((north-y)/res)-1;
-				if(cellx<0 || cellx>NumCols-1)
-					break;
-				if(celly<0 || celly>NumRows-1)
-					break;
-				ignitionGrid[celly][cellx]= 0.0;//nodeSpread->GetStartTime();
-			}
-				break;
-			case SHPT_MULTIPOINT:
-				break;
-			case SHPT_ARC:
-			case SHPT_POLYGON:
-			{
-				xPolygon poly;
-				for(int p = 0; p < pShape->nParts; p++)
-				{
-					int pEnd = (p < pShape->nParts - 1) ? pShape->panPartStart[p + 1] : pShape->nVertices;
-					NumPts = pEnd - pShape->panPartStart[p];// + 1;
-					if(pts)
-						delete[] pts;
-					pts=new double[NumPts*2];
-					i = 0;
-					for(int v = pShape->panPartStart[p]; v < pEnd; v++)
-					{
-						pts[i*2] = pShape->padfX[v];
-						pts[i*2+1]= pShape->padfY[v];
-						i++;
-					}
-					// copy zeros to cells crossed by line
-					x1=pts[0];
-					y1=pts[1];
-					poly.AllocVertex(NumPts);
-					poly.SetVertex(x1, y1, 0);
-					for(i=1; i<NumPts; i++)
-					{
-						x2=pts[i*2];
-						y2=pts[i*2+1];
-						poly.SetVertex(x2, y2, i);
-						dx=(x1-x2);
-						dy=(y1-y2);
-						linedist=sqrt(pow2(dx)+pow2(dy));
-						NumSeg=(long) (linedist/dist)+1;
-						fract=dist/linedist;//((double) NumSeg);
-						for(j=0; j<NumSeg; j++)
-						{
-							x=x1-dx*fract*((double) j);
-							y=y1-dy*fract*((double) j);
-							//MTT_RotateVectorPoint(&x, &y, true);
-							cellx=(long) ((x-west)/res);     // zero based
-							celly=(long) ((north-y)/res);//-1;
-							//celly=(long) ((north-y)/res)-1;
-							if(cellx<0 || cellx>NumCols-1)
-								continue;
-							if(celly<0 || celly>NumRows-1)
-								continue;
-							//if(nodeSpread->DataExist(cellx, celly))
-							//{
-								long Position = GetCellPosition(x, y);
-								SetCellFuel(Position, 91);
-							//igCell = CellData(x, y, igCell, igCrown, igGround, &garbage);
-								//float fuel = igCell.f;// NumRows - celly - 1);
+    long i, j, NumPts, NumSeg, cellx, celly; // NumAlloc
+    double x, y, x1, x2, y1, y2, dx, dy, dist, fract, res, linedist;
+    res = Header.XResol;
+    dist=res/IGNITON_GRID_LINEDIST_DIVISOR;
+    double tWest = GetLoEast();
+    double tSouth = GetHiNorth();
+    //westUTM = pFarsite->ConvertEastingOffsetToUtm(West);//*MetersToKm);
+    //fprintf(otpfile, "%s %lf\n", "YLLCORNER",
+    //southUTM = pFarsite->ConvertNorthingOffsetToUtm(South);//*MetersToKm);
+    double west = ConvertEastingOffsetToUtm(tWest), north = ConvertNorthingOffsetToUtm(tSouth), *pts = NULL;
+    long NumCols = ignitionCols, NumRows = ignitionRows;
+    SHPHandle	hSHP;
+    double 	adfMinBound[4], adfMaxBound[4];
+    SHPObject *pShape;
+    int nShapes, shapeType;
+    hSHP = SHPOpen( _barrierFileName, "rb" );
+    if( hSHP == NULL )
+    {
+        return FALSE;
+    }
+    SHPGetInfo( hSHP, &nShapes, &shapeType, adfMinBound, adfMaxBound );
+    //NumAlloc=0;
+    for(int s = 0; s < nShapes; s++ )
+    {
+        pShape = SHPReadObject( hSHP, s );
+        //NumPts=0;
+        switch(pShape->nSHPType)
+        {
+        case SHPT_POINT:
+        {
+            x = pShape->padfX[0];
+            y = pShape->padfY[0];
+            //MTT_RotateVectorPoint(&x, &y, true);
+            cellx=(long) ((x-west)/res);     // zero based
+            celly=(long) ((north-y)/res);//-1;
+            //celly=(long) ((north-y)/res)-1;
+            if(cellx<0 || cellx>NumCols-1)
+                break;
+            if(celly<0 || celly>NumRows-1)
+                break;
+            ignitionGrid[celly][cellx]= 0.0;//nodeSpread->GetStartTime();
+        }
+        break;
+        case SHPT_MULTIPOINT:
+            break;
+        case SHPT_ARC:
+        case SHPT_POLYGON:
+        {
+            xPolygon poly;
+            for(int p = 0; p < pShape->nParts; p++)
+            {
+                int pEnd = (p < pShape->nParts - 1) ? pShape->panPartStart[p + 1] : pShape->nVertices;
+                NumPts = pEnd - pShape->panPartStart[p];// + 1;
+                if(pts)
+                    delete[] pts;
+                pts=new double[NumPts*2];
+                i = 0;
+                for(int v = pShape->panPartStart[p]; v < pEnd; v++)
+                {
+                    pts[i*2] = pShape->padfX[v];
+                    pts[i*2+1]= pShape->padfY[v];
+                    i++;
+                }
+                // copy zeros to cells crossed by line
+                x1=pts[0];
+                y1=pts[1];
+                poly.AllocVertex(NumPts);
+                poly.SetVertex(x1, y1, 0);
+                for(i=1; i<NumPts; i++)
+                {
+                    x2=pts[i*2];
+                    y2=pts[i*2+1];
+                    poly.SetVertex(x2, y2, i);
+                    dx=(x1-x2);
+                    dy=(y1-y2);
+                    linedist=sqrt(pow2(dx)+pow2(dy));
+                    NumSeg=(long) (linedist/dist)+1;
+                    fract=dist/linedist;//((double) NumSeg);
+                    for(j=0; j<NumSeg; j++)
+                    {
+                        x=x1-dx*fract*((double) j);
+                        y=y1-dy*fract*((double) j);
+                        //MTT_RotateVectorPoint(&x, &y, true);
+                        cellx=(long) ((x-west)/res);     // zero based
+                        celly=(long) ((north-y)/res);//-1;
+                        //celly=(long) ((north-y)/res)-1;
+                        if(cellx<0 || cellx>NumCols-1)
+                            continue;
+                        if(celly<0 || celly>NumRows-1)
+                            continue;
+                        //if(nodeSpread->DataExist(cellx, celly))
+                        //{
+                        long Position = GetCellPosition(x, y);
+                        SetCellFuel(Position, 91);
+                        //igCell = CellData(x, y, igCell, igCrown, igGround, &garbage);
+                        //float fuel = igCell.f;// NumRows - celly - 1);
 
-							//if(ignitionGrid[celly][cellx] != 1.0 && igCell.f > 0 && (igCell.f < 90 || igCell.f > 99))
-								ignitionGrid[celly][cellx] = 0.0;//.Time[0]=nodeSpread->GetStartTime();
-							//}
-						}
-						x1=x2;
-						y1=y2;
-					}
-					if(pShape->nSHPType == SHPT_POLYGON && this->icf.i_FarsiteFillBarriers)
-						FillBarrierPolygon(&poly); // Fills polygon with 0's
-				}
-			}
-			default:
-				break;
-			}
-			SHPDestroyObject(pShape);
+                        //if(ignitionGrid[celly][cellx] != 1.0 && igCell.f > 0 && (igCell.f < 90 || igCell.f > 99))
+                        ignitionGrid[celly][cellx] = 0.0;//.Time[0]=nodeSpread->GetStartTime();
+                        //}
+                    }
+                    x1=x2;
+                    y1=y2;
+                }
+                if(pShape->nSHPType == SHPT_POLYGON && this->icf.i_FarsiteFillBarriers)
+                    FillBarrierPolygon(&poly); // Fills polygon with 0's
+            }
+        }
+        default:
+            break;
+        }
+        SHPDestroyObject(pShape);
 
-			//fscanf(fin, "%s", testend);
-			//fscanf(fin, "%s", testend);    // new id tag
-			//if(feof(fin))
-			//	break;
-		}
-		if(pts)
-			delete[] pts;
-		SHPClose(hSHP);
-		return 1;
+        //fscanf(fin, "%s", testend);
+        //fscanf(fin, "%s", testend);    // new id tag
+        //if(feof(fin))
+        //	break;
+    }
+    if(pts)
+        delete[] pts;
+    SHPClose(hSHP);
+    return 1;
 }
 
 int Farsite5::WriteArrivalTimeGrid(char *trgName)
@@ -10707,140 +10708,140 @@ int Farsite5::CreateIgnitionGrid()
 	crowndata igCrown;
 	grounddata igGround;
 	long garbage;
-        long i, j, NumPts, NumSeg, cellx, celly; //NumAlloc
-		double x, y, x1, x2, y1, y2, dx, dy, dist, fract, res, linedist;
-		res = Header.XResol;
-		dist=res/IGNITON_GRID_LINEDIST_DIVISOR;
-		double tWest = GetLoEast();
-		//double tSouth = GetLoNorth();
-		double tNorth = GetHiNorth();
-		//westUTM = pFarsite->ConvertEastingOffsetToUtm(West);//*MetersToKm);
-			//fprintf(otpfile, "%s %lf\n", "YLLCORNER",
-		//southUTM = pFarsite->ConvertNorthingOffsetToUtm(South);//*MetersToKm);
-		double west = ConvertEastingOffsetToUtm(tWest),
-			//north = ConvertNorthingOffsetToUtm(tSouth), *pts = NULL;
-			north = ConvertNorthingOffsetToUtm(tNorth), *pts = NULL;
-		long NumCols = ignitionCols, NumRows = ignitionRows;
-		SHPHandle	hSHP;
-		double 	adfMinBound[4], adfMaxBound[4];
-		SHPObject *pShape;
-		int nShapes, shapeType;
-		hSHP = SHPOpen( Ignition.ifile, "rb" );
-		if( hSHP == NULL )
-		{
-			return FALSE;
-		}
-		SHPGetInfo( hSHP, &nShapes, &shapeType, adfMinBound, adfMaxBound );
-		//NumAlloc=0;
-		for(int s = 0; s < nShapes; s++ )
-		{
-			pShape = SHPReadObject( hSHP, s );
-			//NumPts=0;
-			switch(pShape->nSHPType)
-			{
-			case SHPT_POINT:
-			{
-				x = pShape->padfX[0];
-				y = pShape->padfY[0];
-				//MTT_RotateVectorPoint(&x, &y, true);
-				cellx=(long) ((x-west)/res);     // zero based
-				celly=(long) ((north-y)/res);//-1;
-				//celly=(long) ((north-y)/res)-1;
-				if(cellx<0 || cellx>NumCols-1)
-					break;
-				if(celly<0 || celly>NumRows-1)
-					break;
-				ignitionGrid[celly][cellx]= 1.0;//nodeSpread->GetStartTime();
-			}
-				break;
-			case SHPT_MULTIPOINT:
-				break;
-			case SHPT_ARC:
-			case SHPT_POLYGON:
-			{
-				xPolygon poly;
-				for(int p = 0; p < pShape->nParts; p++)
-				{
-					int pEnd = (p < pShape->nParts - 1) ? pShape->panPartStart[p + 1] : pShape->nVertices;
-					NumPts = pEnd - pShape->panPartStart[p];// + 1;
-					if(pts)
-						delete[] pts;
-					pts=new double[NumPts*2];
-					i = 0;
-					for(int v = pShape->panPartStart[p]; v < pEnd; v++)
-					{
-						pts[i*2] = pShape->padfX[v];
-						pts[i*2+1]= pShape->padfY[v];
-						i++;
-					}
-					// copy zeros to cells crossed by line
-					x1=pts[0];
-					y1=pts[1];
-					poly.AllocVertex(NumPts);
-					poly.SetVertex(x1, y1, 0);
-					for(i=1; i<NumPts; i++)
-					{
-						x2=pts[i*2];
-						y2=pts[i*2+1];
-						poly.SetVertex(x2, y2, i);
-						dx=(x1-x2);
-						dy=(y1-y2);
-						linedist=sqrt(pow2(dx)+pow2(dy));
-						NumSeg=(long) (linedist/dist)+1;
-						fract=dist/linedist;//((double) NumSeg);
-						for(j=0; j<NumSeg; j++)
-						{
-							x=x1-dx*fract*((double) j);
-							y=y1-dy*fract*((double) j);
-							//MTT_RotateVectorPoint(&x, &y, true);
-							cellx=(long) ((x-west)/res);     // zero based
-							celly=(long) ((north-y)/res);//-1;
-							//celly=(long) ((north-y)/res)-1;
-							if(cellx<0 || cellx>NumCols-1)
-								continue;
-							if(celly<0 || celly>NumRows-1)
-								continue;
-							//if(nodeSpread->DataExist(cellx, celly))
-							//{
-							igCell = CellData(x, y, igCell, igCrown, igGround, &garbage);
-								//float fuel = igCell.f;// NumRows - celly - 1);
+    long i, j, NumPts, NumSeg, cellx, celly; //NumAlloc
+    double x, y, x1, x2, y1, y2, dx, dy, dist, fract, res, linedist;
+    res = Header.XResol;
+    dist=res/IGNITON_GRID_LINEDIST_DIVISOR;
+    double tWest = GetLoEast();
+    //double tSouth = GetLoNorth();
+    double tNorth = GetHiNorth();
+    //westUTM = pFarsite->ConvertEastingOffsetToUtm(West);//*MetersToKm);
+    //fprintf(otpfile, "%s %lf\n", "YLLCORNER",
+    //southUTM = pFarsite->ConvertNorthingOffsetToUtm(South);//*MetersToKm);
+    double west = ConvertEastingOffsetToUtm(tWest),
+        //north = ConvertNorthingOffsetToUtm(tSouth), *pts = NULL;
+        north = ConvertNorthingOffsetToUtm(tNorth), *pts = NULL;
+    long NumCols = ignitionCols, NumRows = ignitionRows;
+    SHPHandle	hSHP;
+    double 	adfMinBound[4], adfMaxBound[4];
+    SHPObject *pShape;
+    int nShapes, shapeType;
+    hSHP = SHPOpen( Ignition.ifile, "rb" );
+    if( hSHP == NULL )
+    {
+        return FALSE;
+    }
+    SHPGetInfo( hSHP, &nShapes, &shapeType, adfMinBound, adfMaxBound );
+    //NumAlloc=0;
+    for(int s = 0; s < nShapes; s++ )
+    {
+        pShape = SHPReadObject( hSHP, s );
+        //NumPts=0;
+        switch(pShape->nSHPType)
+        {
+        case SHPT_POINT:
+        {
+            x = pShape->padfX[0];
+            y = pShape->padfY[0];
+            //MTT_RotateVectorPoint(&x, &y, true);
+            cellx=(long) ((x-west)/res);     // zero based
+            celly=(long) ((north-y)/res);//-1;
+            //celly=(long) ((north-y)/res)-1;
+            if(cellx<0 || cellx>NumCols-1)
+                break;
+            if(celly<0 || celly>NumRows-1)
+                break;
+            ignitionGrid[celly][cellx]= 1.0;//nodeSpread->GetStartTime();
+        }
+        break;
+        case SHPT_MULTIPOINT:
+            break;
+        case SHPT_ARC:
+        case SHPT_POLYGON:
+        {
+            xPolygon poly;
+            for(int p = 0; p < pShape->nParts; p++)
+            {
+                int pEnd = (p < pShape->nParts - 1) ? pShape->panPartStart[p + 1] : pShape->nVertices;
+                NumPts = pEnd - pShape->panPartStart[p];// + 1;
+                if(pts)
+                    delete[] pts;
+                pts=new double[NumPts*2];
+                i = 0;
+                for(int v = pShape->panPartStart[p]; v < pEnd; v++)
+                {
+                    pts[i*2] = pShape->padfX[v];
+                    pts[i*2+1]= pShape->padfY[v];
+                    i++;
+                }
+                // copy zeros to cells crossed by line
+                x1=pts[0];
+                y1=pts[1];
+                poly.AllocVertex(NumPts);
+                poly.SetVertex(x1, y1, 0);
+                for(i=1; i<NumPts; i++)
+                {
+                    x2=pts[i*2];
+                    y2=pts[i*2+1];
+                    poly.SetVertex(x2, y2, i);
+                    dx=(x1-x2);
+                    dy=(y1-y2);
+                    linedist=sqrt(pow2(dx)+pow2(dy));
+                    NumSeg=(long) (linedist/dist)+1;
+                    fract=dist/linedist;//((double) NumSeg);
+                    for(j=0; j<NumSeg; j++)
+                    {
+                        x=x1-dx*fract*((double) j);
+                        y=y1-dy*fract*((double) j);
+                        //MTT_RotateVectorPoint(&x, &y, true);
+                        cellx=(long) ((x-west)/res);     // zero based
+                        celly=(long) ((north-y)/res);//-1;
+                        //celly=(long) ((north-y)/res)-1;
+                        if(cellx<0 || cellx>NumCols-1)
+                            continue;
+                        if(celly<0 || celly>NumRows-1)
+                            continue;
+                        //if(nodeSpread->DataExist(cellx, celly))
+                        //{
+                        igCell = CellData(x, y, igCell, igCrown, igGround, &garbage);
+                        //float fuel = igCell.f;// NumRows - celly - 1);
 
-							if(ignitionGrid[celly][cellx] != 1.0 && igCell.f > 0 && (igCell.f < 90 || igCell.f > 99))
-								ignitionGrid[celly][cellx] = 1.0;//.Time[0]=nodeSpread->GetStartTime();
-							//}
-						}
-						x1=x2;
-						y1=y2;
-					}
-					FillIgnitionPolygon(&poly, 1.0); // Fills polygon with 1's
-				}
-			}
-			default:
-				break;
-			}
-			SHPDestroyObject(pShape);
+                        if(ignitionGrid[celly][cellx] != 1.0 && igCell.f > 0 && (igCell.f < 90 || igCell.f > 99))
+                            ignitionGrid[celly][cellx] = 1.0;//.Time[0]=nodeSpread->GetStartTime();
+                        //}
+                    }
+                    x1=x2;
+                    y1=y2;
+                }
+                FillIgnitionPolygon(&poly, 1.0); // Fills polygon with 1's
+            }
+        }
+        default:
+            break;
+        }
+        SHPDestroyObject(pShape);
 
-			//fscanf(fin, "%s", testend);
-			//fscanf(fin, "%s", testend);    // new id tag
-			//if(feof(fin))
-			//	break;
-		}
-		if(pts)
-			delete[] pts;
-		SHPClose(hSHP);
+        //fscanf(fin, "%s", testend);
+        //fscanf(fin, "%s", testend);    // new id tag
+        //if(feof(fin))
+        //	break;
+    }
+    if(pts)
+        delete[] pts;
+    SHPClose(hSHP);
 
-		//now make sure we have something lit.
-		for(long r = 0; r < ignitionRows; r++)
-		{
-			for(long c = 0; c < ignitionCols; c++)
-			{
-				if(ignitionGrid[r][c] > 0.0)
-				{
-					m_nCellsLit++;
-					Ignition.SetLightsLandscape(true);
-				}
-			}
-		}
+    //now make sure we have something lit.
+    for(long r = 0; r < ignitionRows; r++)
+    {
+        for(long c = 0; c < ignitionCols; c++)
+        {
+            if(ignitionGrid[r][c] > 0.0)
+            {
+                m_nCellsLit++;
+                Ignition.SetLightsLandscape(true);
+            }
+        }
+    }
 	if(m_nCellsLit > 0)
 		return 1;
 
@@ -10962,7 +10963,7 @@ int Farsite5::WriteIgnitionGrid(char *trgName)
 			return e_EMS_FILE_OPEN_ERROR;
 		}
 		//double west = Header.WestUtm, north = Header.NorthUtm, *pts = NULL;
-	//long outCols = nodeSpread->GetNumCols(), outRows = nodeSpread->GetNumRows();
+        //long outCols = nodeSpread->GetNumCols(), outRows = nodeSpread->GetNumRows();
 		double outRes = Header.XResol,
 			outWest = Header.WestUtm,//nodeSpread->West,
 			outSouth =  Header.SouthUtm;//nodeSpread->South;
@@ -11036,9 +11037,9 @@ void Farsite5::AddCurrPerimeter()
 
 	for (count = 0; count < NumVertex; count++)
 	{
-			xpt = GetPerimeter1Value(CurrentFire, count, XCOORD);
-			ypt = GetPerimeter1Value(CurrentFire, count, YCOORD);
-			newData->SetPoint(count, xpt, ypt);
+        xpt = GetPerimeter1Value(CurrentFire, count, XCOORD);
+        ypt = GetPerimeter1Value(CurrentFire, count, YCOORD);
+        newData->SetPoint(count, xpt, ypt);
 	}
 	xpt = GetPerimeter1Value(CurrentFire, 0, XCOORD);
 	ypt = GetPerimeter1Value(CurrentFire, 0, YCOORD);
@@ -11059,10 +11060,10 @@ void Farsite5::AddCurrPerimeter()
 		lastPerimeter = perimeters = newData;
 	}
 	/*DBFWriteStringAttribute(hDBF, NumRecord, 0, Description);
-	DBFWriteIntegerAttribute(hDBF, NumRecord, 1, Month);
-	DBFWriteIntegerAttribute(hDBF, NumRecord, 2, Day);
-	DBFWriteIntegerAttribute(hDBF, NumRecord, 3, Hour);
-	DBFWriteDoubleAttribute(hDBF, NumRecord, 4, SimTime);*/
+      DBFWriteIntegerAttribute(hDBF, NumRecord, 1, Month);
+      DBFWriteIntegerAttribute(hDBF, NumRecord, 2, Day);
+      DBFWriteIntegerAttribute(hDBF, NumRecord, 3, Hour);
+      DBFWriteDoubleAttribute(hDBF, NumRecord, 4, SimTime);*/
 
 }
 
@@ -11106,46 +11107,46 @@ int Farsite5::WritePerimetersShapeFile(char *trgName)
 	sprintf(DataBaseID, "%s", "Elapsed_Minutes");
 	DBFAddField(hDBF, DataBaseID, FTDouble, 32, 4);
 	/*NumVertex = pFarsite->GetNumPoints(CurrentFire);
-	if (BarExport)
-	{
-		NumVertex /= 2;
-		NumVertices = NumVertex;
-	}
-	else
-		NumVertices = NumVertex + 1;
-	VertexX = new double[NumVertex + 1];
-	VertexY = new double[NumVertex + 1];
-	//VertexZ=new double[NumVertex+1];
-	NumParts = 0;
-	//PartsArray=new int[2];
-	//PartsArray[0]=0;
-	for (count = 0; count < NumVertex; count++)
-	{
-		if (!BarExport)
-		{
-			xpt = pFarsite->GetPerimeter1Value(CurrentFire, count, XCOORD);
-			ypt = pFarsite->GetPerimeter1Value(CurrentFire, count, YCOORD);
-			//ros=GetPerimeter1Value(CurrentFire, count, ROSVAL);
-		}
-		else
-		{
-			xpt = pFarsite->GetPerimeter2Value(count, XCOORD);
-			ypt = pFarsite->GetPerimeter2Value(count, YCOORD);
-			//ros=0.0;
-		}
-		VertexX[count] = pFarsite->ConvertEastingOffsetToUtm(xpt);
-		VertexY[count] = pFarsite->ConvertNorthingOffsetToUtm(ypt);
-		//VertexZ[count]=ros;
-	}
-	if (!BarExport)    // don't repeat first point on barrier line
-	{
-		xpt = pFarsite->GetPerimeter1Value(CurrentFire, 0, XCOORD);
-		ypt = pFarsite->GetPerimeter1Value(CurrentFire, 0, YCOORD);
-		//ros=GetPerimeter1Value(CurrentFire, 0, ROSVAL);
-		VertexX[count] = pFarsite->ConvertEastingOffsetToUtm(xpt);
-		VertexY[count] = pFarsite->ConvertNorthingOffsetToUtm(ypt);
-		//VertexZ[count]=ros;
-	}*/
+      if (BarExport)
+      {
+      NumVertex /= 2;
+      NumVertices = NumVertex;
+      }
+      else
+      NumVertices = NumVertex + 1;
+      VertexX = new double[NumVertex + 1];
+      VertexY = new double[NumVertex + 1];
+      //VertexZ=new double[NumVertex+1];
+      NumParts = 0;
+      //PartsArray=new int[2];
+      //PartsArray[0]=0;
+      for (count = 0; count < NumVertex; count++)
+      {
+      if (!BarExport)
+      {
+      xpt = pFarsite->GetPerimeter1Value(CurrentFire, count, XCOORD);
+      ypt = pFarsite->GetPerimeter1Value(CurrentFire, count, YCOORD);
+      //ros=GetPerimeter1Value(CurrentFire, count, ROSVAL);
+      }
+      else
+      {
+      xpt = pFarsite->GetPerimeter2Value(count, XCOORD);
+      ypt = pFarsite->GetPerimeter2Value(count, YCOORD);
+      //ros=0.0;
+      }
+      VertexX[count] = pFarsite->ConvertEastingOffsetToUtm(xpt);
+      VertexY[count] = pFarsite->ConvertNorthingOffsetToUtm(ypt);
+      //VertexZ[count]=ros;
+      }
+      if (!BarExport)    // don't repeat first point on barrier line
+      {
+      xpt = pFarsite->GetPerimeter1Value(CurrentFire, 0, XCOORD);
+      ypt = pFarsite->GetPerimeter1Value(CurrentFire, 0, YCOORD);
+      //ros=GetPerimeter1Value(CurrentFire, 0, ROSVAL);
+      VertexX[count] = pFarsite->ConvertEastingOffsetToUtm(xpt);
+      VertexY[count] = pFarsite->ConvertNorthingOffsetToUtm(ypt);
+      //VertexZ[count]=ros;
+      }*/
 	LastAccess = -1;
 	CPerimeterData *perimData = perimeters;
 	while(perimData)
@@ -11172,7 +11173,7 @@ int Farsite5::WritePerimetersShapeFile(char *trgName)
 			VertexZ[i] = 0.0;
 		}
 		pSHP = SHPCreateObject(nShapeType, -1, NumParts, NULL, NULL, NumVertices,
-			VertexX, VertexY, VertexZ, NULL);
+                               VertexX, VertexY, VertexZ, NULL);
 		SHPWriteObject(hSHP, -1, pSHP);
 		SHPDestroyObject(pSHP);
 
@@ -11186,17 +11187,17 @@ int Farsite5::WritePerimetersShapeFile(char *trgName)
 			delete[] VertexZ;
 		switch(perimData->GetFireType())
 		{
-			case 1:
-				strcpy(Description, "Expanding Fire");
-				break;
-			case 2:
-				strcpy(Description, "Enclave Fire");
-				break;
-			case 3:
-				strcpy(Description, "Barrier");
-				break;
-			default:
-				Description[0] = 0;
+        case 1:
+            strcpy(Description, "Expanding Fire");
+            break;
+        case 2:
+            strcpy(Description, "Enclave Fire");
+            break;
+        case 3:
+            strcpy(Description, "Barrier");
+            break;
+        default:
+            Description[0] = 0;
 		}
 		DBFWriteStringAttribute(hDBF, NumRecord, 0, Description);
 		DBFWriteIntegerAttribute(hDBF, NumRecord, 1, perimData->GetMonth());
@@ -11217,8 +11218,8 @@ int Farsite5::WritePerimetersShapeFile(char *trgName)
 /***********************************************************************************************/
 int Farsite5::WriteTimingsFile(char *trgName)
 {
-  double  duration;
-   duration = (double)(timeFinish - timeLaunchFarsite) / CLOCKS_PER_SEC;
+    double  duration;
+    duration = (double)(timeFinish - timeLaunchFarsite) / CLOCKS_PER_SEC;
 
 	//SYSTEM_INFO sysinf;
 	//GetSystemInfo(&sysinf);
@@ -11232,8 +11233,8 @@ int Farsite5::WriteTimingsFile(char *trgName)
 	fprintf(bmFile, "Farsite BenchMark Results\n");
 	//fprintf(bmFile, "System Info:\n");
 	//unsigned int winMajor, winMinor, osBuild, osPlatform;
-   // OSVERSIONINFO osvi;
-   // BOOL bIsWindowsXPorLater;
+    // OSVERSIONINFO osvi;
+    // BOOL bIsWindowsXPorLater;
 
     //ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
     //osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
@@ -11249,18 +11250,18 @@ int Farsite5::WriteTimingsFile(char *trgName)
 /*	char tmpStr[512];
 	strcpy(tmpStr, cpu.GetCPUName().c_str());
 	if(fprintf(bmFile, "\tProcessor: %s\n", tmpStr) < 0)
-		return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
+    return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
 	strcpy(tmpStr, cpu.GetVendorName().c_str());
 	if(fprintf(bmFile, "\tVendor: %s\n", tmpStr) < 0)
-		return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
+    return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
 	if(fprintf(bmFile, "\tFamily: %d\n", cpu.GetCPUFamily()) < 0)
-		return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
+    return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
 	if(fprintf(bmFile, "\tModel: %d\n", cpu.GetCPUModel()) < 0)
-		return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
+    return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
 	if(fprintf(bmFile, "\tStepping: %d\n", cpu.GetCPUStepping()) < 0)
-		return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
+    return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
 	if(fprintf(bmFile, "\tSpeed (MHz): %d\n", cpu.GetSpeedMHz()) < 0)
-		return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);*/
+    return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);*/
 	//fprintf(bmFile, "\tProcessor: %s\n", cpu.GetCPUName());
 	//fprintf(bmFile, "\tProcessor: %s\n", cpu.GetCPUName());
 	//char pTmp[512];
@@ -11330,7 +11331,7 @@ int Farsite5::WriteTimingsFile(char *trgName)
 	if(fprintf(bmFile, "\tBacking Spread:             %s\n", (this->ConstantBackingSpreadRate(GETVAL) == 0) ? "Calculated from Elliptical Dimensions" : "Calculated from No Wind/No Slope") < 0)
 		return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
 	if(fprintf(bmFile, "\tSimulation Started:         %ld%s%ld %ld:00\n", GetStartMonth(), "/",
-			GetStartDay(), GetStartHour() / 100) < 0)
+               GetStartDay(), GetStartHour() / 100) < 0)
 		return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
 	if(fprintf(bmFile, "\tSimulation Ended:           %s\n", CurTime) < 0)
 		return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
@@ -11372,20 +11373,20 @@ int Farsite5::WriteTimingsFile(char *trgName)
 	for(int i = 0; i < MaxWeatherObs[0] - 20; i++)
 	{
 		if(fprintf(bmFile, "%ld %ld %.0f %ld %ld %.0f %.0f %ld %ld %.0f %ld %ld\n",
-			wtrdt[0][i].mo,
-			wtrdt[0][i].dy,
-			wtrdt[0][i].rn,
-			wtrdt[0][i].t1,
-			wtrdt[0][i].t2,
-			wtrdt[0][i].T1,
-			wtrdt[0][i].T2,
-			wtrdt[0][i].H1,
-			wtrdt[0][i].H2,
-			wtrdt[0][i].el,
-			wtrdt[0][i].tr1,
-			wtrdt[0][i].tr2
-			) < 0)
-		return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
+                   wtrdt[0][i].mo,
+                   wtrdt[0][i].dy,
+                   wtrdt[0][i].rn,
+                   wtrdt[0][i].t1,
+                   wtrdt[0][i].t2,
+                   wtrdt[0][i].T1,
+                   wtrdt[0][i].T2,
+                   wtrdt[0][i].H1,
+                   wtrdt[0][i].H2,
+                   wtrdt[0][i].el,
+                   wtrdt[0][i].tr1,
+                   wtrdt[0][i].tr2
+               ) < 0)
+            return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
 	}
 	//output wind internals
 	//if(fprintf(bmFile, "\tInternal Winds:              %ld\n", (MaxWindObs[0]) / 2) < 0)
@@ -11395,14 +11396,14 @@ int Farsite5::WriteTimingsFile(char *trgName)
 	for(int i = 0; i < MaxWindObs[0] - 1; i++)
 	{
 		if(fprintf(bmFile, "%ld %ld %ld %.0f %ld %ld\n",
-			wddt[0][i].mo,
-			wddt[0][i].dy,
-			wddt[0][i].hr,
-			wddt[0][i].ws,
-			wddt[0][i].wd,
-			wddt[0][i].cl
-			) < 0)
-		return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
+                   wddt[0][i].mo,
+                   wddt[0][i].dy,
+                   wddt[0][i].hr,
+                   wddt[0][i].ws,
+                   wddt[0][i].wd,
+                   wddt[0][i].cl
+               ) < 0)
+            return CloseAndReturn(bmFile, e_EMS_FILE_WRITE_ERROR);
 	}
 
 	//output run time
@@ -11419,19 +11420,19 @@ long Farsite5::GetCrownFireCalculation()
 }
 
 /*{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}
-* Name: LoadCrownFireMethod - Load Crown Fire Method
-* Desc: This can be Finney or Reinhardt,
-*       Finney is used as default.
-*   In: cr_CroFirMet....text argument as set in the command file
-{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
+ * Name: LoadCrownFireMethod - Load Crown Fire Method
+ * Desc: This can be Finney or Reinhardt,
+ *       Finney is used as default.
+ *   In: cr_CroFirMet....text argument as set in the command file
+ {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
 void Farsite5::LoadCrownFireMethod (char cr_CroFirMet[])
 {
 /* check if Reinhardt was set in cmd file, else we'll assume Finney was set or  */
 /* the no switch was found and so Finney is used as default                     */
-   if ( !strcasecmp (cr_CroFirMet, e_CFM_ScotRein) )
-	  SetCrownFireCalculation ( 1 );   /* if scott reinhardt           */
-   else
-      SetCrownFireCalculation ( 0 );   /* else assume finney           */
+    if ( !strcasecmp (cr_CroFirMet, e_CFM_ScotRein) )
+        SetCrownFireCalculation ( 1 );   /* if scott reinhardt           */
+    else
+        SetCrownFireCalculation ( 0 );   /* else assume finney           */
 }
 
 long Farsite5::SetCrownFireCalculation(long Type)
@@ -11507,18 +11508,18 @@ int Farsite5::CmMapEnvironment(int themeno, double mapTime, char *outName)
 
 
 			if(burn.fe->ld.elev==-9999 || burn.fe->ld.fuel<=0
-				|| (burn.fe->ld.fuel >= 90 && burn.fe->ld.fuel <= 99))
+               || (burn.fe->ld.fuel >= 90 && burn.fe->ld.fuel <= 99))
 			{	map[i*numx+j]=-9999;
-			xpt+=res;
+                xpt+=res;
 
-			continue;
+                continue;
 			}
 			burn.fe->GetEnvironmentData(&lmw);
 
 			switch(themeno)
 			{	case 0:
-			map[i*numx+j]=lmw.ones;
-			break;
+                    map[i*numx+j]=lmw.ones;
+                    break;
 			case 1:
 				map[i*numx+j]=lmw.tens;
 				break;
@@ -11565,9 +11566,9 @@ int Farsite5::CmMapEnvironment(int themeno, double mapTime, char *outName)
 		{
 			fprintf(outfile, "%lf ", map[i*numx+j]);
 		}
-			fprintf(outfile, "\n");
+        fprintf(outfile, "\n");
 
-}
+    }
 
 
 	fclose(outfile);
@@ -11579,12 +11580,12 @@ int Farsite5::CmMapEnvironment(int themeno, double mapTime, char *outName)
 
 int Farsite5::ExportMoistureDataText(char *trgName)
 {
-bool b;
+    bool b;
 
-  b = this->cfmc.ExportMoistureDataText(trgName, this->LandFName);
-  if ( b == true )
+    b = this->cfmc.ExportMoistureDataText(trgName, this->LandFName);
+    if ( b == true )
   		return 1;
-	 return 0;
+    return 0;
 }
 
 int Farsite5::WriteSpotDataFile(char *trgName)
@@ -11606,9 +11607,9 @@ int Farsite5::WriteSpotDataFile(char *trgName)
 		else
 			dx = 0.0;
 		if(fprintf(fout, "%f, %f, %f, %f, %f, %f, %f, %f\n", spotData.launchTime, spotData.launchX, spotData.launchY,
-			spotData.landTime, spotData.landX, spotData.landY,
-			spotData.landTime - spotData.launchTime,
-			dx) < 0)
+                   spotData.landTime, spotData.landX, spotData.landY,
+                   spotData.landTime - spotData.launchTime,
+                   dx) < 0)
 			return CloseAndReturn(fout, e_EMS_FILE_WRITE_ERROR);
 	}
 	return CloseAndReturn(fout, 1);
@@ -11650,7 +11651,7 @@ int Farsite5::WriteSpotShapeFile(char *trgName)
 		VertexY[0] = spotData.landY;
 		VertexZ[0] = 0;
 		pSHP = SHPCreateObject(nShapeType, -1, 1, NULL, NULL, 1,
-			VertexX, VertexY, VertexZ, NULL);
+                               VertexX, VertexY, VertexZ, NULL);
 		SHPWriteObject(hSHP, -1, pSHP);
 		SHPDestroyObject(pSHP);
 		NumRecord = DBFGetRecordCount(hDBF);
@@ -11676,8 +11677,8 @@ double Farsite5::SetFarsiteProgress(double newProgress)
 }
 
 /*************************************************************
-* This function will get called from within a critical section
-**************************************************************/
+ * This function will get called from within a critical section
+ **************************************************************/
 float Farsite5::GetFarsiteProgress()
 {
 	return (float) this->progress;
@@ -11688,11 +11689,11 @@ float Farsite5::GetFarsiteProgress()
 int Farsite5::CancelFarsite(void)
 {
 	LEAVEPROCESS = true;       /* Tell farsite it's lights out */
- this->cfmc.Terminate();    /* Cond DLL - cancel if running */
+    this->cfmc.Terminate();    /* Cond DLL - cancel if running */
 
 #ifdef WIN32
 
- this->WN2.Cancel();        /* WindNinja - cancel if running */
+    this->WN2.Cancel();        /* WindNinja - cancel if running */
 #endif
 	return 1;
 }
@@ -11751,7 +11752,7 @@ int Farsite5::WriteSpotGrid(char *trgName)
 			return e_EMS_FILE_OPEN_ERROR;
 		}
 		//double west = Header.WestUtm, north = Header.NorthUtm, *pts = NULL;
-	//long outCols = nodeSpread->GetNumCols(), outRows = nodeSpread->GetNumRows();
+        //long outCols = nodeSpread->GetNumCols(), outRows = nodeSpread->GetNumRows();
 		double outRes = this->m_BSG.l_res, //Header.XResol,
 			outWest = Header.WestUtm,//nodeSpread->West,
 			outSouth =  Header.SouthUtm;//nodeSpread->South;
@@ -11793,22 +11794,22 @@ void Farsite5::WritePerimeter1Shapefile(int num, long curFire)
 	hSHP = SHPCreate(fName1, SHPT_ARC);
 	double *VertexX, *VertexY, *VertexZ;
 	int n = this->GetNumPoints(curFire);
-		VertexX = new double[n];
-		VertexY = new double[n];
-		VertexZ=new double[n];
-		for(int i = 0; i < n; i++)
-		{
-			VertexX[i] = GetPerimeter1Value(curFire, i, XCOORD);
-			VertexY[i] = GetPerimeter1Value(curFire, i, YCOORD);
-			VertexZ[i] = 0.0;
-		}
-		SHPObject *pSHP = SHPCreateObject(SHPT_ARC, -1, 0, NULL, NULL, n,
-			VertexX, VertexY, VertexZ, NULL);
-		SHPWriteObject(hSHP, -1, pSHP);
-		SHPDestroyObject(pSHP);
-		delete[] VertexX;
-		delete[] VertexY;
-		delete[] VertexZ;
+    VertexX = new double[n];
+    VertexY = new double[n];
+    VertexZ=new double[n];
+    for(int i = 0; i < n; i++)
+    {
+        VertexX[i] = GetPerimeter1Value(curFire, i, XCOORD);
+        VertexY[i] = GetPerimeter1Value(curFire, i, YCOORD);
+        VertexZ[i] = 0.0;
+    }
+    SHPObject *pSHP = SHPCreateObject(SHPT_ARC, -1, 0, NULL, NULL, n,
+                                      VertexX, VertexY, VertexZ, NULL);
+    SHPWriteObject(hSHP, -1, pSHP);
+    SHPDestroyObject(pSHP);
+    delete[] VertexX;
+    delete[] VertexY;
+    delete[] VertexZ;
 	SHPClose(hSHP);
 }
 
@@ -11821,30 +11822,30 @@ void Farsite5::WritePerimeter2Shapefile(int num, long curFire)
 	hSHP = SHPCreate(fName2, SHPT_ARC);
 	double *VertexX, *VertexY, *VertexZ;
 	int n = this->GetNumPoints(curFire);//(int)GetPerimeter2Value(-1, -1);//curFire;//
-		VertexX = new double[n];
-		VertexY = new double[n];
-		VertexZ=new double[n];
+    VertexX = new double[n];
+    VertexY = new double[n];
+    VertexZ=new double[n];
 //		double startX, startY;
 //		startX = GetPerimeter2Value(0, XCOORD);
 //		startY = GetPerimeter2Value(0, YCOORD);
-		for(int i = 0; i < n; i++)
-		{
-			VertexX[i] = GetPerimeter2Value(i, XCOORD);
-			VertexY[i] = GetPerimeter2Value(i, YCOORD);
-			VertexZ[i] = 0.0;
-			/*if( i > 0 && VertexX[i] == startX && VertexY[i] == startY)
-			{
-				n = i;
-				break;
-			}*/
-		}
-		SHPObject *pSHP = SHPCreateObject(SHPT_ARC, -1, 0, NULL, NULL, n,
-			VertexX, VertexY, VertexZ, NULL);
-		SHPWriteObject(hSHP, -1, pSHP);
-		SHPDestroyObject(pSHP);
-		delete[] VertexX;
-		delete[] VertexY;
-		delete[] VertexZ;
+    for(int i = 0; i < n; i++)
+    {
+        VertexX[i] = GetPerimeter2Value(i, XCOORD);
+        VertexY[i] = GetPerimeter2Value(i, YCOORD);
+        VertexZ[i] = 0.0;
+        /*if( i > 0 && VertexX[i] == startX && VertexY[i] == startY)
+          {
+          n = i;
+          break;
+          }*/
+    }
+    SHPObject *pSHP = SHPCreateObject(SHPT_ARC, -1, 0, NULL, NULL, n,
+                                      VertexX, VertexY, VertexZ, NULL);
+    SHPWriteObject(hSHP, -1, pSHP);
+    SHPDestroyObject(pSHP);
+    delete[] VertexX;
+    delete[] VertexY;
+    delete[] VertexZ;
 	SHPClose(hSHP);
 }
 
@@ -11861,15 +11862,15 @@ void Farsite5::WritePerimeter1CSV(int num, long CurFire)
 	fprintf(out, "PointNum, X, Y, ros, fli\n");
 	double x, y, r, f;
 	int n = this->GetNumPoints(CurFire);
-		for(int i = 0; i < n; i++)
-		{
-			x = GetPerimeter1Value(CurFire, i, XCOORD);
-			y = GetPerimeter1Value(CurFire, i, YCOORD);
-			r = GetPerimeter1Value(CurFire, i, ROSVAL);
-			f = GetPerimeter1Value(CurFire, i, FLIVAL);
-			fprintf(out, "%d, %f, %f, %f, %f\n", i, x, y, r, f);
-		}
-		fclose(out);
+    for(int i = 0; i < n; i++)
+    {
+        x = GetPerimeter1Value(CurFire, i, XCOORD);
+        y = GetPerimeter1Value(CurFire, i, YCOORD);
+        r = GetPerimeter1Value(CurFire, i, ROSVAL);
+        f = GetPerimeter1Value(CurFire, i, FLIVAL);
+        fprintf(out, "%d, %f, %f, %f, %f\n", i, x, y, r, f);
+    }
+    fclose(out);
 }
 void Farsite5::WritePerimeter2CSV(int num, long curFire)
 {
@@ -11884,15 +11885,15 @@ void Farsite5::WritePerimeter2CSV(int num, long curFire)
 	fprintf(out, "PointNum, X, Y, ros, fli\n");
 	double x, y, r, f;
 	int n = this->GetNumPoints(curFire);
-		for(int i = 0; i < n; i++)
-		{
-			x = GetPerimeter2Value(i, XCOORD);
-			y = GetPerimeter2Value(i, YCOORD);
-			r = GetPerimeter2Value(i, ROSVAL);
-			f = GetPerimeter2Value(i, FLIVAL);
-			fprintf(out, "%d, %f, %f, %f, %f\n", i, x, y, r, f);
-		}
-		fclose(out);
+    for(int i = 0; i < n; i++)
+    {
+        x = GetPerimeter2Value(i, XCOORD);
+        y = GetPerimeter2Value(i, YCOORD);
+        r = GetPerimeter2Value(i, ROSVAL);
+        f = GetPerimeter2Value(i, FLIVAL);
+        fprintf(out, "%d, %f, %f, %f, %f\n", i, x, y, r, f);
+    }
+    fclose(out);
 }
 
 int Farsite5::GetNumIgnitionCells()
@@ -12321,7 +12322,7 @@ int CWindGrids::Create(char *atmFileName)
     while (fgets(buf, 639, atmFile) != NULL)
     {
         nRead = sscanf(buf, "%d %d %d %s %s",
-            &month, &day, &hour, speedFile, dirFile);
+                       &month, &day, &hour, speedFile, dirFile);
         if (nRead == 5)
         {
             std::string cStrSpdName, cStrDirName;

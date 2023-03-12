@@ -793,11 +793,11 @@ double Mechanix::spreadrate(long slope, double windspd, int fuel)
 	double ewind=0, wlim, sum1=0, sum2=0;
 
 	double mois[4][2]=		// fraction of oven-dry weight
-	{	{m_ones, m_liveh},        // use Mechanix Class copies of FE data
-		{m_tens, m_livew},
-		{m_hundreds, 0.0},
-		{m_ones, 0.0}
-	};
+        {	{m_ones, m_liveh},        // use Mechanix Class copies of FE data
+            {m_tens, m_livew},
+            {m_hundreds, 0.0},
+            {m_ones, 0.0}
+        };
 	double gx[5]={0.0, 0.0, 0.0, 0.0, 0.0};
 	double wn[4][2]={{0,0},{0,0},{0,0},{0,0}};
 	double qig[4][2]={{0,0},{0,0},{0,0},{0,0}};
@@ -815,70 +815,70 @@ double Mechanix::spreadrate(long slope, double windspd, int fuel)
 	double etas[2]={0,0};
 	double rir[2]={0,0};
 
-     NewFuel newfuel;
+    NewFuel newfuel;
 
-     memset(&newfuel, 0x0, sizeof(NewFuel));
-     if(!pFarsite->GetNewFuel(fuel, &newfuel)) // will get all models, 13, 40, and custom
-     {	rateo=0.0;
+    memset(&newfuel, 0x0, sizeof(NewFuel));
+    if(!pFarsite->GetNewFuel(fuel, &newfuel)) // will get all models, 13, 40, and custom
+    {	rateo=0.0;
 
-          return rateo;
-     }
+        return rateo;
+    }
 
-     // count number of fuels
-     if(newfuel.h1) ndead++;
+    // count number of fuels
+    if(newfuel.h1) ndead++;
 	if(newfuel.h10) ndead++;
 	if(newfuel.h100) ndead++;
 	if(newfuel.lh) nlive++;
 	if(newfuel.lw) nlive++;
 
-     if(nlive==0)
+    if(nlive==0)
      	newfuel.dynamic=0;
 
-     if(nlive>0)
-          nlive=2;                      // boost to max number
-     if(ndead>0)
-          ndead=4;
+    if(nlive>0)
+        nlive=2;                      // boost to max number
+    if(ndead>0)
+        ndead=4;
 
-     double nclas[2]={(double) ndead, (double) nlive};  // # of dead & live fuel classes
-    	double xmext[2]={newfuel.xmext, 0};
+    double nclas[2]={(double) ndead, (double) nlive};  // # of dead & live fuel classes
+    double xmext[2]={newfuel.xmext, 0};
 
-    	double load[4][2]=			     // tons per acre, later converted to lb/ft2
-	{	{newfuel.h1, newfuel.lh},
-		{newfuel.h10, newfuel.lw},
-		{newfuel.h100, 0.0},
-		{0.0, 0.0},
-	};
+    double load[4][2]=			     // tons per acre, later converted to lb/ft2
+        {	{newfuel.h1, newfuel.lh},
+            {newfuel.h10, newfuel.lw},
+            {newfuel.h100, 0.0},
+            {0.0, 0.0},
+        };
 
-     depth=newfuel.depth;
+    depth=newfuel.depth;
 
-     //-------------------------------------------------------------------------
-     // do the dynamic load transfer
-     //-------------------------------------------------------------------------
-     if(newfuel.dynamic)
-     {    if(mois[0][1]<0.30) // if live herbaceous is less than 30.0
-          {    load[3][0]=load[0][1];
-               load[0][1]=0.0;
-          }
-          else if(mois[0][1]<1.20)
-          {    load[3][0]=load[0][1]*(1.20-mois[0][1])/0.9;
-               load[0][1]-=load[3][0];
-          }
-     }
-     //-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
+    // do the dynamic load transfer
+    //-------------------------------------------------------------------------
+    if(newfuel.dynamic)
+    {    if(mois[0][1]<0.30) // if live herbaceous is less than 30.0
+        {    load[3][0]=load[0][1];
+            load[0][1]=0.0;
+        }
+        else if(mois[0][1]<1.20)
+        {    load[3][0]=load[0][1]*(1.20-mois[0][1])/0.9;
+            load[0][1]-=load[3][0];
+        }
+    }
+    //-------------------------------------------------------------------------
 
 	double sav[4][2]=			     // 1/ft
-             {	{(double) newfuel.sav1, (double) newfuel.savlh},
-		{109.0, (double) newfuel.savlw},
-		{30.0, 0.0},
-		{(double) newfuel.savlh, 0.0},
-	};
+        {	{(double) newfuel.sav1, (double) newfuel.savlh},
+            {109.0, (double) newfuel.savlw},
+            {30.0, 0.0},
+            {(double) newfuel.savlh, 0.0},
+        };
 
 	double heat[4][2]=
-     {    {newfuel.heatd, newfuel.heatl},
-          {newfuel.heatd, newfuel.heatl},
-          {newfuel.heatd, 0.0},
-          {newfuel.heatd, 0.0},
-     };
+        {    {newfuel.heatd, newfuel.heatl},
+             {newfuel.heatd, newfuel.heatl},
+             {newfuel.heatd, 0.0},
+             {newfuel.heatd, 0.0},
+        };
 
 	wind=windspd*88.0;                      // ft/minute
 	slopex=tan((double) slope/180.0*PI);  	// convert from degrees to tan
@@ -893,14 +893,14 @@ double Mechanix::spreadrate(long slope, double windspd, int fuel)
 		if(nclas[i]!=0)
 		{	for(j=0; j<nclas[i]; j++)
 			{    if(ai[i]>0.0)
-                    	f[j][i]=a[j][i]/ai[i];
-                    else
-                         f[j][i]=0.0;
-               }
-               memset(gx, 0x0, 5*sizeof(double));
-               for(j=0; j<nclas[i]; j++)
+                    f[j][i]=a[j][i]/ai[i];
+                else
+                    f[j][i]=0.0;
+            }
+            memset(gx, 0x0, 5*sizeof(double));
+            for(j=0; j<nclas[i]; j++)
 			{    if(sav[j][i]>=1200.0)
-	              		gx[0]+=f[j][i];
+                    gx[0]+=f[j][i];
 				else if(sav[j][i]>=192.0)
                		gx[1]+=f[j][i];
 				else if(sav[j][i]>=96.0)
@@ -910,19 +910,19 @@ double Mechanix::spreadrate(long slope, double windspd, int fuel)
 				else if(sav[j][i]>=16.0)
                		gx[4]+=f[j][i];
 			}
-               for(j=0; j<nclas[i]; j++)
+            for(j=0; j<nclas[i]; j++)
 			{    if(sav[j][i]>=1200.0)
-	              		g[j][i]=gx[0];
+                    g[j][i]=gx[0];
 				else if(sav[j][i]>=192.0)
-	              		g[j][i]=gx[1];
+                    g[j][i]=gx[1];
 				else if(sav[j][i]>=96.0)
-	              		g[j][i]=gx[2];
+                    g[j][i]=gx[2];
 				else if(sav[j][i]>=48.0)
-	              		g[j][i]=gx[3];
+                    g[j][i]=gx[3];
 				else if(sav[j][i]>=16.0)
-	              		g[j][i]=gx[4];
-                    else
-                    	g[j][i]=0.0;
+                    g[j][i]=gx[4];
+                else
+                    g[j][i]=0.0;
 			}
 
 		}
@@ -946,10 +946,11 @@ double Mechanix::spreadrate(long slope, double windspd, int fuel)
 		}
 		fdmois=wmfd/fined;
 		for(j=0; j<nclas[1]; j++)
-		{    if(sav[j][1]<1e-6)
-              		continue;
+		{
+            if(sav[j][1]<1e-6)
+                continue;
 			finel=finel+load[j][1]*exp(-500.0/sav[j][1]);
-          }
+        }
 		w=fined/finel;
 		xmext[1]=2.9*w*(1.0-fdmois/xmext[0])-0.226;
 		if(xmext[1]<xmext[0])
@@ -975,7 +976,7 @@ double Mechanix::spreadrate(long slope, double windspd, int fuel)
 			for(j=0; j<nclas[i]; j++)
 				//wni[i]=wni[i]+f[j][i]*wn[j][i];
 				wni[i]=wni[i]+g[j][i]*wn[j][i];  /* g[j][i] should be subst for f[j][i] in the wni[i] equation */
-										   /* if the above g-factors are calculated */
+            /* if the above g-factors are calculated */
 			rm=xmf[i]/xmext[i];
 			etam[i]=1.0-2.59*rm+5.11*pow2(rm)-3.52*pow(rm,3.0);
 			if(xmf[i] >= xmext[i])
@@ -995,7 +996,7 @@ double Mechanix::spreadrate(long slope, double windspd, int fuel)
 	rat=beta/betaop;
 	aa=133.0/pow(sigma,0.7913);
 	//gammax=pow(sigma,1.5)/(495.0+0.0594*pow(sigma,1.5));
-     gammax=(sigma*sqrt(sigma))/(495.0+0.0594*sigma*sqrt(sigma));
+    gammax=(sigma*sqrt(sigma))/(495.0+0.0594*sigma*sqrt(sigma));
 	gamma=gammax*pow(rat,aa)*exp(aa*(1.0-rat));
 	xir=gamma*(rir[0]+rir[1]);
 	rbqig=rhob*sum3;
@@ -1004,43 +1005,45 @@ double Mechanix::spreadrate(long slope, double windspd, int fuel)
 	rateo=xir*xi/rbqig;   /* this is in English units */
 
 	phis=5.275*pow(beta,-0.3)*pow2(slopex);
-		c=7.47*exp(-0.133*pow(sigma,0.55));
-		b=0.02526*pow(sigma,0.54);
-		e=0.715*exp(-0.000359*sigma);
-		part1=c*pow(rat,-e);
-	phiw=pow(wind,b)*part1;
+    c=7.47*exp(-0.133*pow(sigma,0.55));
+    b=0.02526*pow(sigma,0.54);
+    e=0.715*exp(-0.000359*sigma);
+    part1=c*pow(rat,-e);
+    phiw=pow(wind,b)*part1;
 
 	wlim=0.9*xir;
 
-	if(phis>0.0)
-     {	if(phis>wlim)             // can't have inifinite windspeed
-     		phis=wlim;
-		slopespd=pow((phis/part1),1.0/b)/88.0; 	// converts phis to windspd in mph
-     }
-    	else
-		slopespd=0.0;
-
+    if(phis>0.0)
+    {
+        if(phis>wlim) // can't have inifinite windspeed
+            phis=wlim;
+        slopespd=pow((phis/part1),1.0/b)/88.0; 	// converts phis to windspd in mph
+    }
+    else
+        slopespd=0.0;
+    
 /*   rate=(rateo*(1+phiw+phis));    */
 /*   *byram=384*xir*rate/(60*sigma);*/
 /*	flame=.45*pow(byram,.46);      */
 /*	hpua=xir*384/sigma;            */
-
+    
 /*   maximum windspeed effect on ros*/
 	phiew=phiw+phis;
 	ewind=pow(((phiew*pow(rat,e))/c),1.0/b);
 
 	if(ewind>wlim)
-	{	ewind=wlim;
+	{
+        ewind=wlim;
 		phiew=c*pow(wlim,b)*pow(rat,-e);
 /*		rate=rateo*(*phiew+1);	     */
 /*		byram=384*xir*rate/(60*sigma);*/
 /*		flame=.45*pow(byram,.46);     */
 	}
 	savx=sigma;					// SAVX, REACT IN MECHANIX.PUBLIC:
-     react=xir*0.189275;  		    	// convert btu/f2/min to kW/m2
+    react=xir*0.189275;  		    	// convert btu/f2/min to kW/m2
 	rateo=rateo*0.30480060960;				// convert from f/min to m/min
 
-     return rateo;
+    return rateo;
 }
 
 

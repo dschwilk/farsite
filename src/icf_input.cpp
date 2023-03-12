@@ -2534,32 +2534,32 @@ void ICF::Init_WDI (d_WDI *a_WDI)
 {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
 char *ICF::ErrorMessage (int i_Num)
 {
-int i;
+    int i;
 
-  sprintf(this->cr_ErrMes,"%d = Unknown Error Message Number",i_Num);       /* in case bad err num sent in  */
+    sprintf(this->cr_ErrMes,"%d = Unknown Error Message Number",i_Num);       /* in case bad err num sent in  */
 
-  for ( i = 0; i < 1000; i++ ) {             /* look for the err text in tbl */
-    if ( !strcmp (sr_EMS[i].cr_Sw,"End") )
-      break;
+    for ( i = 0; i < 1000; i++ ) {             /* look for the err text in tbl */
+        if ( !strcmp (sr_EMS[i].cr_Sw,"End") )
+            break;
 
-    if ( sr_EMS[i].i_ErrNum != i_Num )
-      continue;
+        if ( sr_EMS[i].i_ErrNum != i_Num )
+            continue;
 
-	//block removed SB 2009/08/28 at Hans'request
-    //if ( strcmp (sr_EMS[i].cr_Sw,"")){   /* use switch text when present    */
-      ///FromSwNa (sw1, sr_EMS[i].cr_Sw);
-      //sprintf (this->cr_ErrMes, "Switch = %s\n%s", sw1,sr_EMS[i].cr_ErrMes); }
-    //else
-      sprintf (this->cr_ErrMes,"%s",sr_EMS[i].cr_ErrMes);
+        //block removed SB 2009/08/28 at Hans'request
+        //if ( strcmp (sr_EMS[i].cr_Sw,"")){   /* use switch text when present    */
+        ///FromSwNa (sw1, sr_EMS[i].cr_Sw);
+        //sprintf (this->cr_ErrMes, "Switch = %s\n%s", sw1,sr_EMS[i].cr_ErrMes); }
+        //else
+        sprintf (this->cr_ErrMes,"%s",sr_EMS[i].cr_ErrMes);
 
-    if ( strcmp (this->cr_ErrExt,""))  /* app any extra detail err mess txt */
-       strcat (this->cr_ErrMes," ");
-       strcat (this->cr_ErrMes,this->cr_ErrExt);
+        if ( strcmp (this->cr_ErrExt,""))  /* app any extra detail err mess txt */
+            strcat (this->cr_ErrMes," ");
+        strcat (this->cr_ErrMes,this->cr_ErrExt);
 
-    break;
-   }
+        break;
+    }
 
-   return this->cr_ErrMes;
+    return this->cr_ErrMes;
 }
 
 /*{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}
