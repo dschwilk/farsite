@@ -28,11 +28,8 @@
 //				Mark A. Finney, Systems for Environmental Management
 //******************************************************************************
 
-//#include "fsairdlg.h"
 #include "fsairatk.h"
 #include "Farsite5.h"
-//#include "fsglbvar.h"
-//#include <dir.h>
 #include <stdio.h>
 #include <string.h>
 #include <algorithm>
