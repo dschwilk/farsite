@@ -284,7 +284,7 @@ public:
 	bool ThreadStarted;
 	double FlameWeightConsumed, SmolderWeightConsumed;
 
-	PFIntegration(Farsite5 *_pFarsite = NULL);
+	PFIntegration(Farsite5 *_pFarsite = nullptr);
 	~PFIntegration();
 	bool Integrate();//FireRing *, double CurrentTime, double *FlameWt, double *SmolderWt);
 	void SetRange(FireRing* ring, long firenum, double CurrentTime,

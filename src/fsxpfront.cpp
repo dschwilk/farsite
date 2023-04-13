@@ -38,6 +38,7 @@
 //#include <process.h>
 #include <string.h>
 #include "Farsite5.h"
+//#include "splinex.h" // no splinex.cpp anyway. polint() not used.
 
 const double PI = acos(-1.0);
 //extern const double PI;
@@ -3856,7 +3857,13 @@ double PFIntegration::Interpolate(FireRing* ring, long j, double CurrentTime,
 
 	locate(xx - 1, ma, TimeNow, &pos);
 	/*
-	m=(pos-1);
+
+// DWS: This was commented out in initial commit. It is only place in codebase
+// were splinex.h functions are called. But those functions are not implemented
+// anywhere anyway? So it seems linear interpolation below is correct? Leaving
+// this here.
+
+    m=(pos-1);
 	if(m<0)
 		m=0;
 	DistFromEnd=ma-m;

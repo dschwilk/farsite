@@ -22,7 +22,7 @@
  */
 //------------------------------------------------------------------------------
 //
-//	burnupc.h
+//	burnupw.h
 //
 //------------------------------------------------------------------------------
 #ifndef BURNUPPROGRAM
@@ -34,7 +34,7 @@
 #define MXSTEP 20
 #define SWITCHOUTSIDE 0
 #define SWITCHINSIDE 1
-#include "splinex.h"
+
 //#ifdef WIN32
 #include "fsxsync.h"
 //#endif
