@@ -7,23 +7,19 @@
 **********************************************************************************/
 #define _CRT_SECURE_NO_WARNINGS    /* Get rid of sprintf Warnings */
 
-#ifdef WIN32
-#include <windows.h>
-#include <conio.h>
-#else
-#include <stdio.h>
-#endif
-
+#include "FMC_CI.h"    /* FlamMap Input Class */
+#include "FMC_FE2.h"    /* FireEnvironment2 Class */
 #include "cdtlib.h"
 #include "newfms.h"
-
 #include "semtime.h"
 #include "deadfuelmoisture.h"
 
-#include "FMC_CI.h"    /* FlamMap Input Class */
-#include "FMC_FE2.h"    /* FireEnvironment2 Class */
+#include <cstdio>
 
-
+#ifdef WIN32
+  #include <windows.h>
+  #include <conio.h>
+#endif
 
 
 /****************************************************************************

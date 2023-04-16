@@ -21,13 +21,14 @@
  *   - http://www.gpoaccess.gov/uscode/  (enter "17USC105" in the search box.)
  */
 #pragma once
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-//#include <mem.h>
+
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include <iostream>
-//#include <boost/filesystem/path.hpp>
-//#include <boost\filesystem\path.hpp>
+
+
+
 class Farsite5;
 
 #define ATMTEMP  0

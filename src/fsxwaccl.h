@@ -22,17 +22,10 @@
  */
 #include "fsx4.hpp"
 //#include "fsclrsta.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-//#include <owl\dialog.h>
-//#include <owl\control.h>
-//#include <owl\scrollba.h>
-//#include <owl\button.h>
-//#include <owl\static.h>
-//#include <owl\opensave.h>
-//#include <owl\radiobut.h>
-//#include <owl\gdiobjec.h>
+
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
 
 typedef struct
 {

@@ -7,24 +7,28 @@
  * Date: 10-20-09
  **********************************************************************************/
 
-#define _CRT_SECURE_NO_WARNINGS   /* Stop compiler 'depriciated' Warnings */
+
+
+
+#include "FMC_CI.h"    /* Fuel Moisture Conditioning Input Class */
+#include "FMC_FE2.h"    /* FireEnvironment2 Class */
+
+#include "cdtlib.h"
+#include "newfms.h"
+#include "semtime.h"
+#include "deadfuelmoisture.h"
+
+
+#include <cstdio>
+#include <cstring>
 
 #ifdef WIN32
+#define _CRT_SECURE_NO_WARNINGS   /* Stop compiler 'depriciated' Warnings */
 #include <windows.h>
 #include <conio.h>
 #endif
 
-#include <string.h>
 
-#include "cdtlib.h"
-#include "newfms.h"
-
-#include "semtime.h"
-#include "deadfuelmoisture.h"
-
-#include "FMC_CI.h"    /* Fuel Moisture Conditioning Input Class */
-#include "FMC_FE2.h"    /* FireEnvironment2 Class */
-#include <stdio.h>
 
 //.....................................................
 // Need to include icf_def.h for the error return #defines

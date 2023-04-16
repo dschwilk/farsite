@@ -23,10 +23,11 @@
 #define IDYES 1
 #define IDNO 2
 
-#include <string.h>
 #include "fsxwignt.h"
 #include "Farsite5.h"
-//#include "portablestrings.h"
+
+#include <cstring>
+
 
 const double PI = acos(-1.0);
 //extern const double PI;

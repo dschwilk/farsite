@@ -3,8 +3,8 @@
 *        Used to track burned and ember spot locations
 *
 *******************************************************************************/
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 #include "Far_BSG.h"
 
 

@@ -29,15 +29,13 @@
 //------------------------------------------------------------------------------
 
 #include "fsxpfront.h"
-//#include "fsglbvar.h"
 #include "burnupw.h"	// burnup program
-//#ifdef WIN32
-#include "fsxsync.h"
-//#endif
-#include <math.h>
-//#include <process.h>
-#include <string.h>
 #include "Farsite5.h"
+
+#include <cmath>
+#include <cstring>
+
+//#include <process.h>
 //#include "splinex.h" // no splinex.cpp anyway. polint() not used.
 
 const double PI = acos(-1.0);

@@ -34,14 +34,15 @@
 #ifndef AIRATTACK
 #define AIRATTACK
 
-#include <stdlib.h>
-#include <math.h>
-#include <string.h>
-//#include <mem.h>
 #include "fsxwbar.h"
 #include "fsxlandt.h"
-#include <time.h>
+
+#include <cstdlib>
+#include <cmath>
+#include <cstring>
+#include <ctime>
 #include <sys/timeb.h>
+
 
 //------------------------------------------------------------------------------
 //

@@ -6,7 +6,6 @@
 #pragma once
 #include "fsxlandt.h"
 #include "fsxwatm.h"
-#include <stdio.h>
 #include "icf_def.h"
 #include "fsairatk.h"
 #include "fsxpfront.h"
@@ -17,14 +16,15 @@
 #include "fsxwshap.h"
 #include "polygon.h"
 #include "PerimeterData.h"
+#include "FMC_CFMC.h"
+#include "Far_BSG.h"
+
+#include <cstdio>
+#include <vector>
 #include <random>
 #include <list>
 #include <algorithm>
 
-#include "FMC_CFMC.h"
-
-#include "Far_BSG.h"
-#include <vector>
 
 // Can change the RNG engine here. This is the std Mersenne Twister. Random
 // numbers are used in spotting code and the seed can be set in the input file

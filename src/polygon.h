@@ -3,8 +3,8 @@
 #ifndef POLYGON_HEADER
 #define POLYGON_HEADER
 
-#include <stdlib.h>
-#include <math.h>
+#include <cstdlib>
+#include <cmath>
 
 
 class xPolygon

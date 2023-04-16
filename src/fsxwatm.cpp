@@ -22,12 +22,9 @@
  */
 #include "fsxwatm.h"
 #include "Farsite5.h"
-#include <math.h>
-#include <algorithm>
-//#include <boost/filesystem/path.hpp>
-//#include <boost/filesystem/operations.hpp>
 
-//namespace bfs = boost::filesystem ; 
+#include <cmath>
+#include <algorithm>
 
 
 //------------------------------------------------------------------------------

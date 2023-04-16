@@ -30,8 +30,9 @@
 
 #include "fsairatk.h"
 #include "Farsite5.h"
-#include <stdio.h>
-#include <string.h>
+
+#include <cstdio>
+#include <cstring>
 #include <algorithm>
 #include <cctype>
 

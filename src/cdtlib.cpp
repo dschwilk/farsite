@@ -30,8 +30,8 @@
 #include "cdtlib.h"
 
 /* Standard include files */
-#include <math.h>
-#include <stdio.h>
+#include <cmath>
+#include <cstdio>
 
 /*! \var static const double Radians
  *  \brief Global constant defining the radians per degree.

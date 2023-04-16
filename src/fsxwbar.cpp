@@ -29,13 +29,15 @@
 //******************************************************************************
 
 
-#include <stdlib.h>
-#include <math.h>
-#include <memory.h>
 //#include "fsxw.hpp"
 //#include "fsglbvar.h"
 #include "fsxwbar.h"
 #include "Farsite5.h"
+
+#include <cstdlib>
+#include <cmath>
+#include <memory>
+
 
 VectorBarrier::VectorBarrier(Farsite5 *_pFarsite)
 {

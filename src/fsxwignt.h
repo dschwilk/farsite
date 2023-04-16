@@ -24,8 +24,8 @@
 #define IgnitionHeader
 
 #include "fsx4.hpp"
-//#include "fsglbvar.h"
 #include "shapefil.h"
+
 //#include "Farsite5.h"
 class Farsite5;
 

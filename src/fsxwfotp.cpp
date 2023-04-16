@@ -21,12 +21,14 @@
  *   - http://www.gpoaccess.gov/uscode/  (enter "17USC105" in the search box.)
  */
 #include "fsx4.hpp"
-//#include <io.h>
-#include <sys/stat.h>
-#include <string.h>
-#include <algorithm>
 #include "Farsite5.h"
 #include "FARSITE.h"
+
+
+#include <sys/stat.h>
+
+#include <cstring>
+#include <algorithm>
 
 using namespace std;
 

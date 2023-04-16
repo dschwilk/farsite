@@ -29,9 +29,11 @@
 //#ifdef WIN32
 #include "fsxsync.h"
 //#endif
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
+
+
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
 
 /*FarsiteEvent hBurnEvent;
 FarsiteEvent hMoistEvent;

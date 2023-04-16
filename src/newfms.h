@@ -25,14 +25,13 @@
 
 
 
-/*#ifdef __cplusplus
-#   define  EXTERN extern "C"
+#ifdef __cplusplus
+   #define  EXTERN extern "C"
 #else
-#   define  EXTERN extern
-#   define  true 1
-#   define  false 0
-#endif*/
-
+   #define  EXTERN extern
+   #define  true 1
+   #define  false 0
+#endif
 
 
 /*

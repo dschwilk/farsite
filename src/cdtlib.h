@@ -21,9 +21,9 @@
     \brief Prevents name-mangling of C source code by C++ compilers.
     \internal
  */
-#define EXTERN extern "C"
+  #define EXTERN extern "C"
 #else
-#define EXTERN extern
+  #define EXTERN extern
 #endif
 
 /*! \enum CDT_Event

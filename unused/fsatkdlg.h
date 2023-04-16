@@ -32,18 +32,9 @@
 #ifndef ATTACKDIALOG
 #define ATTACKDIALOG
 
-#include <stdio.h>
-//#include <owl\scrollba.h>
-//#include <owl\combobox.h>
-//#include <owl\radiobut.h>
-//#include <owl\listbox.h>
-//#include <owl\static.h>
-//#include <owl\button.h>
-//#include <owl\dialog.h>
-//#include <owl\edit.h>
-//#include <owl\updown.h>
 #include "fsxwattk.h"
-//#include "fsatkdlg.rh"
+
+#include <cstdio>
 
 //------------------------------------------------------------------------------
 //

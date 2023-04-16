@@ -175,10 +175,11 @@
 
 #include "shapefil.h"
 
-#include <math.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+
 
 #ifndef FALSE
 #  define FALSE		0

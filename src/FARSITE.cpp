@@ -1,10 +1,8 @@
 // FARSITE.cpp : Defines the exported functions for the DLL application.
 //
 
-//#include "stdafx.h"
 #include "FARSITE.h"
 #include "Farsite5.h"
-
 
 CFarsite::CFarsite()
 {

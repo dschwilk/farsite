@@ -166,19 +166,27 @@
 
 #include "shapefil.h"
 
-#include <math.h>
-#include <limits.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cmath>
+#include <cstdlib>
+#include <cstring>
+#include <limits>
+#include <cassert>
+
+
 
 //typedef unsigned char uchar;
 
-#if UINT_MAX == 65535
-typedef long int32;
-#else
-typedef int int32;
+// #if UINT_MAX == 65535
+// typedef long int32;
+// #else
+// typedef int int32;
+// #endif
+
+
+#ifndef int32
+   typedef int32_t int32;
 #endif
+
 
 #ifndef FALSE
 #  define FALSE		0

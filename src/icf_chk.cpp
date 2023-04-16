@@ -7,16 +7,16 @@
 *
 {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
 
- #define _CRT_SECURE_NO_DEPRECATE
-
-// #include "stdafx.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
+#define _CRT_SECURE_NO_DEPRECATE
 
 #include "icf_def.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+
+
 
 /* Format statements for sprintf min max errors                             */
 /* NOTE: one is for integers and one of floats....................           */

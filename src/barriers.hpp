@@ -1,10 +1,11 @@
 #ifndef BARRIERS_HPP_
 #define BARRIERS_HPP_
 
-//#include "boost/filesystem/path.hpp"
+#include "fsxwignt.h"
+
 #include <string>
 #include <iostream>
-#include "fsxwignt.h"
+
 
 class Farsite5;
 	

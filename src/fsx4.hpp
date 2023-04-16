@@ -24,23 +24,19 @@
 #ifndef MainHeaderFile
 #define MainHeaderFile
 
-//#include <owl\owlpch.h>
-#include <map>
-#include <utility>
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-//#include <dos.h>
-//#include <conio.h>
-#include <string.h>
-//#include <windef.h>
-//#include <alloc.h>
-
 //#include "newfms.h"
 #include "fsxlandt.h"
 #include "fsxpfront.h"
-//typedef unsigned char BYTE;
-//#include "Farsite5.h"
+
+
+#include <map>
+#include <utility>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <cstring>
+
+
 #ifndef int32
 typedef int32_t int32; 
 #endif

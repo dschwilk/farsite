@@ -5,6 +5,9 @@
 **********************************************************************************/
 #pragma once
 
+#include <cstdint>
+
+
 #define GETVAL -1
 
 /* Used to identify Theme Categories, the numbers used could be anything but */
@@ -20,6 +23,7 @@
 //#ifdef WIN32
 #include "fsxsync.h"
 //#endif
+
 #ifndef int32
 typedef int32_t int32;
 #endif

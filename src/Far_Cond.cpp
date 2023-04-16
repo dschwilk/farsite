@@ -18,13 +18,15 @@
 **********************************************************************************/
 
 #include "Farsite5.h"
-#include <memory.h>
-#include <cstring>
-#include <string.h>
-#include <math.h>
-#include <stdio.h>
-#include <algorithm>
 #include "barriers.hpp"
+
+#include <memory>
+#include <cstring>
+#include <cmath>
+#include <cstdio>
+
+#include <algorithm>
+
 
 #define e_MinPerDay 1440
 #define e_DaysPerYear  365

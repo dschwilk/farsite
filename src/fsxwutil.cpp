@@ -37,10 +37,12 @@
 //#endif
 #include "vec.h"
 #include "Farsite5.h"
-#include <string.h>
+
+
+#include <cstring>
 
 const double PI = acos(-1.0);
-//extern const double PI;
+
 
 AreaPerimeter::AreaPerimeter(Farsite5 *_pFarsite) : APolygon(_pFarsite)
 {

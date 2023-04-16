@@ -21,13 +21,8 @@
  *   - http://www.gpoaccess.gov/uscode/  (enter "17USC105" in the search box.)
  */
 #include "fsxwaccl.h"
-//#include "ftestrc.h"
-//#include "fsxw.hpp"
-//#include "fsxwhelp.h"
-//#include "fsglbvar.h"
-//#include <owl\color.h>
 
-#define LOG90 2.30259
+const double LOG90 = 2.30259;
 
 extern Acceleration AccelConst;
 extern bool ACCEL_ON;
@@ -50,6 +45,3 @@ void TTransAccelData::ResetData()
 	memset(Dat.AccelLoad, 0x0, sizeof(Dat.AccelLoad));
 	memset(Dat.AccelSave, 0x0, sizeof(Dat.AccelSave));
 }
-
-
-

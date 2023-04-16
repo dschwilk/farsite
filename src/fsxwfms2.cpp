@@ -32,19 +32,15 @@
 //
 //------------------------------------------------------------------------------
 
-#include <math.h>
-#include <string.h>
+#include "fsx4.hpp"
+//#include "cdtlib.h"
 //#include "newfms.h"//fms-0.4.0.h"
 #include "Farsite5.h"
-//#ifdef WIN32
 #include "fsxsync.h"
-//#endif
-#include "fsx4.hpp"
-#include "cdtlib.h"
-//#include "portablestrings.h"
-//#include <windows.h>
-//#include <process.h>
-//extern const double PI;
+
+#include <cmath>
+#include <cstring>
+
 static const double PI = acos(-1.0);
 
 //------------------------------------------------------------------------------

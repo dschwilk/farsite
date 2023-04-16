@@ -31,12 +31,15 @@
 #include "fsxwattk.h"
 #include "fsx4.hpp"
 //#include "ftestrc.h"
-#include <stdio.h>
-#include <string.h>
-#include <algorithm>
+#include "Farsite5.h"
+
+#include <cstdio>
+#include <cstring>
 #include <cctype>
 #include <cassert>
-#include "Farsite5.h"
+
+#include <algorithm>
+
 
 const double PI = acos(-1.0);
 //extern bool GroundRes_ON;

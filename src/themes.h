@@ -31,9 +31,9 @@
 #ifndef THEMES
 #define THEMES
 
-#include <stdlib.h>
+#include <cstdlib>
 //#include <windows.h>
-#include <time.h>
+#include <ctime>
 #include <sys/timeb.h>
 
 /*

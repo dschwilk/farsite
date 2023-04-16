@@ -3,15 +3,15 @@
 * Desc: Dead Fuel Moisture Conditioning DLL Class interface functions.
 * Date: 11-01-09
 ***********************************************************************************/
-//#include <windows.h>
+
+#include "FMC_CFMC.h"
+
+#include "FMC_CI.h"
+#include "FMC_FE2.h"
 #include "cdtlib.h"
-#include "newfms.h"
 
 #include "semtime.h"
 #include "deadfuelmoisture.h"
-#include "FMC_CI.h"
-#include "FMC_FE2.h"
-#include "FMC_CFMC.h"
 
 long GUniqueInstance = 1;
 int critsec = 0;

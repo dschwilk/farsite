@@ -6,26 +6,27 @@
  *********************************************************************************/
 
 #include "Farsite5.h"
-#include <memory.h>
-#include <cstring>
-#include <string.h>
-#include <math.h>
-#include <stdio.h>
-#include <algorithm>
-#include <cassert>
-
 #include "barriers.hpp"
+
+
+#include <memory>
+#include <cstring>
+#include <cmath>
+#include <algorithm>
+#include <cstdlib>
+#include <cstdio>
+
+//#include <cassert>
 
 #ifndef WIN32
 #include <fcntl.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <sys/sendfile.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 
-#define MAX_PATH 1512 // DWS allow longer paths
+
+
 void CopyFile(char *in, char *out, bool unused)
 {
 
@@ -41,11 +42,13 @@ void CopyFile(char *in, char *out, bool unused)
     close(read_fd);
     close(write_fd);
 }
-#endif
+#endif  // not win32
+
 using namespace std;
 
-const double IGNITON_GRID_LINEDIST_DIVISOR  = 1000.0;
+const int MAX_PATH = 1512; // DWS allow longer paths
 
+const double IGNITON_GRID_LINEDIST_DIVISOR  = 1000.0;
 const double PI = acos(-1.0);
 
 extern int CloseAndReturn(FILE *stream, int returnCode);

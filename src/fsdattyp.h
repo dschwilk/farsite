@@ -20,7 +20,7 @@
  *   - http://www.copyright.gov/title17/92chap1.html#105
  *   - http://www.gpoaccess.gov/uscode/  (enter "17USC105" in the search box.)
  */
-#include <stdlib.h>
+#include <cstdlib>
 
 #ifndef FARSITE_DATATYPES
 #define FARSITE_DATATYPES

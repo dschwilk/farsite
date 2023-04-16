@@ -35,8 +35,7 @@
 #ifndef GlobalFarsiteModelFunctions
 #define GlobalFarsiteModelFunctions
 
-#include <stdlib.h>
-//#include <owl\window.h>
+#include <cstdlib>
 
 #define GETVAL -1		// definitions used for getting and storing data
 #define XCOORD 0		// in fire perimeter1 arrays:

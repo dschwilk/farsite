@@ -31,8 +31,10 @@
 #include "fsx4.hpp"
 #include "vec.h"
 #include "Farsite5.h"
+
+#include <cmath>
 #include <algorithm>
-#include <math.h>
+
 
 using namespace std;
 const double PI = acos(-1.0);

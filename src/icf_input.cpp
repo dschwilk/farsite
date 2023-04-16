@@ -7,15 +7,14 @@
 * Date: 1-4-08
 *
 {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
-// #include "stdafx.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-//#include <io.h>
-// #define _CRT_SECURE_NO_DEPRECATE
+
 #include "icf_def.h"
-#include <time.h>
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <ctime>
 
 extern d_EMS sr_EMS[];          /* Error Message Struct table */
 void CelsToFahr (float *af);

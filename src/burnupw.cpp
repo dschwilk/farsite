@@ -25,15 +25,17 @@
 //
 //
 //------------------------------------------------------------------------------
-#include <algorithm>
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <cstring>
-#include <algorithm>
+
+
 #include "burnupw.h"
 //#include "fsglbvar.h"
 #include "Farsite5.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <cstring>
+#include <algorithm>
 
 using namespace std;
 

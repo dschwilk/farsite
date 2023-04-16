@@ -2,9 +2,12 @@
 //
 
 #include "FARSITE.h"
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
+
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
 #include <ctime>
 bool cancelRequest = false;
 int nFarsites = 0;
@@ -71,11 +74,9 @@ unsigned int __stdcall RunFarsiteProc(void *_pFarsite)
 	}
 	return ret;
 }
-#else
-#include <stdio.h>
-#include <stdlib.h>
-
 #endif
+
+
 bool ParseCommands(char *in, char *lcp, char *inputs, char *ignitPath, char *barrierPath, char *outPath, int *outType)
 {
 	strcpy(lcp, "");
@@ -115,6 +116,7 @@ bool ParseCommands(char *in, char *lcp, char *inputs, char *ignitPath, char *bar
 		return false;
 	return true;
 }
+
 #ifdef WIN32
 // int regMain(int argc, char* argv[])
 // {

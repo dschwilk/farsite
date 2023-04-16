@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 /*#ifdef BUILD_FMC_DLL
 #define FMC_DLL_EXPORT __declspec(dllexport)
 #else

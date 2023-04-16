@@ -1,8 +1,5 @@
-//#include <stdexcept>
-//#include <cstdlib>
-//#include <iostream>
-//#include "arc.hpp"
-//#include "boost/filesystem/fstream.hpp"
+// 
+
 #include "barriers.hpp"
 #include "fsxw.hpp"
 #include "fsxwbar.h"

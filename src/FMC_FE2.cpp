@@ -23,17 +23,6 @@
 //        landscape file (declarations in fsx4.hpp)
 //
 //------------------------------------------------------------------------------
-#ifdef WIN32
-#include <windows.h>
-#include <process.h>
-#include <conio.h>
-#else
-#include <stdio.h>
-#include <string.h>
-#include <algorithm>
-#include <sys/stat.h>
-#endif
-
 
 #include "cdtlib.h"
 #include "newfms.h"
@@ -41,7 +30,20 @@
 #include "deadfuelmoisture.h"
 #include "FMC_CI.h"
 #include "FMC_FE2.h"
-#include <math.h>
+
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+
+#include <sys/stat.h>
+
+#ifdef WIN32
+  #include <windows.h>
+  #include <process.h>
+  #include <conio.h>
+#endif
+
 
 using namespace std;
 

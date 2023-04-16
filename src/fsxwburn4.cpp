@@ -33,15 +33,13 @@
 #include "fsxwattk.h"
 #include "fsairatk.h"
 #include "fsxpfront.h"
-//#include "fsglbvar.h"
-//#ifdef WIN32
-#include "fsxsync.h"
-//#endif
-#include "Farsite5.h"
-//#include <process.h>
-#include <string.h>
 
+#include "fsxsync.h"
+#include "Farsite5.h"
+
+#include <cstring>
 #include <iostream>
+
 using namespace std;
 
 #define BURN_THREAD 0

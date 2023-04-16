@@ -36,7 +36,7 @@
 //#include "fsglbvar.h"
 //#include "fsxsync.h"
 #include "Farsite5.h"
-#include <string.h>
+#include <cstring>
 
 
 CrossThread::CrossThread(Farsite5 *_pFarsite) : poly(_pFarsite)

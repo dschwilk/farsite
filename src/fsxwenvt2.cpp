@@ -23,7 +23,8 @@
 //#include "fswindow.h"
 #include "fsx4.hpp"
 #include "Farsite5.h"
-#include <stdlib.h>
+
+#include <cstdlib>
 
 const double PI = acos(-1.0);
 

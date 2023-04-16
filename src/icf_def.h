@@ -6,6 +6,9 @@
 {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
 #pragma once 
 
+#include<cstdio>
+
+
 /* Number of hours that we can extend the last RAWS record */
 #define  e_RAWS_ExtHr  6  
 

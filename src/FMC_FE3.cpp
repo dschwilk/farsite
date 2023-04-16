@@ -7,15 +7,6 @@
 * Date: 4-14-10
 ********************************************************************/
 
-#define _CRT_SECURE_NO_WARNINGS
-
-#ifdef WIN32
-#include <windows.h>
-#include <process.h>
-#include <conio.h>
-#else
-#include <stdio.h>
-#endif
 
 #include "cdtlib.h"
 #include "newfms.h"
@@ -23,6 +14,18 @@
 #include "deadfuelmoisture.h"
 #include "FMC_CI.h"
 #include "FMC_FE2.h"
+
+#include <cstdio>
+
+#ifdef WIN32
+    #define _CRT_SECURE_NO_WARNINGS
+    #include <windows.h>
+    #include <process.h>
+    #include <conio.h>
+#endif
+
+
+
 static const double PI=acos(-1.0);
 
 // Test-lar

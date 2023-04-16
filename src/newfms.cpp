@@ -11,7 +11,7 @@
     \version 0.7.0
  */
 
-/*! \mainpage Fuel Moisture Stick (FMS) Library
+/*! \brief Fuel Moisture Stick (FMS) Library
 
     \section intro Introduction
 
@@ -121,21 +121,15 @@
     that exercises the FMS library on some field data.
     \include demo.c
  */
-// #include "stdafx.h"
-
-/* Larry added this......*/
-// #define EXTERN 
-#include "cdtlib.h"
-#include <stdio.h> 
-/*-----------------------*/
-
 
 #include "newfms.h"
+#include "cdtlib.h"
 
-#include <limits.h>
-#include <math.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio> 
+#include <limits>
+#include <cmath>
+#include <cstdlib>
+#include <cstring>
 
 
 

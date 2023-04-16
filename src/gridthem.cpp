@@ -26,9 +26,11 @@
 //
 //------------------------------------------------------------------------------
 #include "themes.h"
-#include <math.h>
-#include <string.h>
 #include "Farsite5.h"
+
+#include <cmath>
+#include <cstring>
+
 
 GridTheme::GridTheme()
 {
