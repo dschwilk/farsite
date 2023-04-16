@@ -23,11 +23,7 @@
 #ifndef OUTPUTS_DEFINED
 #define OUTPUTS_DEFINED
 
-#include <stdlib.h>
-//#include <owl\printer.h>
-//#include <owl\gdiobjec.h>
-//#include <owl\opensave.h>
-//#include <owl\framewin.h>
+#include <cstdlib>
 
 class TOutputs//:public TFrameWindow
 {
