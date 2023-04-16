@@ -1,1 +1,1 @@
-./examples/cougarCreek/input/cougarCreek.lcp ./examples/cougarCreek/input/cougarCreek.input ./examples/cougarCreek/input/cougarCreek_polygonIgnit.shp 0 ./examples/cougarCreek/output/cougarCreek_polygonIgnit 0
+./examples/cougarCreek/input/cougarCreek.lcp ./examples/cougarCreek/input/cougarCreek.input ./examples/cougarCreek/input/cougarCreek_polygonIgnit.shp   0    /home/schwilk/git/farsite/examples/cougarCreek/output/cougarCreek_polygonIgnit 0
