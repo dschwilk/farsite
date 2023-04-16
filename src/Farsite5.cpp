@@ -25,7 +25,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define FALSE 0
 #define MAX_PATH 1512 // DWS allow longer paths
 void CopyFile(char *in, char *out, bool unused)
 {
@@ -10464,7 +10463,7 @@ int Farsite5::SetBarrier(char *_barrierFileName)
     hSHP = SHPOpen( _barrierFileName, "rb" );
     if( hSHP == NULL )
     {
-        return FALSE;
+        return false;
     }
     SHPGetInfo( hSHP, &nShapes, &shapeType, adfMinBound, adfMaxBound );
     //NumAlloc=0;
@@ -10729,7 +10728,7 @@ int Farsite5::CreateIgnitionGrid()
     hSHP = SHPOpen( Ignition.ifile, "rb" );
     if( hSHP == NULL )
     {
-        return FALSE;
+        return false;
     }
     SHPGetInfo( hSHP, &nShapes, &shapeType, adfMinBound, adfMaxBound );
     //NumAlloc=0;
