@@ -24,7 +24,7 @@
 #include <random>
 #include <list>
 #include <algorithm>
-
+#include <atomic>
 
 // Can change the RNG engine here. This is the std Mersenne Twister. Random
 // numbers are used in spotting code and the seed can be set in the input file
@@ -1203,7 +1203,7 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
  #define e_WindNinja 3   // WN-Test
  int    i_RunStatus;   /* set as Farsite or Fuel Conditioning is running */
 
-	double progress;
+    std::atomic_int progress;
 
 	unsigned long systime1, systime2, systime;
 	bool CanModify;// = true;
@@ -1341,8 +1341,8 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	double GetProgress(int *ai_RunStatus);
 	int CancelFarsite(void);
 
-	double SetFarsiteProgress(double newProgress);
- float  GetFarsiteProgress ();
+	int SetFarsiteProgress(int newProgress);
+    int GetFarsiteProgress();
 
 
 // void Farsite5::SetFarsiteRunStatus (int i);

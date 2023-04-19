@@ -37,7 +37,7 @@ public:
 
 	int CanLaunchFarsite(void);
 	int LaunchFarsite(void);
-  double GetFarsiteProgress();
+    int GetFarsiteProgress();
  // double GetFarsiteProgress(int *ai_RunStatus, char cr[]);
 // int  GetFarsiteStatus (char cr[]);
 

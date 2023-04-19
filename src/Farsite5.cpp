@@ -453,7 +453,7 @@ Farsite5::Farsite5(void) :
 #endif
 	InputsFName[0] = 0;
 	LandFName[0] = 0;
-	SetFarsiteProgress(0.0);
+	SetFarsiteProgress(0);
 
 	progress = 0.0;
 // SetFarsiteRunStatus (e_StartUp);
@@ -8257,9 +8257,9 @@ int  Farsite5::FarsiteSimulationLoop()
 /*.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-..-*/
     while (burn.SIMTIME <= maximum)	{
 
-        if (maximum > 0)
-            SetFarsiteProgress (burn.SIMTIME / (double)maximum);
-
+        if (maximum > 0) {
+            SetFarsiteProgress(std::round(100.0 * burn.SIMTIME / (double)maximum));
+        }
         if (LEAVEPROCESS)				// allows exit from FARSITE process control
 		   	break;
 
@@ -8460,7 +8460,7 @@ int  Farsite5::FarsiteSimulationLoop()
 
 
 	ProcessSimRequest();
-	SetFarsiteProgress(1.0);
+	SetFarsiteProgress(100);
 	//progress = 1.0;
 	// write raster files at end of timestep...
 	/*if (GetRastMake()) {
@@ -9794,7 +9794,7 @@ int Farsite5::Execute_StartRestart()
 					//WriteMessageBar(0);
 					//mb->NULLHintTextPointer();
 					LEAVEPROCESS = false;
-					SetFarsiteProgress(0.0);
+					SetFarsiteProgress(0);
 					burn.SIMTIME = 0.0;				   // reset start of FARSITE iterations
 					burn.CuumTimeIncrement = 0.0;
 					maximum = 0;
@@ -11665,25 +11665,18 @@ int Farsite5::WriteSpotShapeFile(char *trgName)
 }
 
 /*************************************************************************************/
-double Farsite5::SetFarsiteProgress(double newProgress)
+int Farsite5::SetFarsiteProgress(int newProgress)
 {
-#ifdef WIN32
-	EnterCriticalSection(&progressCS);
-#endif
 	progress = newProgress;
-	double tmp = progress;
-#ifdef WIN32
-	LeaveCriticalSection(&progressCS);
-#endif
-	return tmp;
+	return progress;
 }
 
 /*************************************************************
  * This function will get called from within a critical section
  **************************************************************/
-float Farsite5::GetFarsiteProgress()
+int Farsite5::GetFarsiteProgress()
 {
-	return (float) this->progress;
+	return this->progress;
 }
 
 
@@ -11692,11 +11685,6 @@ int Farsite5::CancelFarsite(void)
 {
 	LEAVEPROCESS = true;       /* Tell farsite it's lights out */
     this->cfmc.Terminate();    /* Cond DLL - cancel if running */
-
-#ifdef WIN32
-
-    this->WN2.Cancel();        /* WindNinja - cancel if running */
-#endif
 	return 1;
 }
 

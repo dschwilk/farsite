@@ -3,79 +3,28 @@
 
 #include "FARSITE.h"
 
-
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <cmath>
 #include <ctime>
-bool cancelRequest = false;
-int nFarsites = 0;
 
-#ifdef WIN32
-#include <sys/time.h>
-#include <direct.h>
-#include <conio.h>
-#include <process.h>
-#include <windows.h>
+#include <vector>
+#include <chrono>
+#include <thread>
+#include <atomic>
+#include <iostream>
+#include <mutex>
 
+// A mutex ensures orderly access to std::cout from multiple threads.
+std::mutex iomutex;
 
+using namespace std::chrono_literals;
+using namespace std;
 
-unsigned int __stdcall  ProgressThread(void *_pFarsite)
-{
- 	CFarsite *pFarsite = (CFarsite *)_pFarsite;
-	//Sleep(1000);
-	double progress = 0.0;
-	while(!cancelRequest && (progress = pFarsite->GetFarsiteProgress()) < 1.0)
-	{
-		printf("ProgressThread (10 second notification): Farsite %.2f percent complete.\n",
-			progress * 100.0);
-		Sleep(10000);
-	}
-	//Sleep(1000);
-	return 1;
-}
+std::atomic_bool cancelRequest = false;
 
-
-unsigned int __stdcall  CheckKey( void *_pFarsite )
-{
- 	CFarsite *pFarsite = (CFarsite *)_pFarsite;
-   if(_getch() != 0)
-   {
-		printf("Farsite terminate request....\n");
-		pFarsite->CancelFarsite();    /* _endthread implied */
-		cancelRequest = true;
-   }
-   return 1;
-}
-
-unsigned int __stdcall  MultiCheckKey( void *_pFarsite )
-{
- 	CFarsite *pFarsite = (CFarsite *)_pFarsite;
-   if(_getch() != 0)
-   {
-		printf("Farsite terminate request....\n");
-		for(int f = 0; f < nFarsites; f++)
-			pFarsite[f].CancelFarsite();    /* _endthread implied */
-		cancelRequest = true;
-   }
-   return 1;
-}
-
-unsigned int __stdcall RunFarsiteProc(void *_pFarsite)
-{
-	CFarsite *pFarsite = (CFarsite *)_pFarsite;
-	int ret = pFarsite->LaunchFarsite();
-	if(ret != 1)
-	{
-	   char *a = pFarsite->CommandFileError(ret);
-	   printf ("%s\n",a);
-	   cancelRequest = true;
-	}
-	return ret;
-}
-#endif
-
+static const int MAX_PATH = 1512; // char buffer length for file paths
 
 bool ParseCommands(char *in, char *lcp, char *inputs, char *ignitPath, char *barrierPath, char *outPath, int *outType)
 {
@@ -117,362 +66,254 @@ bool ParseCommands(char *in, char *lcp, char *inputs, char *ignitPath, char *bar
 	return true;
 }
 
-#ifdef WIN32
-// int regMain(int argc, char* argv[])
-// {
-// 	char lcpFileName[512], inputsFileName[512], baseOutputsPath[512];
-// 	if(argc < 5)
-// 	{
-// 		printf("TestFARSITE expects four parameters, all required\nTestFARSITE Usage:\n"
-// 			"TestFARSITE [LCPName] [InputsFileName] [outputDirPath] [outputsType]\n"
-// 			"Where:\n\t[LCPName] is the path to the Landscape File\n"
-// 			"\t[InputsFileName] is the path to the FARSITE Inputs File (ASCII Format)\n"
-// 			"\t[outputDirPath] is the path to the output files base name (no extension)\n"
-// 			"\t[outputsType] is the file type for outputs (0 = both, 1 = ASCII grid, 2 = FlamMap binary grid, > 3 = ShapeFile only\n\n");
-// 		exit(1);
-// 	}
-// 	strcpy(lcpFileName, argv[1]);
-// 	strcpy(inputsFileName, argv[2]);
-// 	strcpy(baseOutputsPath, argv[3]);
-// 	int outType = atoi(argv[4]);
-// 	char igFileName[256];
-// 	char barFileName[256];
-// 	char outputName[512];
-// 	CFarsite farsite, farsite2, farsite3;
-// 	if ( !farsite.SetLandscapeFile(lcpFileName))
-// 	{
-// 		printf ("Can't open: %s \n", lcpFileName);
-// 	    return 0;
-// 	}
-// 	int i = farsite.LoadFarsiteInputs(inputsFileName);
-// 	if ( i != 1 )
-// 	{
-// 	   char *a = farsite.CommandFileError(i);
-// 	   printf ("%s\n",a);
-// 	   return 1;
-// 	}
-// 	/*if(!farsite.SetIgnition(igFileName))
-// 	{
-// 		printf ("Error setting ignition using file: %s \n", igFileName);
-// 		_getch();
-// 	    return 0;
-// 	}
-// 	if(!farsite.SetBarriers(barFileName))
-// 	{
-// 		printf ("Error setting barrier using file: %s \n", barFileName);
-// 		_getch();
-// 	    return 0;
-// 	}*/
-// 	printf("\nLaunching Farsite, press any key to terminate.\n");
-// 	HANDLE threadHandles[2];
-// 	HANDLE checkKeyHandles[1];
-// 	unsigned int ThreadID, ThreadID1, ThreadID2, ThreadID3, ThreadID4, ThreadID5;
-// 	printf("Starting 'CheckKey' thread.\n");
-// 	checkKeyHandles[0] =(HANDLE) ::_beginthreadex(NULL, 0, CheckKey, &farsite, NULL, &ThreadID2);
-// 	printf("Starting 'ProgressThread' thread.\n");
-//     threadHandles[0] =(HANDLE) ::_beginthreadex(NULL, 0, ProgressThread, &farsite, NULL, &ThreadID1);
-// 	//HANDLE hRiskThread;
-//  	printf("Starting 'RunFarsiteProc' thread.\n");
-// 	threadHandles[1] =(HANDLE) ::_beginthreadex(NULL, 0, RunFarsiteProc, &farsite, NULL, &ThreadID);
-//   	printf("Waiting for threads.\n");
-// 	WaitForMultipleObjects(2, threadHandles, TRUE, INFINITE);
+
+void printError(char *theerr,  char *fname)
+{
+    std::lock_guard<std::mutex> iolock(iomutex);
+    printf("%s for %s\n", theerr, fname);
+}
 
 
 
-// 	/*if(farsite.LaunchFarsite() != 1)
-// 	{
-// 		printf("Error: LaunchFarsite failure.\n");
-// 		_getch();
-// 		return 1;
-// 	}*/
-// 	//if(!cancelRequest)
-// 	//{
-// 		if(outType == 0 || outType == 1)
-// 		{
-// 			sprintf(outputName, "%s_CrownFire.asc", baseOutputsPath);
-// 			farsite.WriteCrownFireGrid(outputName);
-// 			sprintf(outputName, "%s_Intensity.asc", baseOutputsPath);
-// 			farsite.WriteIntensityGrid(outputName);
-// 			sprintf(outputName, "%s_FlameLength.asc", baseOutputsPath);
-// 			farsite.WriteFlameLengthGrid(outputName);
-// 			sprintf(outputName, "%s_SpreadRate.asc", baseOutputsPath);
-// 			farsite.WriteSpreadRateGrid(outputName);
-// 			sprintf(outputName, "%s_SpreadDirection.asc", baseOutputsPath);
-// 			farsite.WriteSpreadDirectionGrid(outputName);
-// 			sprintf(outputName, "%s_HeatPerUnitArea.asc", baseOutputsPath);
-// 			farsite.WriteHeatPerUnitAreaGrid(outputName);
-// 			sprintf(outputName, "%s_ReactionIntensity.asc", baseOutputsPath);
-// 			farsite.WriteReactionIntensityGrid(outputName);
-// 			sprintf(outputName, "%s_Ignitions.asc", baseOutputsPath);
-// 			farsite.WriteIgnitionGrid(outputName);
-// 			sprintf(outputName, "%s_ArrivalTime.asc", baseOutputsPath);
-// 			farsite.WriteArrivalTimeGrid(outputName);
-// 		}
-// 		if(outType == 0 || outType == 2)
-// 		{
-// 			sprintf(outputName, "%s_ArrivalTime.fbg", baseOutputsPath);
-// 			farsite.WriteArrivalTimeGridBinary(outputName);
-// 			sprintf(outputName, "%s_CrownFire.fbg", baseOutputsPath);
-// 			farsite.WriteCrownFireGridBinary(outputName);
-// 			sprintf(outputName, "%s_Intensity.fbg", baseOutputsPath);
-// 			farsite.WriteIntensityGridBinary(outputName);
-// 			sprintf(outputName, "%s_FlameLength.fbg", baseOutputsPath);
-// 			farsite.WriteFlameLengthGridBinary(outputName);
-// 			sprintf(outputName, "%s_SpreadRate.fbg", baseOutputsPath);
-// 			farsite.WriteSpreadRateGridBinary(outputName);
-// 			sprintf(outputName, "%s_SpreadDirection.fbg", baseOutputsPath);
-// 			farsite.WriteSpreadDirectionGridBinary(outputName);
-// 			sprintf(outputName, "%s_HeatPerUnitArea.fbg", baseOutputsPath);
-// 			farsite.WriteHeatPerUnitAreaGridBinary(outputName);
-// 			sprintf(outputName, "%s_ReactionIntensity.fbg", baseOutputsPath);
-// 			farsite.WriteReactionIntensityGridBinary(outputName);
-// 		}
-// 		sprintf(outputName, "%s_Perimeters.shp", baseOutputsPath);
-// 		farsite.WritePerimetersShapeFile(outputName);
-// 		sprintf(outputName, "%s_Timings.txt", baseOutputsPath);
-// 		farsite.WriteTimingsFile(outputName);
-// 		sprintf(outputName, "%s_Spots.shp", baseOutputsPath);
-// 		farsite.WriteSpotShapeFile(outputName);
-
-// 	//}
-// 	//if(!cancelRequest)
-// 	//{
-// 		printf("Press any key to exit.\n");
-// 		WaitForMultipleObjects(1, checkKeyHandles, TRUE, INFINITE);
-
-// 	//}
-// 	CloseHandle(checkKeyHandles[0]);
-// 	CloseHandle(threadHandles[0]);
-// 	CloseHandle(threadHandles[1]);
-// 	return 0;
-// }
-
-// int multiMain(int argc, char* argv[])
-// {
-// 	char lcpFileName[512], inputsFileName[512], ignitName[512], barrierName[512], baseOutputsPath[512];
-// 	if(argc < 2)
-// 	{
-// 		printf("TestFARSITE expects one parameter\nTestFARSITE Usage:\n"
-// 			"TestFARSITE [commandfile]\n"
-// 			"Where:\n\t[commandfile] is the path to the command file.\n");
-// 		printf("The command file contains command lines for multiple Farsite runs, each run's command on a seperate line.\n");
-// 		printf("Each command expects four parameters, all required\n"
-// 			"[LCPName] [InputsFileName] [outputDirPath] [outputsType]\n"
-// 			"Where:\n\t[LCPName] is the path to the Landscape File\n"
-// 			"\t[InputsFileName] is the path to the FARSITE Inputs File (ASCII Format)\n"
-// 			"\t[outputDirPath] is the path to the output files base name (no extension)\n"
-// 			"\t[outputsType] is the file type for outputs (0 = both, 1 = ASCII grid, 2 = FlamMap binary grid, > 3 = ShapeFile only\n\n");
-// 		exit(1);
-// 	}
-// 	FILE *cmd = fopen(argv[1], "rt");
-// 	if(!cmd)
-// 	{
-// 		printf("Error, cannot open %s\n", argv[1]);
-// 		exit(1);
-// 	}
-// 	char outputName[512];
-// 	int outType;// = atoi(argv[4]);
-// 	nFarsites = 0;
-// 	char buf[512];
-// 	while(!feof(cmd))
-// 	{
-// 		fgets(buf, 512, cmd);
-
-// 		if(ParseCommands(buf, lcpFileName, inputsFileName, ignitName, barrierName, baseOutputsPath, &outType))//assume valid commands
-// 			nFarsites++;
-// 	}
-// 	rewind(cmd);
-// 	char **lcps = new char *[nFarsites];
-// 	char **inputs = new char *[nFarsites];
-// 	char **ignits = new char *[nFarsites];
-// 	char **barriers = new char *[nFarsites];
-// 	char **outs = new char *[nFarsites];
-// 	int *outTypes = new int[nFarsites];
-// 	for(int i = 0; i < nFarsites; i++)
-// 	{
-// 		lcps[i] = new char[MAX_PATH];
-// 		inputs[i] = new char[MAX_PATH];
-// 		ignits[i] = new char[MAX_PATH];
-// 		barriers[i] = new char[MAX_PATH];
-// 		outs[i] = new char[MAX_PATH];
-// 		strcpy(lcps[i], "");
-// 		strcpy(inputs[i], "");
-// 		strcpy(ignits[i], "");
-// 		strcpy(barriers[i], "");
-// 		strcpy(outs[i], "");
-// 	}
-// 	CFarsite *pFarsites = new CFarsite[nFarsites];
-// 	for(int f = 0; f < nFarsites; f++)
-// 	{
-// 		fgets(buf, 512, cmd);
-// 		if(!ParseCommands(buf, lcps[f], inputs[f], ignits[f], barriers[f], outs[f], &outTypes[f]))
-// 			continue;
-// 		if ( !pFarsites[f].SetLandscapeFile(lcps[f]))
-// 		{
-// 			printf ("Can't open: %s \n", lcpFileName);
-// 			_getch();
-// 			return 0;
-// 		}
-// 		int i = pFarsites[f].LoadFarsiteInputs(inputs[f]);
-// 		if ( i != 1 )
-// 		{
-// 		   char *a = pFarsites[f].CommandFileError(i);
-// 		   printf ("%s\n",a);
-// 		   _getch ();
-// 		   return 1;
-// 		}
-// 		pFarsites[f].SetIgnition(ignits[f]);
-// 		pFarsites[f].SetBarriers(barriers[f]);
-// 	}
-// 	fclose(cmd);
-// 	printf("\nLaunching %d Farsites, press any key to terminate.\n", nFarsites);
-// 	HANDLE *threadHandles = new HANDLE[nFarsites + 1];
-// 	HANDLE checkKeyHandles[1];
-// 	unsigned int *ThreadIDs = new unsigned int[nFarsites + 1], ThreadID;
-// 	printf("Starting 'CheckKey' thread.\n");
-// 	checkKeyHandles[0] =(HANDLE) ::_beginthreadex(NULL, 0, MultiCheckKey, &pFarsites[0], NULL, &ThreadID);
-// 	printf("Starting 'ProgressThread' thread.\n");
-//     threadHandles[0] =(HANDLE) ::_beginthreadex(NULL, 0, ProgressThread, &pFarsites[0], NULL, &ThreadIDs[0]);
-// 	//HANDLE hRiskThread;
-//  	printf("Starting 'RunFarsiteProc' threads.\n");
-// 	for(int f = 1; f <= nFarsites; f++)
-// 	{
-// 		threadHandles[f] =(HANDLE) ::_beginthreadex(NULL, 0, RunFarsiteProc, &pFarsites[f-1], NULL, &ThreadIDs[f]);
-// 		/*threadHandles[f] =(HANDLE) ::_beginthreadex(NULL, 0, RunFarsiteProc, &pFarsites[f-1], CREATE_SUSPENDED, &ThreadIDs[f]);
-// 		long ProcNum = f;
-// 		while ( ProcNum >= tprocs )
-// 			ProcNum -= tprocs;
-// 		unsigned long Affinity =pow(2.0, (int)ProcNum);
-// 		SetThreadAffinityMask (threadHandles[f], Affinity);
-// 		ResumeThread(threadHandles[f]);*/
-// 	}
-//  	printf("Waiting for threads.\n");
-// 	WaitForMultipleObjects(nFarsites + 1, threadHandles, TRUE, INFINITE);
-
-
-// 	if(!cancelRequest)
-// 	{
-// 		printf("Writing outputs\n");
-// 		for(int f = 0; f < nFarsites; f++)
-// 		{
-// 			if(outTypes[f] == 0 || outTypes[f] == 1)
-// 			{
-// 				sprintf(outputName, "%s_CrownFire.asc", outs[f]);
-// 				pFarsites[f].WriteCrownFireGrid(outputName);
-// 				sprintf(outputName, "%s_Intensity.asc", outs[f]);
-// 				pFarsites[f].WriteIntensityGrid(outputName);
-// 				sprintf(outputName, "%s_FlameLength.asc", outs[f]);
-// 				pFarsites[f].WriteFlameLengthGrid(outputName);
-// 				sprintf(outputName, "%s_SpreadRate.asc", outs[f]);
-// 				pFarsites[f].WriteSpreadRateGrid(outputName);
-// 				sprintf(outputName, "%s_SpreadDirection.asc", outs[f]);
-// 				pFarsites[f].WriteSpreadDirectionGrid(outputName);
-// 				sprintf(outputName, "%s_HeatPerUnitArea.asc", outs[f]);
-// 				pFarsites[f].WriteHeatPerUnitAreaGrid(outputName);
-// 				sprintf(outputName, "%s_ReactionIntensity.asc", outs[f]);
-// 				pFarsites[f].WriteReactionIntensityGrid(outputName);
-// 				sprintf(outputName, "%s_ArrivalTime.asc", outs[f]);
-// 				pFarsites[f].WriteArrivalTimeGrid(outputName);
-// 				sprintf(outputName, "%s_Ignitions.asc", outs[f]);
-// 				pFarsites[f].WriteIgnitionGrid(outputName);
-// 			}
-// 			if(outTypes[f] == 0 || outTypes[f] == 2)
-// 			{
-// 				sprintf(outputName, "%s_CrownFire.fbg", outs[f]);
-// 				pFarsites[f].WriteCrownFireGridBinary(outputName);
-// 				sprintf(outputName, "%s_ArrivalTime.fbg", outs[f]);
-// 				pFarsites[f].WriteArrivalTimeGridBinary(outputName);
-// 				sprintf(outputName, "%s_Intensity.fbg", outs[f]);
-// 				pFarsites[f].WriteIntensityGridBinary(outputName);
-// 				sprintf(outputName, "%s_FlameLength.fbg", outs[f]);
-// 				pFarsites[f].WriteFlameLengthGridBinary(outputName);
-// 				sprintf(outputName, "%s_SpreadRate.fbg", outs[f]);
-// 				pFarsites[f].WriteSpreadRateGridBinary(outputName);
-// 				sprintf(outputName, "%s_SpreadDirection.fbg", outs[f]);
-// 				pFarsites[f].WriteSpreadDirectionGridBinary(outputName);
-// 				sprintf(outputName, "%s_HeatPerUnitArea.fbg", outs[f]);
-// 				pFarsites[f].WriteHeatPerUnitAreaGridBinary(outputName);
-// 				sprintf(outputName, "%s_ReactionIntensity.fbg", outs[f]);
-// 				pFarsites[f].WriteReactionIntensityGridBinary(outputName);
-// 				sprintf(outputName, "%s_ArrivalTime.fbg", outs[f]);
-// 				pFarsites[f].WriteArrivalTimeGridBinary(outputName);
-// 			}
-// 			sprintf(outputName, "%s_Perimeters.shp", outs[f]);
-// 			pFarsites[f].WritePerimetersShapeFile(outputName);
-// 			sprintf(outputName, "%s_Timings.txt", outs[f]);
-// 			pFarsites[f].WriteTimingsFile(outputName);
-// 		}
-
-// 	}
-// 	if(!cancelRequest)
-// 	{
-// 		printf("Press any key to exit.\n");
-// 		WaitForMultipleObjects(1, checkKeyHandles, TRUE, INFINITE);
-
-// 	}
-// 	CloseHandle(checkKeyHandles[0]);
-// 	for(int f = 0; f < nFarsites + 1; f++)
-// 		CloseHandle(threadHandles[f]);
-// 	//for(int f = 0; f < tprocs; f++)
-// 	delete[] pFarsites;
-// 	for(int i = 0; i < nFarsites; i++)
-// 	{
-// 		delete[] lcps[i];
-// 		delete[] inputs[i];
-// 		delete[] outs[i];
-// 	}
-// 	delete[] lcps;
-// 	delete[] inputs;
-// 	delete[] outs;
-// 	return 0;
-// }
-
-int nOmpFarsites = 0;
-unsigned int __stdcall  ompProgressThread(void *_pFarsite)
+void ProgressThread(void *_pFarsite, int nFarsites)
 {
  	CFarsite **pFarsite = (CFarsite **)_pFarsite;
-	//Sleep(1000);
-	double progress = 0.0;
-	while(!cancelRequest)// && (progress = pFarsite->GetFarsiteProgress()) < 1.0)
+	int progress = 0;
+	while(!cancelRequest)
 	{
-		printf("Progress...\n");// Farsite %.2f percent complete.\n",
-		for(int f = 0; f < nOmpFarsites; f++)
+//		printf("Progress on %d Farsites...\n", nFarsites);// Farsite %.2f percent complete.\n",
+		for(int f = 0; f < nFarsites; f++)        
 		{
-			if(pFarsite[f])
-			{
-				progress = pFarsite[f]->GetFarsiteProgress();
-				//if(progress > 0)
-					printf("Farsite %d: %.3f complete\n",// Farsite %.2f percent complete.\n",
-						f + 1, progress * 100.0);
-			}
+            progress=0;
+ 			std::lock_guard<std::mutex> {iomutex};
+            if(pFarsite[f]) progress = pFarsite[f]->GetFarsiteProgress();
+            cout << "Farsite #" << f+1 << " " << progress << "% complete. " << std::flush;
 		}
-		Sleep(5000);
+        iomutex.lock();
+        cout << "\n" <<  std::flush;
+        iomutex.unlock();
+        std::this_thread::sleep_for(2000ms);
 	}
-	//Sleep(100);
-	return 1;
 }
 
-unsigned int __stdcall  ompCheckKey( void *_pFarsite )
+
+// void buildFarsite(CFarsite *pFarsite, FarsiteRunInputs inputs)
+// {
+
+// }
+
+int writeOutputs(CFarsite * pFarsite, int outType, char *outs, int f)
 {
- 	CFarsite **pFarsite = (CFarsite **)_pFarsite;
-   if(_getch() != 0)
-   {
-		printf("Farsite terminate request....\n");
-		for(int f = 0; f < nOmpFarsites; f++)
-		{
-			if(pFarsite[f])
-				pFarsite[f]->CancelFarsite();    /* _endthread implied */
-		}
-		cancelRequest = true;
-   }
-   return 1;
+    int ret;
+    char outputName[MAX_PATH];
+    
+    iomutex.lock();
+    cout << "Writing outputs for Farsite #" << f+1 << ": " << outs << "\n" << std::flush;
+    iomutex.unlock();
+    if(outType == 0 || outType == 1 || outType == 4)
+    {
+        if(outType == 4)
+        {
+            pFarsite->WriteOneHours(outs);
+            pFarsite->WriteTenHours(outs);
+        }
+        sprintf(outputName, "%s_CrownFire.asc", outs);
+        ret = pFarsite->WriteCrownFireGrid(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+        sprintf(outputName, "%s_Intensity.asc", outs);
+        ret = pFarsite->WriteIntensityGrid(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+        sprintf(outputName, "%s_FlameLength.asc", outs);
+        ret = pFarsite->WriteFlameLengthGrid(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+        sprintf(outputName, "%s_SpreadRate.asc", outs);
+        ret = pFarsite->WriteSpreadRateGrid(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+        sprintf(outputName, "%s_SpreadDirection.asc", outs);
+        ret = pFarsite->WriteSpreadDirectionGrid(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+        sprintf(outputName, "%s_HeatPerUnitArea.asc", outs);
+        ret = pFarsite->WriteHeatPerUnitAreaGrid(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+        sprintf(outputName, "%s_ReactionIntensity.asc", outs);
+        ret = pFarsite->WriteReactionIntensityGrid(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+        sprintf(outputName, "%s_ArrivalTime.asc", outs);
+        ret = pFarsite->WriteArrivalTimeGrid(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+    }
+    if(outType == 0 || outType == 2)
+    {
+        sprintf(outputName, "%s_CrownFire.fbg", outs);
+        ret = pFarsite->WriteCrownFireGridBinary(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+        sprintf(outputName, "%s_ArrivalTime.fbg", outs);
+        ret = pFarsite->WriteArrivalTimeGridBinary(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+        sprintf(outputName, "%s_Intensity.fbg", outs);
+        ret = pFarsite->WriteIntensityGridBinary(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+        sprintf(outputName, "%s_FlameLength.fbg", outs);
+        ret = pFarsite->WriteFlameLengthGridBinary(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+        sprintf(outputName, "%s_SpreadRate.fbg", outs);
+        ret = pFarsite->WriteSpreadRateGridBinary(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+        sprintf(outputName, "%s_SpreadDirection.fbg", outs);
+        ret = pFarsite->WriteSpreadDirectionGridBinary(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+        sprintf(outputName, "%s_HeatPerUnitArea.fbg", outs);
+        ret = pFarsite->WriteHeatPerUnitAreaGridBinary(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+        sprintf(outputName, "%s_ReactionIntensity.fbg", outs);
+        ret = pFarsite->WriteReactionIntensityGridBinary(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+        sprintf(outputName, "%s_ArrivalTime.fbg", outs);
+        ret = pFarsite->WriteArrivalTimeGridBinary(outputName);
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputName);
+        }
+    }
+    /*sprintf(outputName, "%s_Moistures.txt", outs[f]);
+      ret = pFarsite->WriteMoistData(outputName);
+      if(ret != 1)
+      {
+      char *a = pFarsite->CommandFileError(ret);
+      printError(a, outputName);
+      }*/
+    sprintf(outputName, "%s_Ignitions.asc", outs);
+    ret = pFarsite->WriteIgnitionGrid(outputName);
+    if(ret != 1)
+    {
+        char *a = pFarsite->CommandFileError(ret);
+        printError(a, outputName);
+    }
+    sprintf(outputName, "%s_Perimeters.shp", outs);
+    ret = pFarsite->WritePerimetersShapeFile(outputName);
+    if(ret != 1)
+    {
+        char *a = pFarsite->CommandFileError(ret);
+        printError(a, outputName);
+    }
+    sprintf(outputName, "%s_SpotGrid.asc", outs);
+    ret = pFarsite->WriteSpotGrid(outputName);
+    if(ret != 1)
+    {
+        char *a = pFarsite->CommandFileError(ret);
+        printError(a, outputName);
+    }
+    sprintf(outputName, "%s_Spots.csv", outs);
+    ret = pFarsite->WriteSpotDataFile(outputName);
+    if(ret != 1)
+    {
+        char *a = pFarsite->CommandFileError(ret);
+        printError(a, outputName);
+    }
+    sprintf(outputName, "%s_Spots.shp", outs);
+    ret = pFarsite->WriteSpotShapeFile(outputName);
+    if(ret != 1)
+    {
+        char *a = pFarsite->CommandFileError(ret);
+        printError(a, outputName);
+    }
+    sprintf(outputName, "%s_Timings.txt", outs);
+    ret = pFarsite->WriteTimingsFile(outputName);
+
+    if(ret != 1)
+    {
+        char *a = pFarsite->CommandFileError(ret);
+        printError(a, outputName);
+    }
+    
+return ret;
 }
 
-typedef CFarsite * LPFARSITE;
-
-int openMPMain(int argc, char* argv[])
+// For handing to std:thread() return ignored
+int LaunchFarsite(void *_pFarsite, int outType, char *outs, int f)
 {
-	char lcpFileName[512], inputsFileName[512], ignitName[512], barrierName[512], baseOutputsPath[512];
+  	CFarsite *pFarsite = (CFarsite *)_pFarsite;
+    
+    int	ret = pFarsite->LaunchFarsite();
+    if(ret != 1) 
+    {
+        char *a = pFarsite->CommandFileError(ret);
+        printError(outs,a);
+        return ret;
+    }
+
+    ret = writeOutputs(pFarsite, outType, outs, f);
+    return ret;
+}
+
+int MPMain(int argc, char* argv[])
+{
+	char lcpFileName[MAX_PATH], inputsFileName[MAX_PATH], ignitName[MAX_PATH], barrierName[MAX_PATH], baseOutputsPath[MAX_PATH];
 	if(argc < 2)
 	{
 		printf("TestFARSITE expects one parameter\nTestFARSITE Usage:\n"
@@ -495,32 +336,30 @@ int openMPMain(int argc, char* argv[])
 		printf("Error, cannot open %s\n", argv[1]);
 		exit(1);
 	}
-	char outputName[512];
+
 	int outType;// = atoi(argv[4]);
-	nFarsites = 0;
-	char buf[512];
+	int nFarsites = 0;
+	char buf[MAX_PATH];
 	while(!feof(cmd))
 	{
-		fgets(buf, 512, cmd);
+		fgets(buf, MAX_PATH, cmd);
 
 		if(ParseCommands(buf, lcpFileName, inputsFileName, ignitName, barrierName, baseOutputsPath, &outType))//assume valid commands
 			nFarsites++;
 	}
 	rewind(cmd);
-	//SYSTEM_INFO sysInfo;
-	//GetSystemInfo(&sysInfo);
-	//nOmpFarsites =  sysInfo.dwNumberOfProcessors;
 
-	nOmpFarsites = nFarsites;
+    
 	char **lcps = new char *[nFarsites];
 	char **inputs = new char *[nFarsites];
 	char **ignits = new char *[nFarsites];
 	char **barriers = new char *[nFarsites];
 	char **outs = new char *[nFarsites];
 	int *outTypes = new int[nFarsites];
-	CFarsite **pFarsites = new CFarsite*[nOmpFarsites];
-	for(int i = 0; i < nOmpFarsites; i++)
-		pFarsites[i] = NULL;
+    std::vector<std::thread> FarsiteThreads;
+	CFarsite **pFarsites = new CFarsite*[nFarsites];
+	for(int i = 0; i < nFarsites; i++)
+		pFarsites[i] = nullptr;
 	for(int i = 0; i < nFarsites; i++)
 	{
 		lcps[i] = new char[MAX_PATH];
@@ -533,29 +372,23 @@ int openMPMain(int argc, char* argv[])
 		strcpy(ignits[i], "");
 		strcpy(barriers[i], "");
 		strcpy(outs[i], "");
-		fgets(buf, 512, cmd);
+		fgets(buf, MAX_PATH, cmd);
 		if(!ParseCommands(buf, lcps[i], inputs[i], ignits[i], barriers[i], outs[i], &outTypes[i]))
 			continue;
 	}
 
-	HANDLE threadHandle[1];
-	HANDLE checkKeyHandles[1];
-	unsigned int ThreadID1, ThreadID2;
-	printf("Starting 'CheckKey' thread.\n");
-	checkKeyHandles[0] =(HANDLE) ::_beginthreadex(NULL, 0, ompCheckKey, (void *) pFarsites, NULL, &ThreadID1);
 	printf("Starting 'ProgressThread' thread.\n");
-    threadHandle[0] =(HANDLE) ::_beginthreadex(NULL, 0, ompProgressThread, &pFarsites[0], NULL, &ThreadID2);
+    auto progressThread = std::thread(ProgressThread, &pFarsites[0], nFarsites);
 	int ret;
-	int f, waitTime;
-
-#pragma omp parallel for default(shared) private (buf, ret, outputName, waitTime) schedule (dynamic, 1)
+	int f;
+    
+//    auto waitTime =  1000ms;
+        
 	for(f = 0; f < nFarsites; f++)
 	{
-		#pragma omp critical
 		{
-			waitTime = f;
-			printf("Sleeping %d ms for iteration %d\n", waitTime*f, f);
-			Sleep(waitTime*f);
+//			printf("Sleeping 1000 ms for iteration %d\n", f);
+//			std::this_thread::sleep_for(waitTime);
 			pFarsites[f] = new CFarsite();
 		}
 		if(!cancelRequest)
@@ -576,10 +409,10 @@ int openMPMain(int argc, char* argv[])
 			ret = pFarsites[f]->LoadFarsiteInputs(inputs[f]);
 			if ( ret != 1 )
 			{
-			   char *a = pFarsites[f]->CommandFileError(ret);
-			   printf ("%s\n",a);
-				delete pFarsites[f];
-				pFarsites[f] = NULL;
+                char *a = pFarsites[f]->CommandFileError(ret);
+                printf ("%s\n",a);
+                delete pFarsites[f];
+				pFarsites[f] = nullptr;
 				continue;
 			}
 		}
@@ -596,218 +429,27 @@ int openMPMain(int argc, char* argv[])
 		if(!cancelRequest)
 		{
 			printf("Launching Farsite #%d\n", f + 1);
-			ret = pFarsites[f]->LaunchFarsite();
-			if(ret != 1)
-			{
-			   char *a = pFarsites[f]->CommandFileError(ret);
-			   printf ("%s\n",a);
-				delete pFarsites[f];
-				pFarsites[f] = NULL;
-				continue;
-			}
+            FarsiteThreads.push_back(std::thread(LaunchFarsite, pFarsites[f], outTypes[f], outs[f], f));
 		}
-		if(!cancelRequest)
-		{
-			printf("Writing outputs for Farsite #%d to %s\n", f + 1, outs[f]);
-			if(outTypes[f] == 0 || outTypes[f] == 1 || outTypes[f] == 4)
-			{
-				if(outTypes[f] == 4)
-				{
-					pFarsites[f]->WriteOneHours(outs[f]);
-					pFarsites[f]->WriteTenHours(outs[f]);
-				}
-				sprintf(outputName, "%s_CrownFire.asc", outs[f]);
-				ret = pFarsites[f]->WriteCrownFireGrid(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-				sprintf(outputName, "%s_Intensity.asc", outs[f]);
-				ret = pFarsites[f]->WriteIntensityGrid(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-				sprintf(outputName, "%s_FlameLength.asc", outs[f]);
-				ret = pFarsites[f]->WriteFlameLengthGrid(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-				sprintf(outputName, "%s_SpreadRate.asc", outs[f]);
-				ret = pFarsites[f]->WriteSpreadRateGrid(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-				sprintf(outputName, "%s_SpreadDirection.asc", outs[f]);
-				ret = pFarsites[f]->WriteSpreadDirectionGrid(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-				sprintf(outputName, "%s_HeatPerUnitArea.asc", outs[f]);
-				ret = pFarsites[f]->WriteHeatPerUnitAreaGrid(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-				sprintf(outputName, "%s_ReactionIntensity.asc", outs[f]);
-				ret = pFarsites[f]->WriteReactionIntensityGrid(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-				sprintf(outputName, "%s_ArrivalTime.asc", outs[f]);
-				ret = pFarsites[f]->WriteArrivalTimeGrid(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-			}
-			if(outTypes[f] == 0 || outTypes[f] == 2)
-			{
-				sprintf(outputName, "%s_CrownFire.fbg", outs[f]);
-				ret = pFarsites[f]->WriteCrownFireGridBinary(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-				sprintf(outputName, "%s_ArrivalTime.fbg", outs[f]);
-				ret = pFarsites[f]->WriteArrivalTimeGridBinary(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-				sprintf(outputName, "%s_Intensity.fbg", outs[f]);
-				ret = pFarsites[f]->WriteIntensityGridBinary(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-				sprintf(outputName, "%s_FlameLength.fbg", outs[f]);
-				ret = pFarsites[f]->WriteFlameLengthGridBinary(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-				sprintf(outputName, "%s_SpreadRate.fbg", outs[f]);
-				ret = pFarsites[f]->WriteSpreadRateGridBinary(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-				sprintf(outputName, "%s_SpreadDirection.fbg", outs[f]);
-				ret = pFarsites[f]->WriteSpreadDirectionGridBinary(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-				sprintf(outputName, "%s_HeatPerUnitArea.fbg", outs[f]);
-				ret = pFarsites[f]->WriteHeatPerUnitAreaGridBinary(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-				sprintf(outputName, "%s_ReactionIntensity.fbg", outs[f]);
-				ret = pFarsites[f]->WriteReactionIntensityGridBinary(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-				sprintf(outputName, "%s_ArrivalTime.fbg", outs[f]);
-				ret = pFarsites[f]->WriteArrivalTimeGridBinary(outputName);
-				if(ret != 1)
-				{
-					char *a = pFarsites[f]->CommandFileError(ret);
-					printf ("%s for %s\n",a, outputName);
-				}
-			}
-			/*sprintf(outputName, "%s_Moistures.txt", outs[f]);
-			ret = pFarsites[f]->WriteMoistData(outputName);
-			if(ret != 1)
-			{
-				char *a = pFarsites[f]->CommandFileError(ret);
-				printf ("%s for %s\n",a, outputName);
-			}*/
-			sprintf(outputName, "%s_Ignitions.asc", outs[f]);
-			ret = pFarsites[f]->WriteIgnitionGrid(outputName);
-			if(ret != 1)
-			{
-				char *a = pFarsites[f]->CommandFileError(ret);
-				printf ("%s for %s\n",a, outputName);
-			}
-			sprintf(outputName, "%s_Perimeters.shp", outs[f]);
-			ret = pFarsites[f]->WritePerimetersShapeFile(outputName);
-			if(ret != 1)
-			{
-				char *a = pFarsites[f]->CommandFileError(ret);
-				printf ("%s for %s\n",a, outputName);
-			}
-			sprintf(outputName, "%s_SpotGrid.asc", outs[f]);
-			ret = pFarsites[f]->WriteSpotGrid(outputName);
-			if(ret != 1)
-			{
-				char *a = pFarsites[f]->CommandFileError(ret);
-				printf ("%s for %s\n",a, outputName);
-			}
-			sprintf(outputName, "%s_Spots.csv", outs[f]);
-			ret = pFarsites[f]->WriteSpotDataFile(outputName);
-			if(ret != 1)
-			{
-				char *a = pFarsites[f]->CommandFileError(ret);
-				printf ("%s for %s\n",a, outputName);
-			}
-			sprintf(outputName, "%s_Spots.shp", outs[f]);
-			ret = pFarsites[f]->WriteSpotShapeFile(outputName);
-			if(ret != 1)
-			{
-				char *a = pFarsites[f]->CommandFileError(ret);
-				printf ("%s for %s\n",a, outputName);
-			}
-			sprintf(outputName, "%s_Timings.txt", outs[f]);
-			ret = pFarsites[f]->WriteTimingsFile(outputName);
-			if(ret != 1)
-			{
-				char *a = pFarsites[f]->CommandFileError(ret);
-				printf ("%s for %s\n",a, outputName);
-			}
-		}
-		#pragma omp critical
-		{
-			CFarsite *tFarsite = pFarsites[f];
-			pFarsites[f] = NULL;
-			delete tFarsite;
-		}
+		
 
 	}
+    
 	bool complete = !cancelRequest;
-	cancelRequest = true;
-	WaitForMultipleObjects(1, threadHandle, TRUE, INFINITE);
+	while (!FarsiteThreads.empty())
+    {
+        FarsiteThreads.back().join();
+        FarsiteThreads.pop_back();
+    }
+
+    cancelRequest = true;
+    progressThread.join();
+
 	if(complete)
 	{
-		printf("Press any key to exit.\n");
-		WaitForMultipleObjects(1, checkKeyHandles, TRUE, INFINITE);
-
+		printf("Done\n");
 	}
-	CloseHandle(checkKeyHandles[0]);
-	CloseHandle(threadHandle[0]);
+
 	fclose(cmd);
 	delete[] pFarsites;
 	for(int i = 0; i < nFarsites; i++)
@@ -826,8 +468,14 @@ int openMPMain(int argc, char* argv[])
 	delete[] outTypes;
 	return 0;
 }
-#else
-#define MAX_PATH 1512 // char buffer length for file paths
+
+
+
+
+
+
+
+
 int linuxMain(int argc, char* argv[])
 {
     char lcpFileName[MAX_PATH], inputsFileName[MAX_PATH], ignitName[MAX_PATH], barrierName[MAX_PATH], baseOutputsPath[MAX_PATH];
@@ -855,7 +503,7 @@ int linuxMain(int argc, char* argv[])
 	}
     char outputName[1512];
 	int outType;// = atoi(argv[4]);
-	nFarsites = 0;
+	int nFarsites = 0;
     char buf[1512];
 	while(!feof(cmd))
 	{
@@ -1154,17 +802,12 @@ int linuxMain(int argc, char* argv[])
 	delete[] outTypes;
 	return 0;
 }
-#endif
 
 
 // Call main function depending on platform
 int main(int argc, char* argv[])
 {
-	//regMain(argc, argv);
-	//multiMain(argc, argv);
-#ifdef WIN32
-	openMPMain(argc, argv);
-#else
-	linuxMain(argc, argv);
-#endif
+
+	MPMain(argc, argv);
+//	linuxMain(argc, argv);
 }

@@ -148,16 +148,10 @@ int CFarsite::LaunchFarsite(void)
 }
 
 /****************************************************************************/
-double CFarsite::GetFarsiteProgress()//int *ai_RunStatus, char cr[])
+int CFarsite::GetFarsiteProgress()//int *ai_RunStatus, char cr[])
 {
-
-
 	if (m_pFarsite)
     return m_pFarsite->GetFarsiteProgress();//FPC.GetProgress(m_pFarsite, &m_pFarsite->WN2,&m_pFarsite->cfmc, cr);
-
-//  Original
-//	  	return m_pFarsite->GetFarsiteProgress(ai_RunStatus);
-
 	return 0;
 }
 
