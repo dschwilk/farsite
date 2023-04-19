@@ -319,7 +319,7 @@ int MPMain(int argc, char* argv[])
 		printf("TestFARSITE expects one parameter\nTestFARSITE Usage:\n"
 			"TestFARSITE [commandfile]\n"
 			"Where:\n\t[commandfile] is the path to the command file.\n");
-		printf("The command file contains command lines for multiple Farsite runs, each run's command on a seperate line.\n");
+		printf("The command file contains command lines for multiple Farsite runs, each run's command on a separate line.\n");
 		printf("Each command expects six parameters, all required\n"
 			"[LCPName] [InputsFileName] [IgnitionFileName] [BarrierFileName] [outputDirPath] [outputsType]\n"
 			"Where:\n\t[LCPName] is the path to the Landscape File\n"
@@ -484,7 +484,7 @@ int linuxMain(int argc, char* argv[])
 		printf("TestFARSITE expects one parameter\nTestFARSITE Usage:\n"
 			"TestFARSITE [commandfile]\n"
 			"Where:\n\t[commandfile] is the path to the command file.\n");
-		printf("The command file contains command lines for multiple Farsite runs, each run's command on a seperate line.\n");
+		printf("The command file contains command lines for multiple Farsite runs, each run's command on a separate line.\n");
 		printf("Each command expects six parameters, all required\n"
 			"[LCPName] [InputsFileName] [IgnitionFileName] [BarrierFileName] [outputDirPath] [outputsType]\n"
 			"Where:\n\t[LCPName] is the path to the Landscape File\n"
