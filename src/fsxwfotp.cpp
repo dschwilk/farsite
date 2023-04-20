@@ -673,7 +673,7 @@ int OutputFile::WriteBinaryData(FILE *trg, int outType)
 	return 1;
 }
 
-int OutputFile::WriteArrivalTimeBinary(char *trgName)
+int OutputFile::WriteArrivalTimeBinary(const char *trgName)
 {
 	FILE *out = fopen(trgName, "wb");
 	if(!out)
@@ -685,7 +685,7 @@ int OutputFile::WriteArrivalTimeBinary(char *trgName)
 	return ret;
 }
 
-int OutputFile::WriteIntensityBinary(char *trgName)
+int OutputFile::WriteIntensityBinary(const char *trgName)
 {
 	FILE *out = fopen(trgName, "wb");
 	if(!out)
@@ -696,7 +696,7 @@ int OutputFile::WriteIntensityBinary(char *trgName)
 	fclose(out);
 	return ret;
 }
-int OutputFile::WriteFlameLengthBinary(char *trgName)
+int OutputFile::WriteFlameLengthBinary(const char *trgName)
 {
 	FILE *out = fopen(trgName, "wb");
 	if(!out)
@@ -707,7 +707,7 @@ int OutputFile::WriteFlameLengthBinary(char *trgName)
 	fclose(out);
 	return ret;
 }
-int OutputFile::WriteSpreadRateBinary(char *trgName)
+int OutputFile::WriteSpreadRateBinary(const char *trgName)
 {
 	FILE *out = fopen(trgName, "wb");
 	if(!out)
@@ -718,7 +718,7 @@ int OutputFile::WriteSpreadRateBinary(char *trgName)
 	fclose(out);
 	return ret;
 }
-int OutputFile::WriteSpreadDirectionBinary(char *trgName)
+int OutputFile::WriteSpreadDirectionBinary(const char *trgName)
 {
 	FILE *out = fopen(trgName, "wb");
 	if(!out)
@@ -729,7 +729,7 @@ int OutputFile::WriteSpreadDirectionBinary(char *trgName)
 	fclose(out);
 	return ret;
 }
-int OutputFile::WriteHeatPerUnitAreaBinary(char *trgName)
+int OutputFile::WriteHeatPerUnitAreaBinary(const char *trgName)
 {
 	FILE *out = fopen(trgName, "wb");
 	if(!out)
@@ -740,7 +740,7 @@ int OutputFile::WriteHeatPerUnitAreaBinary(char *trgName)
 	fclose(out);
 	return ret;
 }
-int OutputFile::WriteReactionIntensityBinary(char *trgName)
+int OutputFile::WriteReactionIntensityBinary(const char *trgName)
 {
 	FILE *out = fopen(trgName, "wb");
 	if(!out)
@@ -751,7 +751,7 @@ int OutputFile::WriteReactionIntensityBinary(char *trgName)
 	fclose(out);
 	return ret;
 }
-int OutputFile::WriteCrownFireBinary(char *trgName)
+int OutputFile::WriteCrownFireBinary(const char *trgName)
 {
 	FILE *out = fopen(trgName, "wb");
 	if(!out)

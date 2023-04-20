@@ -521,7 +521,7 @@ const char *Farsite5::GetLandFileName()
 	return LandFName;
 }
 
-void Farsite5::SetLandFileName(char* FileName)
+void Farsite5::SetLandFileName(const char* FileName)
 {
 	//LandFName = bfs::path(FileName, bfs::native) ;
 	strcpy(LandFName, FileName);
@@ -702,7 +702,7 @@ bool Farsite5::OpenLandFile()
 }
 
 
-bool Farsite5::LoadLandscapeFile(char *FileName)
+bool Farsite5::LoadLandscapeFile(const char *FileName)
 {
     CloseLandFile();
 
@@ -1959,15 +1959,15 @@ void Farsite5::SetAllMoistures(int _fm1, int _fm10, int _fm100,
 }
 
 
-int Farsite5::LoadInputsFile(char *FileName)
+int Farsite5::LoadInputsFile(const char *FileName)
 {
     int i;
 
     strcpy(InputsFName, FileName);
 
-    i = icf.InputFarsite(FileName);          /* Load info from commnad file       */
+    i = icf.InputFarsite(FileName);      /* Load info from commnad file       */
     if ( i != 1 )                        /*  some basic checking done         */
-        return i;                           /* Error - return error number       */
+        return i;                        /* Error - return error number       */
 
     i = icf.ValidateFarsite();           /* Validate inputs, detailed err chk */
     if ( i != 1 )                        /* Return err num                    */
@@ -10426,21 +10426,21 @@ long Farsite5::GetMaxDay()
 	return maxday;
 }
 
-int Farsite5::SetIgnitionFileName(char *_ignitionFileName)
+int Farsite5::SetIgnitionFileName(const char *_ignitionFileName)
 {
 	strcpy(icf.cr_FarsiteIgnition, _ignitionFileName);
 	strcpy(Ignition.ifile, icf.cr_FarsiteIgnition);
 	return CreateIgnitionGrid();
 }
 
-int Farsite5::SetBarrierFileName(char *_barrierFileName)
+int Farsite5::SetBarrierFileName(const char *_barrierFileName)
 {
 	strcpy(icf.cr_FarsiteBarrier, _barrierFileName);
 
 	return 1;
 }
 
-int Farsite5::SetBarrier(char *_barrierFileName)
+int Farsite5::SetBarrier(const char *_barrierFileName)
 {
 	SetBarrierFileName(_barrierFileName);
 	//new way to deal with barriers: Set Landscape fuels to non-burnable
@@ -10572,7 +10572,7 @@ int Farsite5::SetBarrier(char *_barrierFileName)
     return 1;
 }
 
-int Farsite5::WriteArrivalTimeGrid(char *trgName)
+int Farsite5::WriteArrivalTimeGrid(const char *trgName)
 {
 	strcpy(RasterArrivalTime, trgName);
 	//burn.rast->SelectMemOutputs(5);
@@ -10583,7 +10583,7 @@ int Farsite5::WriteArrivalTimeGrid(char *trgName)
 	//return 1;
 }
 
-int Farsite5::WriteIntensityGrid(char *trgName)
+int Farsite5::WriteIntensityGrid(const char *trgName)
 {
 	strcpy(RasterFireIntensity, trgName);
 	burn.rast->setHeaderType(5) ;
@@ -10593,7 +10593,7 @@ int Farsite5::WriteIntensityGrid(char *trgName)
 	//return 1;
 }
 
-int Farsite5::WriteFlameLengthGrid(char *trgName)
+int Farsite5::WriteFlameLengthGrid(const char *trgName)
 {
 	strcpy(RasterFlameLength, trgName);
 	burn.rast->setHeaderType(5) ;
@@ -10603,7 +10603,7 @@ int Farsite5::WriteFlameLengthGrid(char *trgName)
 	//return 1;
 }
 
-int Farsite5::WriteSpreadRateGrid(char *trgName)
+int Farsite5::WriteSpreadRateGrid(const char *trgName)
 {
 	strcpy(RasterSpreadRate, trgName);
 	burn.rast->setHeaderType(5) ;
@@ -10613,7 +10613,7 @@ int Farsite5::WriteSpreadRateGrid(char *trgName)
 	//return 1;
 }
 
-int Farsite5::WriteSpreadDirectionGrid(char *trgName)
+int Farsite5::WriteSpreadDirectionGrid(const char *trgName)
 {
 	strcpy(RasterFireDirection, trgName);
 	burn.rast->setHeaderType(5) ;
@@ -10623,7 +10623,7 @@ int Farsite5::WriteSpreadDirectionGrid(char *trgName)
 	//return 1;
 }
 
-int Farsite5::WriteHeatPerUnitAreaGrid(char *trgName)
+int Farsite5::WriteHeatPerUnitAreaGrid(const char *trgName)
 {
 	strcpy(RasterHeatPerArea, trgName);
 	burn.rast->setHeaderType(5) ;
@@ -10633,7 +10633,7 @@ int Farsite5::WriteHeatPerUnitAreaGrid(char *trgName)
 	//return 1;
 }
 
-int Farsite5::WriteReactionIntensityGrid(char *trgName)
+int Farsite5::WriteReactionIntensityGrid(const char *trgName)
 {
 	strcpy(RasterReactionIntensity, trgName);
 	burn.rast->setHeaderType(5) ;
@@ -10643,7 +10643,7 @@ int Farsite5::WriteReactionIntensityGrid(char *trgName)
 	//return 1;
 }
 
-int Farsite5::WriteCrownFireGrid(char *trgName)
+int Farsite5::WriteCrownFireGrid(const char *trgName)
 {
 	strcpy(RasterCrownFire, trgName);
 	burn.rast->setHeaderType(5) ;
@@ -10653,36 +10653,36 @@ int Farsite5::WriteCrownFireGrid(char *trgName)
 }
 
 
-int Farsite5::WriteArrivalTimeGridBinary(char *trgName)
+int Farsite5::WriteArrivalTimeGridBinary(const char *trgName)
 {
 	return burn.rast->WriteArrivalTimeBinary(trgName);
 }
 
-int Farsite5::WriteIntensityGridBinary(char *trgName)
+int Farsite5::WriteIntensityGridBinary(const char *trgName)
 {
 	return burn.rast->WriteIntensityBinary(trgName);
 }
-int Farsite5::WriteFlameLengthGridBinary(char *trgName)
+int Farsite5::WriteFlameLengthGridBinary(const char *trgName)
 {
 	return burn.rast->WriteFlameLengthBinary(trgName);
 }
-int Farsite5::WriteSpreadRateGridBinary(char *trgName)
+int Farsite5::WriteSpreadRateGridBinary(const char *trgName)
 {
 	return burn.rast->WriteSpreadRateBinary(trgName);
 }
-int Farsite5::WriteSpreadDirectionGridBinary(char *trgName)
+int Farsite5::WriteSpreadDirectionGridBinary(const char *trgName)
 {
 	return burn.rast->WriteSpreadDirectionBinary(trgName);
 }
-int Farsite5::WriteHeatPerUnitAreaGridBinary(char *trgName)
+int Farsite5::WriteHeatPerUnitAreaGridBinary(const char *trgName)
 {
 	return burn.rast->WriteHeatPerUnitAreaBinary(trgName);
 }
-int Farsite5::WriteReactionIntensityGridBinary(char *trgName)
+int Farsite5::WriteReactionIntensityGridBinary(const char *trgName)
 {
 	return burn.rast->WriteReactionIntensityBinary(trgName);
 }
-int Farsite5::WriteCrownFireGridBinary(char *trgName)
+int Farsite5::WriteCrownFireGridBinary(const char *trgName)
 {
 	return burn.rast->WriteCrownFireBinary(trgName);
 }
@@ -10955,7 +10955,8 @@ void Farsite5::FillIgnitionPolygon(xPolygon *poly, float val)
 		}
 	}
 }
-int Farsite5::WriteIgnitionGrid(char *trgName)
+
+int Farsite5::WriteIgnitionGrid(const char *trgName)
 {
 	if(ignitionGrid)
 	{
@@ -11069,7 +11070,7 @@ void Farsite5::AddCurrPerimeter()
 
 }
 
-int Farsite5::WritePerimetersShapeFile(char *trgName)
+int Farsite5::WritePerimetersShapeFile(const char *trgName)
 {
 
 	int NumVertices, NumParts = 0;
@@ -11218,7 +11219,7 @@ int Farsite5::WritePerimetersShapeFile(char *trgName)
 
 
 /***********************************************************************************************/
-int Farsite5::WriteTimingsFile(char *trgName)
+int Farsite5::WriteTimingsFile(const char *trgName)
 {
     double  duration;
     duration = (double)(timeFinish - timeLaunchFarsite) / CLOCKS_PER_SEC;
@@ -11580,7 +11581,7 @@ int Farsite5::CmMapEnvironment(int themeno, double mapTime, char *outName)
 	return 1;
 }
 
-int Farsite5::ExportMoistureDataText(char *trgName)
+int Farsite5::ExportMoistureDataText(const char *trgName)
 {
     bool b;
 
@@ -11590,7 +11591,7 @@ int Farsite5::ExportMoistureDataText(char *trgName)
     return 0;
 }
 
-int Farsite5::WriteSpotDataFile(char *trgName)
+int Farsite5::WriteSpotDataFile(const char *trgName)
 {
 	FILE *fout = fopen(trgName, "wt");
 	if(!fout)
@@ -11617,7 +11618,7 @@ int Farsite5::WriteSpotDataFile(char *trgName)
 	return CloseAndReturn(fout, 1);
 }
 
-int Farsite5::WriteSpotShapeFile(char *trgName)
+int Farsite5::WriteSpotShapeFile(const char *trgName)
 {
 	long NumRecord;
 	SHPHandle hSHP;
@@ -11674,7 +11675,7 @@ int Farsite5::SetFarsiteProgress(int newProgress)
 /*************************************************************
  * This function will get called from within a critical section
  **************************************************************/
-int Farsite5::GetFarsiteProgress()
+int Farsite5::GetFarsiteProgress() const
 {
 	return this->progress;
 }
@@ -11732,7 +11733,7 @@ int Farsite5::AddIgnitionToSpotGrid()
 	return 1;
 }
 
-int Farsite5::WriteSpotGrid(char *trgName)
+int Farsite5::WriteSpotGrid(const char *trgName)
 {
 	if(m_BSG.Grid)
 	{
@@ -11775,6 +11776,7 @@ int Farsite5::WriteSpotGrid(char *trgName)
 	}
 	return e_EMS_OUTPUT_DOES_NOT_EXIST;
 }
+
 void Farsite5::WritePerimeter1Shapefile(int num, long curFire)
 {
 	char fName1[MAX_PATH];//, fName2[MAX_PATH];

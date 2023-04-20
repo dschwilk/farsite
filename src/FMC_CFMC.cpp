@@ -557,7 +557,7 @@ void CFMC::RAWS_Display()
 }
 
 
-bool CFMC::ExportMoistureDataText(char *FileName, char * LCP_FilNam)
+bool CFMC::ExportMoistureDataText(const char *FileName, const char * LCP_FilNam)
 {
 bool b;
    b = this->a_FE2->ExportMoistureDataText(FileName, LCP_FilNam);

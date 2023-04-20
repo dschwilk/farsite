@@ -281,7 +281,7 @@ public:
    void Load_CurHist (DeadMoistureHistory *CurHist, d_RAWS *a_RAWS, int i_Elev, double d_RaiAcm, long SimTim, long l_Intv);
 
 
-    bool ExportMoistureDataText(char* FileName, char* LCP_FilNam);
+    bool ExportMoistureDataText(const char* FileName, const char* LCP_FilNam);
 
     int Set_FarsiteTime (long l_Adj);
 

@@ -15,15 +15,15 @@ class FARSITEDLL_EXPORT CFarsite
 public:
 	CFarsite();
 	~CFarsite();
-	int SetLandscapeFile(char *_lcpFileName);
-	int SetIgnition(char *shapeFileName);
-	int SetBarriers(char *shapeFileName);
+	int SetLandscapeFile(const char *_lcpFileName);
+	int SetIgnition(const char *shapeFileName);
+	int SetBarriers(const char *shapeFileName);
 	int SetNumProcessors(int numThreads = 1);
 	int SetStartProcessor(int _procNum);
 	int GetStartProcessor();
 	int GetNumIgnitionCells();
 
-	int LoadFarsiteInputs(char *_inputFile);
+	int LoadFarsiteInputs(const char *_inputFile);
 	char *CommandFileError(int i_ErrNum);
 	char *GetErrorMessage(int errNum);
 
@@ -37,40 +37,40 @@ public:
 
 	int CanLaunchFarsite(void);
 	int LaunchFarsite(void);
-    int GetFarsiteProgress();
+    int GetFarsiteProgress() const;
  // double GetFarsiteProgress(int *ai_RunStatus, char cr[]);
 // int  GetFarsiteStatus (char cr[]);
 
 	int CancelFarsite(void);
 
 	//output functions
-	int WriteArrivalTimeGrid(char *trgName);
-	int WriteIntensityGrid(char *trgName);
-	int WriteFlameLengthGrid(char *trgName);
-	int WriteSpreadRateGrid(char *trgName);
-	int WriteSpreadDirectionGrid(char *trgName);
-	int WriteHeatPerUnitAreaGrid(char *trgName);
-	int WriteReactionIntensityGrid(char *trgName);
-	int WriteCrownFireGrid(char *trgName);
-	int WriteArrivalTimeGridBinary(char *trgName);
-	int WriteIntensityGridBinary(char *trgName);
-	int WriteFlameLengthGridBinary(char *trgName);
-	int WriteSpreadRateGridBinary(char *trgName);
-	int WriteSpreadDirectionGridBinary(char *trgName);
-	int WriteHeatPerUnitAreaGridBinary(char *trgName);
-	int WriteReactionIntensityGridBinary(char *trgName);
-	int WriteCrownFireGridBinary(char *trgName);
-	int WriteIgnitionGrid(char *trgName);
-	int WritePerimetersShapeFile(char *trgName);
-	int WriteTimingsFile(char *trgName);
+	int WriteArrivalTimeGrid(const char *trgName);
+	int WriteIntensityGrid(const char *trgName);
+	int WriteFlameLengthGrid(const char *trgName);
+	int WriteSpreadRateGrid(const char *trgName);
+	int WriteSpreadDirectionGrid(const char *trgName);
+	int WriteHeatPerUnitAreaGrid(const char *trgName);
+	int WriteReactionIntensityGrid(const char *trgName);
+	int WriteCrownFireGrid(const char *trgName);
+	int WriteArrivalTimeGridBinary(const char *trgName);
+	int WriteIntensityGridBinary(const char *trgName);
+	int WriteFlameLengthGridBinary(const char *trgName);
+	int WriteSpreadRateGridBinary(const char *trgName);
+	int WriteSpreadDirectionGridBinary(const char *trgName);
+	int WriteHeatPerUnitAreaGridBinary(const char *trgName);
+	int WriteReactionIntensityGridBinary(const char *trgName);
+	int WriteCrownFireGridBinary(const char *trgName);
+	int WriteIgnitionGrid(const char *trgName);
+	int WritePerimetersShapeFile(const char *trgName);
+	int WriteTimingsFile(const char *trgName);
 
-	int WriteOneHours(char *trgName);
-	int WriteTenHours(char *trgName);
-	int WriteHundredHours(char *trgName);
-	int WriteMoistData(char *trgName);
-	int WriteSpotDataFile(char *trgName);
-	int WriteSpotShapeFile(char *trgName);
-	int WriteSpotGrid(char *trgName);
+	int WriteOneHours(const char *trgName);
+	int WriteTenHours(const char *trgName);
+	int WriteHundredHours(const char *trgName);
+	int WriteMoistData(const char *trgName);
+	int WriteSpotDataFile(const char *trgName);
+	int WriteSpotShapeFile(const char *trgName);
+	int WriteSpotGrid(const char *trgName);
 
 private:
 	Farsite5 *m_pFarsite;

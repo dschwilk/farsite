@@ -28,7 +28,7 @@ void CelsToFahr (float *af);
 *   In: cr_PthFN....path and file name.
 *  Ret: 1 = no error, else error number, see error message defines and table
 {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
-int ICF::Input (char cr_PthFN[])
+int ICF::Input (const char cr_PthFN[])
 {
 int i;
 
@@ -36,7 +36,7 @@ int i;
   ICF::Init ();                              /* Init all class variables          */
 
   this->fh = fopen (cr_PthFN,"r");
-  if ( this->fh == NULL ){
+  if ( this->fh == nullptr ){
 	  sprintf (this->cr_ErrExt,"%s\n",cr_PthFN);
 	 return e_EMS_Fil;}
 
@@ -58,8 +58,12 @@ int i;
 /*.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.*/
 /* Newer RAWS (Remote Automated Weather Stations) data -                     */
    if ( !ICF::RAWS_WeatherData (&i) )     /* Data embedded in inputs file */
-     return ICF::CloseRet (i);
+     return ICF::CloseRet (i);    
 
+// DWS: Note error in above function call can happen under current
+// multi-process version. Must have to do with low-level file reading and
+// threads despite no files being in common across farsite runs tested.
+   
    if ( !ICF::RAWS_WeatherDataFile(&i) )  /* Data in separate data file */
      return ICF::CloseRet (i);
 
@@ -67,6 +71,7 @@ int i;
   if (!ICF::Set_FilNam ((char *)e_ICF_ROS_ADJUST_FILE, this->cr_ROSAdjustFile))  /* ROS_ADJUST_FILE     */
     return ICF::CloseRet(e_EMS_Fil);
 
+  
   /*.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.*/
 /* Weather Stream Data, can be in embeded in cmd file or .wtr file, not both */
   if ( !ICF::WeatherDataFile (&i) )           /* WEATHER_FILE:               */
@@ -116,7 +121,7 @@ int i;
 *  Ret: 1 = no error, else error number, see error message defines and table
 *
 {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
-int ICF::InputFarsite (char cr_PthFN[])
+int ICF::InputFarsite (const char cr_PthFN[])
 {
 int i;
 
@@ -269,7 +274,7 @@ int i;
 
   ICF::Set_SinIntArg((char *)e_ICF_USE_MEM_LCP, &this->i_useMemoryLCP); /* USE_MEMORY_LCP */
   ICF::Set_SinIntArg((char *)e_ICF_USE_MEM_OUTPUTS, &this->i_useMemoryOutputs); /* USE_MEMORY_OUTPUTS */
-	 ICF::Set_FilNam ((char *)e_ICF_TEMP_STORAGE_PATH, this->cr_storagePath);
+  ICF::Set_FilNam ((char *)e_ICF_TEMP_STORAGE_PATH, this->cr_storagePath);
 
 /*.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.*/
 /* Gridded Winds                                                             */

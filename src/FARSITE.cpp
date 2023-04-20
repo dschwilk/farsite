@@ -16,7 +16,7 @@ CFarsite::~CFarsite()
 	m_pFarsite = NULL;
 }
 
-int CFarsite::SetLandscapeFile(char *_lcpFileName)
+int CFarsite::SetLandscapeFile(const char *_lcpFileName)
 {
 	if(m_pFarsite)
 	{
@@ -25,7 +25,7 @@ int CFarsite::SetLandscapeFile(char *_lcpFileName)
 	return 0;
 }
 
-int CFarsite::SetIgnition(char *shapeFileName)
+int CFarsite::SetIgnition(const char *shapeFileName)
 {
 	if(m_pFarsite)
 	{
@@ -34,7 +34,7 @@ int CFarsite::SetIgnition(char *shapeFileName)
 	return 0;
 }
 
-int CFarsite::SetBarriers(char *shapeFileName)
+int CFarsite::SetBarriers(const char *shapeFileName)
 {
 	if(m_pFarsite)
 	{
@@ -58,7 +58,7 @@ int CFarsite::GetStartProcessor()
 	return 0;
 }
 
-int CFarsite::LoadFarsiteInputs(char *_inputFile)
+int CFarsite::LoadFarsiteInputs(const char *_inputFile)
 {
 	if(m_pFarsite)
 		return m_pFarsite->LoadInputsFile(_inputFile);
@@ -148,7 +148,7 @@ int CFarsite::LaunchFarsite(void)
 }
 
 /****************************************************************************/
-int CFarsite::GetFarsiteProgress()//int *ai_RunStatus, char cr[])
+int CFarsite::GetFarsiteProgress() const //int *ai_RunStatus, char cr[])
 {
 	if (m_pFarsite)
     return m_pFarsite->GetFarsiteProgress();//FPC.GetProgress(m_pFarsite, &m_pFarsite->WN2,&m_pFarsite->cfmc, cr);
@@ -178,7 +178,7 @@ int CFarsite::CancelFarsite(void)
 	return 0;
 }
 
-int CFarsite::WriteArrivalTimeGrid(char *trgName)
+int CFarsite::WriteArrivalTimeGrid(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -187,7 +187,7 @@ int CFarsite::WriteArrivalTimeGrid(char *trgName)
 	return 0;
 }
 
-int CFarsite::WriteIntensityGrid(char *trgName)
+int CFarsite::WriteIntensityGrid(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -196,7 +196,7 @@ int CFarsite::WriteIntensityGrid(char *trgName)
 	return 0;
 }
 
-int CFarsite::WriteFlameLengthGrid(char *trgName)
+int CFarsite::WriteFlameLengthGrid(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -205,7 +205,7 @@ int CFarsite::WriteFlameLengthGrid(char *trgName)
 	return 0;
 }
 
-int CFarsite::WriteSpreadRateGrid(char *trgName)
+int CFarsite::WriteSpreadRateGrid(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -214,7 +214,7 @@ int CFarsite::WriteSpreadRateGrid(char *trgName)
 	return 0;
 }
 
-int CFarsite::WriteSpreadDirectionGrid(char *trgName)
+int CFarsite::WriteSpreadDirectionGrid(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -223,7 +223,7 @@ int CFarsite::WriteSpreadDirectionGrid(char *trgName)
 	return 0;
 }
 
-int CFarsite::WriteHeatPerUnitAreaGrid(char *trgName)
+int CFarsite::WriteHeatPerUnitAreaGrid(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -232,7 +232,7 @@ int CFarsite::WriteHeatPerUnitAreaGrid(char *trgName)
 	return 0;
 }
 
-int CFarsite::WriteReactionIntensityGrid(char *trgName)
+int CFarsite::WriteReactionIntensityGrid(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -241,7 +241,7 @@ int CFarsite::WriteReactionIntensityGrid(char *trgName)
 	return 0;
 }
 
-int CFarsite::WriteCrownFireGrid(char *trgName)
+int CFarsite::WriteCrownFireGrid(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -251,7 +251,7 @@ int CFarsite::WriteCrownFireGrid(char *trgName)
 }
 
 
-int CFarsite::WriteArrivalTimeGridBinary(char *trgName)
+int CFarsite::WriteArrivalTimeGridBinary(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -261,7 +261,7 @@ int CFarsite::WriteArrivalTimeGridBinary(char *trgName)
 }
 
 
-int CFarsite::WriteIntensityGridBinary(char *trgName)
+int CFarsite::WriteIntensityGridBinary(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -271,7 +271,7 @@ int CFarsite::WriteIntensityGridBinary(char *trgName)
 }
 
 
-int CFarsite::WriteFlameLengthGridBinary(char *trgName)
+int CFarsite::WriteFlameLengthGridBinary(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -279,7 +279,7 @@ int CFarsite::WriteFlameLengthGridBinary(char *trgName)
 	}
 	return 0;
 }
-int CFarsite::WriteSpreadRateGridBinary(char *trgName)
+int CFarsite::WriteSpreadRateGridBinary(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -287,7 +287,7 @@ int CFarsite::WriteSpreadRateGridBinary(char *trgName)
 	}
 	return 0;
 }
-int CFarsite::WriteSpreadDirectionGridBinary(char *trgName)
+int CFarsite::WriteSpreadDirectionGridBinary(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -295,7 +295,7 @@ int CFarsite::WriteSpreadDirectionGridBinary(char *trgName)
 	}
 	return 0;
 }
-int CFarsite::WriteHeatPerUnitAreaGridBinary(char *trgName)
+int CFarsite::WriteHeatPerUnitAreaGridBinary(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -303,7 +303,7 @@ int CFarsite::WriteHeatPerUnitAreaGridBinary(char *trgName)
 	}
 	return 0;
 }
-int CFarsite::WriteReactionIntensityGridBinary(char *trgName)
+int CFarsite::WriteReactionIntensityGridBinary(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -311,7 +311,7 @@ int CFarsite::WriteReactionIntensityGridBinary(char *trgName)
 	}
 	return 0;
 }
-int CFarsite::WriteCrownFireGridBinary(char *trgName)
+int CFarsite::WriteCrownFireGridBinary(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -320,7 +320,7 @@ int CFarsite::WriteCrownFireGridBinary(char *trgName)
 	return 0;
 }
 
-int CFarsite::WriteIgnitionGrid(char *trgName)
+int CFarsite::WriteIgnitionGrid(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -329,7 +329,7 @@ int CFarsite::WriteIgnitionGrid(char *trgName)
 	return 0;
 }
 
-int CFarsite::WritePerimetersShapeFile(char *trgName)
+int CFarsite::WritePerimetersShapeFile(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -338,7 +338,7 @@ int CFarsite::WritePerimetersShapeFile(char *trgName)
 	return 0;
 }
 
-int CFarsite::WriteTimingsFile(char *trgName)
+int CFarsite::WriteTimingsFile(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -347,7 +347,7 @@ int CFarsite::WriteTimingsFile(char *trgName)
 	return 0;
 }
 
-int CFarsite::WriteSpotGrid(char *trgName)
+int CFarsite::WriteSpotGrid(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -358,7 +358,7 @@ int CFarsite::WriteSpotGrid(char *trgName)
 
 
 /***********************************************************************************/
-int CFarsite::WriteOneHours(char *trgName)
+int CFarsite::WriteOneHours(const char *trgName)
 {
 	if (m_pFarsite)	{
 		 m_pFarsite->LastAccess = -1;
@@ -375,7 +375,7 @@ int CFarsite::WriteOneHours(char *trgName)
 	return 0;
 }
 
-int CFarsite::WriteTenHours(char *trgName)
+int CFarsite::WriteTenHours(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -395,7 +395,7 @@ int CFarsite::WriteTenHours(char *trgName)
 	}
 	return 0;
 }
-int CFarsite::WriteHundredHours(char *trgName)
+int CFarsite::WriteHundredHours(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -416,7 +416,7 @@ int CFarsite::WriteHundredHours(char *trgName)
 	return 0;
 }
 
-int CFarsite::WriteMoistData(char *trgName)
+int CFarsite::WriteMoistData(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -425,7 +425,7 @@ int CFarsite::WriteMoistData(char *trgName)
 	return 0;
 }
 
-int CFarsite::WriteSpotDataFile(char *trgName)
+int CFarsite::WriteSpotDataFile(const char *trgName)
 {
 	if(m_pFarsite)
 	{
@@ -434,7 +434,7 @@ int CFarsite::WriteSpotDataFile(char *trgName)
 	return 0;
 }
 
-int CFarsite::WriteSpotShapeFile(char *trgName)
+int CFarsite::WriteSpotShapeFile(const char *trgName)
 {
 	if(m_pFarsite)
 	{

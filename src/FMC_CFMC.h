@@ -90,7 +90,7 @@ public:
    void RAWS_Display ();
 
 
-   bool ExportMoistureDataText(char* FileName, char* LCP_FilNam);
+   bool ExportMoistureDataText(const char* FileName, const char* LCP_FilNam);
    int  Set_FarsiteDef (long l);
 
    int  SimTime_ActualTime (double SimTime, long* mo, long* dy, long* hr, long* mn);

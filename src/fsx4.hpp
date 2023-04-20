@@ -379,14 +379,14 @@ public:
 	void ConvF();
 	void InitRasterFiles(long HeaderType);
 	void GetRasterExtent();
-	int WriteArrivalTimeBinary(char *trgName);
-	int WriteIntensityBinary(char *trgName);
-	int WriteFlameLengthBinary(char *trgName);
-	int WriteSpreadRateBinary(char *trgName);
-	int WriteSpreadDirectionBinary(char *trgName);
-	int WriteHeatPerUnitAreaBinary(char *trgName);
-	int WriteReactionIntensityBinary(char *trgName);
-	int WriteCrownFireBinary(char *trgName);
+	int WriteArrivalTimeBinary(const char *trgName);
+	int WriteIntensityBinary(const char *trgName);
+	int WriteFlameLengthBinary(const char *trgName);
+	int WriteSpreadRateBinary(const char *trgName);
+	int WriteSpreadDirectionBinary(const char *trgName);
+	int WriteHeatPerUnitAreaBinary(const char *trgName);
+	int WriteReactionIntensityBinary(const char *trgName);
+	int WriteCrownFireBinary(const char *trgName);
 
 };
 

@@ -615,7 +615,7 @@ char  CR[1000];
 *                    into text file, not used for anything else
 *  Ret: true = ok,  false error opening file
 ************************************************************************/
-bool FE2::ExportMoistureDataText(char* FileName, char* LcpName)
+bool FE2::ExportMoistureDataText(const char* FileName, const char* LcpName)
 {
 DeadMoistureHistory *a;
 long i, j, NumHist,NumAlloc;

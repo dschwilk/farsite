@@ -493,7 +493,7 @@ public:
 
   FPC m_FPC;    /* Farsite Progress Class */
 
-  int ExportMoistureDataText(char *trgName);
+  int ExportMoistureDataText(const char *trgName);
 
 //___________________________________________________________________
 // Gridded winds
@@ -533,8 +533,8 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 
 	CSpotList spotList;
    	void 	ReadHeader();
-	bool LoadLandscapeFile(char *FileName);
-	int LoadInputsFile(char *FileName);
+	bool LoadLandscapeFile(const char *FileName);
+	int LoadInputsFile(const char *FileName);
 	char  *LoadInputError (int i_Num);
 	void CloseLandFile();
 	celldata 	CellData(double east, double north, celldata &cell, crowndata &cfuel, grounddata &gfuel, long *posit);
@@ -542,7 +542,7 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	void GetCellDataFromMemory(long posit, celldata& cell, crowndata& cfuel, grounddata& gfuel);
 	void SetCellFuel(long posit, short tfuel);
 	const char *GetLandFileName();
-	void SetLandFileName(char* FileName);
+	void SetLandFileName(const char* FileName);
 	bool OpenLandFile();
 	double 	ConvertEastingOffsetToUtm(double input);
 	double 	ConvertNorthingOffsetToUtm(double input);
@@ -559,10 +559,10 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	bool 	NeedConvFuelModels();
 	void 	SetCustFuelModelID(bool True_False);
 	void 	SetConvFuelModelID(bool True_False);
-        void    LoadBurnPeriods();
+    void    LoadBurnPeriods();
 	void	LoadFuelMoist();
-        void    LoadFoliarMoist(int i_FolMoi);
-        int     LoadWeatherStream (d_ICF *a_ICF);
+    void    LoadFoliarMoist(int i_FolMoi);
+    int     LoadWeatherStream (d_ICF *a_ICF);
 
 
 	int  LoadWind_Table (d_ICF *a_ICF);
@@ -571,8 +571,8 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 
 
 
-        bool  LoadFuelMoistureFile(char *FileName);
-	long 	AllocWeatherData(long StatNum, long NumObs);
+    bool  LoadFuelMoistureFile(char *FileName);
+	long  AllocWeatherData(long StatNum, long NumObs);
 	void 	FreeWeatherData(long StationNumber);
 	void 	FreeWindData(long StationNumber);
 
@@ -586,21 +586,21 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	void SetFoliarMoistureContent(long Percent);
 	void SetSpreadDirection(double North, double Max);
 	void 	SetFileOutputOptions(long FileType, bool YesNo);
-	bool		GetFileOutputOptions(long FileType);
+	bool    GetFileOutputOptions(long FileType);
 	void 	SetRasterFileName(const char *FileName);
 	char 	*GetRasterFileName(long Type);
 	void 	SetVectorFileName(const char *FileName);
 	char 	*GetVectorFileName();
 	long 	AccessOutputUnits(long val);
-	long		CanSetRasterResolution(long YesNo);		// flag to allow setting of rast res
+	long	CanSetRasterResolution(long YesNo);		// flag to allow setting of rast res
 	void 	SetRastRes(double XResol, double YResol);	// set raster output resolution
 	void 	GetRastRes(double *XResol, double *YResol);  // get raster output resolution
-	int 		CheckCellResUnits();					// returns 0 for metric 1 for English
+	int 	CheckCellResUnits();					// returns 0 for metric 1 for English
 	double 	GetWestUtm();
 	double 	GetEastUtm();
 	double 	GetSouthUtm();
 	double 	GetNorthUtm();
-	double  	GetLoEast();
+	double  GetLoEast();
 	double 	GetHiEast();
 	double 	GetLoNorth();
 	double	GetHiNorth();
@@ -611,9 +611,9 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 
 	bool 	CalcFirstLastStreamData();		// compute 1st and last valid dates for simulation
 	long 	GetNumStations();		  			// retrieve number of weather/wind stations
-	long AtmosphereGridExists();
-	long		GetJulianDays(long Month);
-	bool SetAtmosphereGrid(long NumGrids);
+	long    AtmosphereGridExists();
+	long	GetJulianDays(long Month);
+	bool    SetAtmosphereGrid(long NumGrids);
 	AtmosphereGrid* GetAtmosphereGrid();
 	void 	SetGridNorthOffset(double offset);		// set offset for Atm Grid purposes
 	void 	SetGridEastOffset(double offset);
@@ -1228,9 +1228,9 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	long ignitionRows;
 	float **ignitionGrid;
 
-	int SetIgnitionFileName(char *_ignitionFileName);
-	int SetBarrierFileName(char *_barrierFileName);
-	int SetBarrier(char *_barrierFileName);
+	int SetIgnitionFileName(const char *_ignitionFileName);
+	int SetBarrierFileName(const char *_barrierFileName);
+	int SetBarrier(const char *_barrierFileName);
 
 	long IgnitionReset;// = 0;
 	//void 	ResetVisPerimFile();
@@ -1309,47 +1309,47 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	long NumCompoundCrews;// = 0;
 	CompoundCrew* compoundcrew[MaxNumCompoundCrews];
 	int LaunchFarsite(void);
-	int WriteArrivalTimeGrid(char *trgName);
-	int WriteIntensityGrid(char *trgName);
-	int WriteFlameLengthGrid(char *trgName);
-	int WriteSpreadRateGrid(char *trgName);
-	int WriteSpreadDirectionGrid(char *trgName);
-	int WriteHeatPerUnitAreaGrid(char *trgName);
-	int WriteReactionIntensityGrid(char *trgName);
-	int WriteCrownFireGrid(char *trgName);
-	int WriteArrivalTimeGridBinary(char *trgName);
-	int WriteIntensityGridBinary(char *trgName);
-	int WriteFlameLengthGridBinary(char *trgName);
-	int WriteSpreadRateGridBinary(char *trgName);
-	int WriteSpreadDirectionGridBinary(char *trgName);
-	int WriteHeatPerUnitAreaGridBinary(char *trgName);
-	int WriteReactionIntensityGridBinary(char *trgName);
-	int WriteCrownFireGridBinary(char *trgName);
+	int WriteArrivalTimeGrid(const char *trgName);
+	int WriteIntensityGrid(const char *trgName);
+	int WriteFlameLengthGrid(const char *trgName);
+	int WriteSpreadRateGrid(const char *trgName);
+	int WriteSpreadDirectionGrid(const char *trgName);
+	int WriteHeatPerUnitAreaGrid(const char *trgName);
+	int WriteReactionIntensityGrid(const char *trgName);
+	int WriteCrownFireGrid(const char *trgName);
+	int WriteArrivalTimeGridBinary(const char *trgName);
+	int WriteIntensityGridBinary(const char *trgName);
+	int WriteFlameLengthGridBinary(const char *trgName);
+	int WriteSpreadRateGridBinary(const char *trgName);
+	int WriteSpreadDirectionGridBinary(const char *trgName);
+	int WriteHeatPerUnitAreaGridBinary(const char *trgName);
+	int WriteReactionIntensityGridBinary(const char *trgName);
+	int WriteCrownFireGridBinary(const char *trgName);
 	int CreateIgnitionGrid();
 	void FillIgnitionPolygon(xPolygon *poly, float val);
 	void FillBarrierPolygon(xPolygon *poly);
-	int WriteIgnitionGrid(char *trgName);
-	int WriteSpotGrid(char *trgName);
+	int WriteIgnitionGrid(const char *trgName);
+	int WriteSpotGrid(const char *trgName);
 
 	CPerimeterData *perimeters;
 	CPerimeterData *lastPerimeter;
 	void CleanPerimeters();
 	void AddCurrPerimeter();
-	int WritePerimetersShapeFile(char *trgName);
+	int WritePerimetersShapeFile(const char *trgName);
 
 //	double GetFarsiteProgress(int *ai_RunStatus);
 	double GetProgress(int *ai_RunStatus);
 	int CancelFarsite(void);
 
 	int SetFarsiteProgress(int newProgress);
-    int GetFarsiteProgress();
+    int GetFarsiteProgress() const;
 
 
 // void Farsite5::SetFarsiteRunStatus (int i);
 
 	clock_t timeLaunchFarsite;
 	clock_t timeFinish;
-	int WriteTimingsFile(char *trgName);
+	int WriteTimingsFile(const char *trgName);
 
 // int GetFarsiteRunStatus(char cr[]);
 	int LoadCustomFuelsData();
@@ -1365,8 +1365,8 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	//CRITICAL_SECTION progressCS;
 	int CmMapEnvironment(int themeno, double mapTime, char *outName);
 
-	int WriteSpotDataFile(char *trgName);
-	int WriteSpotShapeFile(char *trgName);
+	int WriteSpotDataFile(const char *trgName);
+	int WriteSpotShapeFile(const char *trgName);
 	int AddIgnitionToSpotGrid();
 
 	int GetNumIgnitionCells();

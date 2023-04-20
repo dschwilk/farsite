@@ -699,8 +699,8 @@ d_WDI   s_WDI;       /* WindNinja Diurnal Inputs */
 
    int  FSPRO_ConditionInputs (char cr_PthFN[500]);
    int  InputFlamMap (char cr_PthFN[]);
-   int  InputFarsite (char cr_PthFN[]);
-   int  Input (char cr_PthFN[]);
+   int  InputFarsite (const char cr_PthFN[]);
+   int  Input (const char cr_PthFN[]);
    int  InputFSIM (char cr_PthFN[]);
    int  InputFCONST (char cr_PthFN[]);
 
@@ -712,8 +712,7 @@ d_WDI   s_WDI;       /* WindNinja Diurnal Inputs */
    void DeleteAll ();
 
    int  Set_Date (char cr_Sw[]); 
-
-   
+  
    int  Set_FilNam (const char cr_Sw[], char cr_FN[]);
    int  Set_SinNumArg (char cr_Sw[], float *af);
    int  Set_SinTxtArg (char cr_Sw[], char *a, int iN);
