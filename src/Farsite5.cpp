@@ -19,13 +19,13 @@
 //#include <cassert>
 
 #ifndef WIN32
+// TODO use c++ std code avoid platform specific
+
 #include <fcntl.h>
 #include <sys/sendfile.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-
-
 
 void CopyFile(char *in, char *out, bool unused)
 {

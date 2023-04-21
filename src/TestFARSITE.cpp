@@ -19,17 +19,36 @@
 #include <atomic>
 #include <mutex>
 
-// A mutex ensures orderly access to std::cout from multiple threads.
-std::mutex iomutex;
-
 using namespace std::chrono_literals;
 using namespace std;
 
-std::atomic_bool cancelRequest = false;
+static const string help_str = R"(TestFARSITE expects one parameter
+Usage: TestFARSITE [commandfile]
+Where:
+    [commandfile] is the path to the command file. The command file contains
+    command lines for multiple Farsite runs, each run's command on a separate
+    line. Each command expects six parameters, all required:
 
+[LCPName] [InputsFileName] [IgnitionFileName] [BarrierFileName] [outputDirPath] [outputsType]
+
+Where:
+    [LCPName] is the path to the Landscape File
+    [InputsFileName] is the path to the FARSITE Inputs file (ASCII Format)
+    [IgnitionFileName] is the path to the Ignition shape file
+    [BarrierFileName] is the path to the Barrier shape file (0 if no barrier)
+    [outputDirPath] is the path to the output files base name (no extension)
+    [outputsType] is the file type for outputs (0 = both, 1 = ASCII grid,
+                  2 = FlamMap binary grid
+
+)";
+
+
+mutex iomutex;  // for locking std::cout
+atomic_bool cancelRequest = false; // Flag to end program based on user
+                                        // input. Not yet used.
 static const int MAX_PATH = 1512; // char buffer length for file paths
 
-// The 6 required command file tokens
+// The 6 required command file arguments
 struct FarsiteCommand {
     std::string lcp;
     std::string input;
@@ -54,16 +73,27 @@ ostream& operator<<(ostream& os, const FarsiteCommand fc)
     os << fc.lcp << " " << fc.input << " " << fc.ignitPath << " " << fc.barrierPath << " " << fc.outPath << " " << fc.outType;
     return os;
 }
-
     
 void printError(const char *theerr,  const char *fname)
 {
     std::lock_guard<std::mutex> iolock(iomutex);
-    printf("%s for %s\n", theerr, fname);
+    cout << "Error: " << theerr << " for " << fname << "\n";
 }
 
+void printMsg(const char *msg)
+{
+    std::lock_guard<std::mutex> iolock(iomutex);
+    cout << msg << "\n";
+}
 
+void printMsg(const std::string msg)
+{
+    std::lock_guard<std::mutex> iolock(iomutex);
+    cout << msg << "\n";
+}
 
+// This is very simple for now. It would be nice to have a progress bar of the
+// type in the indicators library.
 void ProgressThread(void *_pFarsite, int nFarsites)
 {
  	CFarsite **pFarsite = (CFarsite **)_pFarsite;
@@ -76,7 +106,16 @@ void ProgressThread(void *_pFarsite, int nFarsites)
             progress=0;
  			std::lock_guard<std::mutex> {iomutex};
             if(pFarsite[f]) progress = pFarsite[f]->GetFarsiteProgress();
-            cout << "Farsite #" << f+1 << " " << progress << "% complete. " << std::flush;
+            if (progress == 0)
+            {
+                cout << "Farsite #" << f+1 << " Preparing landscape. ";
+            } else if (progress == 100)
+            {
+                cout << "Farsite #" << f+1 << " Writing results. ";
+            } else
+            {              
+                cout << "Farsite #" << f+1 << " " << progress << "% complete. ";
+            }
 		}
         iomutex.lock();
         cout << "\n" <<  std::flush;
@@ -86,19 +125,12 @@ void ProgressThread(void *_pFarsite, int nFarsites)
 }
 
 
-// void buildFarsite(CFarsite *pFarsite, FarsiteRunInputs inputs)
-// {
-
-// }
-
 int writeOutputs(CFarsite * pFarsite, int outType, std::string outputPath, int f)
 {
     int ret;
     //  std::string outputName;
-    
-    iomutex.lock();
-    cout << "Writing outputs for Farsite #" << f+1 << ": " << outputPath << "\n" << std::flush;
-    iomutex.unlock();
+
+//    printMsg(string("Writing outputs for Farsite #") + to_string(f+1) + ": " + outputPath);
     if(outType == 0 || outType == 1 || outType == 4)
     {
         if(outType == 4)
@@ -261,25 +293,20 @@ return ret;
 }
 
 
-
+// This function must be called from the main thread -- it is unsafe to have
+// multiple versions running concurrently due to how the ICF class handles
+// error messages and strings.
 int LoadCommandInputs(CFarsite *pFarsite, int f, FarsiteCommand fc)
 {
     int ret;
-    iomutex.lock();
-    cout << "Loading lcp file for Farsite #" << f+1 << ": " << fc.lcp << "\n";
-    iomutex.unlock();
+    printMsg(string( "Loading lcp file for Farsite #") + to_string(f+1) + ": " + fc.lcp + "\n");
     if ( !pFarsite->SetLandscapeFile(fc.lcp.c_str()))
     {
-        iomutex.lock();
-        cout << "Error loading lcp file for Farsite #" << f+1 << ": " << fc.lcp << "\n";
-        iomutex.unlock();
-        printError(fc.lcp.c_str(), fc.lcp.c_str());
-        return -501;
+        printMsg(string( "Error Loading lcp file for Farsite #") + to_string(f+1) + ": " + fc.lcp + "\n");
+        return -1;
     }
 
-    iomutex.lock();
-    cout << "Loading inputs file for Farsite #" << f+1 << ": " << fc.input << "\n";
-    iomutex.unlock();
+    printMsg(string( "Loading inputs file for Farsite #") + to_string(f+1) + ": " + fc.input + "\n");
     ret = pFarsite->LoadFarsiteInputs(fc.input.c_str());
     if ( ret != 1 )
     {
@@ -288,9 +315,7 @@ int LoadCommandInputs(CFarsite *pFarsite, int f, FarsiteCommand fc)
         return ret;
     }
 
-    iomutex.lock();
-    cout << "Loading ignition file for Farsite #" << f+1 << ": " << fc.ignitPath << "\n";
-    iomutex.unlock();
+    printMsg(string( "Loading ignition file for Farsite #") + to_string(f+1) + ": " + fc.ignitPath + "\n");
     ret = pFarsite->SetIgnition(fc.ignitPath.c_str());
     if ( ret != 1 )
     {
@@ -301,62 +326,41 @@ int LoadCommandInputs(CFarsite *pFarsite, int f, FarsiteCommand fc)
     
     if(fc.barrierPath.length() > 2)
     {
-        iomutex.lock();
-        cout << "Loading barrier file for Farsite #" << f+1 << ": " << fc.barrierPath << "\n";
-        iomutex.unlock();
+        printMsg(string( "Loading barrier file for Farsite #") + to_string(f+1) + ": " + fc.barrierPath + "\n");
         pFarsite->SetBarriers(fc.barrierPath.c_str());
     }
     return ret;
 }
 
 
-
-
-
-// For handing to std:thread() return ignored
-int LaunchFarsite(void *_pFarsite, int f, FarsiteCommand fc)
+// For handing to std:thread()
+void LaunchFarsite(void *_pFarsite, int f, FarsiteCommand fc)
 {
   	CFarsite *pFarsite = (CFarsite *)_pFarsite;
-
-    int ret = LoadCommandInputs(pFarsite, f, fc);
-    if(ret != 1) 
-    {
-        cout << "Command File Error in Launch Farsite\n";
-        char *a = pFarsite->CommandFileError(ret);
-        printError(fc.input.c_str(),a);
-        return ret;
-    }
-
+    int ret;
     ret = pFarsite->LaunchFarsite();
 
     if(ret != 1) 
     {
-        char *a = pFarsite->CommandFileError(ret);
-        printError(fc.outPath.c_str(), a);
-        return ret;
+        printMsg(string("Error: LaunchFarsite failure for farsite #") + to_string(f+1) );
+        return;  // throw?
     }
-
+     // write outputs
     ret = writeOutputs(pFarsite, fc.outType, fc.outPath, f);
-    return ret;
+    if(ret != 1) 
+    {
+        printMsg(string("Error: Writing results failure for farsite #") + to_string(f+1) );
+        return;  // throw?
+    }
 }
 
+// Multi process version of main(). 
 int MPMain(int argc, char* argv[])
 {
 	//char lcpFileName[MAX_PATH], inputsFileName[MAX_PATH], ignitName[MAX_PATH], barrierName[MAX_PATH], baseOutputsPath[MAX_PATH];
 	if(argc != 2)
 	{
-		printf("TestFARSITE expects one parameter\nTestFARSITE Usage:\n"
-			"TestFARSITE [commandfile]\n"
-			"Where:\n\t[commandfile] is the path to the command file.\n");
-		printf("The command file contains command lines for multiple Farsite runs, each run's command on a separate line.\n");
-		printf("Each command expects six parameters, all required\n"
-			"[LCPName] [InputsFileName] [IgnitionFileName] [BarrierFileName] [outputDirPath] [outputsType]\n"
-			"Where:\n\t[LCPName] is the path to the Landscape File\n"
-			"\t[InputsFileName] is the path to the FARSITE Inputs File (ASCII Format)\n"
-			"\t[IgnitionFileName] is the path to the Ignition shape File\n"
-			"\t[BarrierFileName] is the path to the Barrier shape File (0 if no barrier)\n"
-			"\t[outputDirPath] is the path to the output files base name (no extension)\n"
-			"\t[outputsType] is the file type for outputs (0 = both, 1 = ASCII grid, 2 = FlamMap binary grid\n\n");
+        cout << help_str;
 		exit(1);
 	}
 
@@ -374,29 +378,35 @@ int MPMain(int argc, char* argv[])
     }
     
     int nFarsites = cmds.size(); 
-
-
-    // cout << "LCP: " << cmds[0].lcp << " Ingition: " << cmds[0].ignitPath;  
-    // return 0;
-    
+   
     std::vector<std::thread> FarsiteThreads;
 	CFarsite **pFarsites = new CFarsite*[nFarsites];
 	for(int i = 0; i < nFarsites; i++)
 		pFarsites[i] = nullptr;  // start empty
 
-	printf("Starting 'ProgressThread' thread.\n");
+	printMsg("Starting 'ProgressThread' thread.");
     auto progressThread = std::thread(ProgressThread, &pFarsites[0], nFarsites);
 	int f;
            
 	for(f = 0; f < nFarsites; f++)
 	{
-		{
-			pFarsites[f] = new CFarsite();
-		}
-
+		pFarsites[f] = new CFarsite();
+		
 		if(!cancelRequest)
 		{
-			printf("Launching Farsite #%d\n", f + 1);
+            // Load inputs
+            int ret = LoadCommandInputs(pFarsites[f], f, cmds[f]);
+            if(ret != 1) 
+            {
+                //printMsg(string("Command File Error in farsite #") + to_string(f+1));
+                char *a = pFarsites[f]->CommandFileError(ret);
+                printError(cmds[f].input.c_str(),a);
+                delete pFarsites[f];
+                pFarsites[f] = nullptr;
+            }
+
+            // Launch simulation in own thread
+			printMsg(string("Launching Farsite #") + to_string(f+1));
             FarsiteThreads.push_back(std::thread(LaunchFarsite, pFarsites[f], f, cmds[f]));
 		}
 		
@@ -414,7 +424,7 @@ int MPMain(int argc, char* argv[])
 
 	if(complete)
 	{
-		printf("Done\n");
+		printMsg("Done\n");
 	}
 
     
@@ -427,13 +437,6 @@ int MPMain(int argc, char* argv[])
     cmdfile.close();
 	return 0;
 }
-
-
-
-
-
-
-
 
 // int linuxMain(int argc, char* argv[])
 // {

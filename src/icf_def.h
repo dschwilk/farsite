@@ -2,7 +2,10 @@
 * Name: icf.h    Input Command File Settings Class Definitions
 * Desc:
 *
-*
+* DWS: Note that the input class is not thread-safe I believe because of these
+* error strings which might be read by two different processes at once.
+* Therefore, it is important to load all inputs from one main thread and only
+* use use separate threads for a CFarsite::LaunchFarsite() call.
 {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
 #pragma once 
 

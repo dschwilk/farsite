@@ -16,6 +16,7 @@
 #include <cmath>
 #include <ctime>
 
+
 extern d_EMS sr_EMS[];          /* Error Message Struct table */
 void CelsToFahr (float *af);
 
@@ -59,14 +60,10 @@ int i;
 /* Newer RAWS (Remote Automated Weather Stations) data -                     */
    if ( !ICF::RAWS_WeatherData (&i) )     /* Data embedded in inputs file */
      return ICF::CloseRet (i);    
-
-// DWS: Note error in above function call can happen under current
-// multi-process version. Must have to do with low-level file reading and
-// threads despite no files being in common across farsite runs tested.
-   
+ 
    if ( !ICF::RAWS_WeatherDataFile(&i) )  /* Data in separate data file */
      return ICF::CloseRet (i);
-
+  
    //ros adjustment
   if (!ICF::Set_FilNam ((char *)e_ICF_ROS_ADJUST_FILE, this->cr_ROSAdjustFile))  /* ROS_ADJUST_FILE     */
     return ICF::CloseRet(e_EMS_Fil);
@@ -862,8 +859,8 @@ FILE *fh, *tmp;
 /* See if there's a RAWS file name switch, and see if it's there */
   if (!ICF::Set_FilNam ((char *)e_ICF_RAWF, cr_FN)) {
      return 0; }      /* Fil Nam found but error - opening/finding */
-
-  if ( !strcmp (cr_FN,"") )    /* No Swithc found */
+  
+  if ( !strcmp (cr_FN,"") )    /* No Switch found */
      return 1;                 /* That's ok, it's not an error */
 
   fh = fopen (cr_FN,"r");      /* open file, already chk'd it's there */
@@ -872,6 +869,7 @@ FILE *fh, *tmp;
 /*  inputs command file and the RAWS data file, then we can */
 /*  just use the WeatherStreamData() which normally read the RAWS */
 /*  data right from the inputs command file */
+ 
   tmp = this->fh;
   this->fh = fh;
 
@@ -904,14 +902,14 @@ FILE *fh, *tmp;
 {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{**/
 int ICF::RAWS_WeatherData (int *ai)
 {
-     int i, j,i_Arg, iN_Recs, i_Mth, i_Day; //,i_Year;
-int M,D,H;
-float f;
-#define eC_Un 20
-char cr_Un[eC_Un];
+    int i, j,i_Arg, iN_Recs, i_Mth, i_Day; //,i_Year;
+    int M,D,H;
+    float f;
+    const int eC_Un = 20;
+    char cr_Un[eC_Un];
 
-#define e_wr 10
-float wr[e_wr];
+    const int e_wr = 10;
+    float wr[e_wr];
 
 /* find the switch and its arg......                                         */
    i = ICF::Set_SinIntArg ((char *)e_ICF_RAWS,&i_Arg); /* WEATHER_DATA:                */
