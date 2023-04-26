@@ -4,8 +4,8 @@
 *       Handles the percent of completion for the program.
 *
 *********************************************************************/
+#include "Far_FPC.h"
 #include "Farsite5.h"
-
 
 /*******************************************************************/
 FPC::FPC()
