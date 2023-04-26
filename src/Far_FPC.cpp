@@ -91,7 +91,6 @@ const char* FPC::ProgressStateString() const
     return ProgressStateToString(this->_state);
 }
 
-
 /**********************************************************************
 * Name:
 * Desc:

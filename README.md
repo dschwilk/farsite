@@ -70,15 +70,15 @@ make
 ./bin/TestFARSITE ../examples/Panther/runPanther.txt 2>&1 | tee scriptRun.log
 ```
 
-Note from DWS: at this point there was a bunch of text about absolute paths. I'll move all that to a historical record files. The above example runs as is for a start. The input files all do work with relative paths but paths must be relative to the working directory (where the executable was called). Allowing paths relative to the files in which they occur would be an important improvement.
+Note from DWS: at this point there was a bunch of text about absolute paths. I'll move all that to a historical record files. The above example runs as is for a start. The input files all do work with paths relative to the working directory (where the executable was called). Allowing paths relative to the files in which they occur would be an important improvement (see issue #2).
 
 # Additional notes #
 
 ## Quick notes on code structure by DWS:
 
 - There are two separate date and time libraries here. Older is C style library `cdtlib.h`. Other is C++ `SemTime` class declared in `semtime.h`. Seems main reason for the older library is need for some functions related to solar radiation etc, not implemented in the C++ class version which is purely date-time operations
-- There are two implementations of dead fuel moisture calculations. Code allows choosing.
-- Overall, a huge amount of pointer use, naked "new", etc. Any modifications to the main fire growth simulation would be quite difficult because of this. Also Many VERY long functions.
+- There are two implementations of dead fuel moisture calculations. Far_Cond.cpp (which implements some member functions of Farsite5 class, yes we need to rename files) has commented out code to select the newer dead fuel moisture method but by default selects older. This seems to be just for "preconditioning" I'm not sure which model is used in the conditining during the fire growth simulation. This deserves investigation.
+- Overall, a huge amount of pointer use, naked "new", etc. Any modifications to the main fire growth simulation would be quite difficult because of this. Also there a many VERY long functions and file names to not indicate which .cpp files implement code from which headers always.
 - Fire fighting ("attack") code is integrated in the simulation code but has no effect on CLI because no inputs are used. In other words, the flag variables that turn this on are always false. I doubt this is much of a performance cost but it should be a small one because I don't think the compiler can figure out those branches are unreachable. The main drawback to that integration is added complexity to already very long functions with many if statements and explicit loops.
 
 

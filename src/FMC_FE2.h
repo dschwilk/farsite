@@ -232,6 +232,7 @@ public:
 
 /****************************************************************************/
 
+// An object of this class is a member of the CFMC class
 class  FE2 {
 public:
    bool  b_Terminate;  /* Terminate Conditioning run */

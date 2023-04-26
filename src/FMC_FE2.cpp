@@ -68,13 +68,18 @@ char gcr[1000];
  *        back other errors at some point.
  *  Ret: 1 = completed successfully,
  *       0 = terminated by user
+ *
+ * TODO: would be helpful to have this be able to update the Farsite5 class
+ * progress object. Would need to take a pointer to the containing Farsite5
+ * object as an argument, I think. More complicated solution would be a
+ * callback std::function using Farsite5::SetFarsiteProgress()
  ***********************************************************************/
 int  FE2::CondMngr ()
 {
     double MoistSimTime, Interval, MaxTime;
     long  lX;
 
-    b_Terminate = false ;
+//    b_Terminate = false ; // DWS: Was not being used to check input.
     MoistSimTime = 0;              /* See Note-1 above */
     lX = a_CI->Get_MoistCalcHourInterval();
     Interval = a_CI->GetMoistCalcInterval (lX, FM_INTERVAL_TIME);
@@ -89,17 +94,19 @@ int  FE2::CondMngr ()
 
 /* Run simuation for each time increment */
     do {
-        if (b_Terminate == true)              /* User terminated - hit a key */
-            break;
+//        if (b_Terminate == true)              /* User terminated - hit a key */
+//            break;
         MoistSimTime += Interval;
         CalcMapFuelMoistures(MoistSimTime);
         d_Progress = MoistSimTime / MaxTime;  /* Percent completed */
+        // TODO: update containing Farsite5 object with percent progress?
+        
         if ( d_Progress > 1.0 )               /* might go a little over */
             d_Progress = 1.0;
     } while ( MoistSimTime < MaxTime);       // MaxTime is class variable
 
-    if ( b_Terminate == true )  /* If conditiong run had a termination request */
-        return 0;
+//    if ( b_Terminate == true )  /* If conditiong run had a termination request */
+//        return 0;
 
     return 1;
 }
