@@ -38,8 +38,7 @@ public:
 	int CanLaunchFarsite(void);
 	int LaunchFarsite(void);
     int GetFarsiteProgress() const;
- // double GetFarsiteProgress(int *ai_RunStatus, char cr[]);
-// int  GetFarsiteStatus (char cr[]);
+    const char* GetFarsiteStatusString() const;
 
 	int CancelFarsite(void);
 

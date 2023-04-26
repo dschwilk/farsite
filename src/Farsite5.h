@@ -1104,14 +1104,12 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	bool LEAVEPROCESS, SIMULATE_GO,   IN_BURNPERIOD;	// using input data instead of files;
 
 
-
+    // TODO remove below? Should be handled by FPC?
  #define e_StartUp  0
  #define e_Farsite 1
  #define e_Condition 2
- #define e_WindNinja 3   // WN-Test
+// #define e_WindNinja 3   // WN-Test
  int    i_RunStatus;   /* set as Farsite or Fuel Conditioning is running */
-
-    std::atomic_int progress;
 
 	unsigned long systime1, systime2, systime;
 	bool CanModify;// = true;
@@ -1245,21 +1243,17 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	void AddCurrPerimeter();
 	int WritePerimetersShapeFile(const char *trgName);
 
-//	double GetFarsiteProgress(int *ai_RunStatus);
-	double GetProgress(int *ai_RunStatus);
 	int CancelFarsite(void);
 
+    // Status getting
 	int SetFarsiteProgress(int newProgress);
     int GetFarsiteProgress() const;
-
-
-// void Farsite5::SetFarsiteRunStatus (int i);
+    const char* GetFarsiteStatusString() const;
 
 	clock_t timeLaunchFarsite;
 	clock_t timeFinish;
 	int WriteTimingsFile(const char *trgName);
 
-// int GetFarsiteRunStatus(char cr[]);
 	int LoadCustomFuelsData();
     int LoadCustomFuelFile(char *FileName);
 	int CheckCustomFuelsCoverage();
@@ -1270,7 +1264,6 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	long SetCrownFireCalculation(long Type);
 	long CrownFireCalculation;			// 0=Finney (1998), 1=Scott&Reinhardt (2001)
 
-	//CRITICAL_SECTION progressCS;
 	int CmMapEnvironment(int themeno, double mapTime, char *outName);
 
 	int WriteSpotDataFile(const char *trgName);

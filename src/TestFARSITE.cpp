@@ -3,12 +3,6 @@
 
 #include "FARSITE.h"
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <cmath>
-#include <ctime>
-
 #include <vector>
 #include <chrono>
 #include <iostream>
@@ -16,8 +10,8 @@
 #include <sstream>
 #include <string>
 #include <thread>
-#include <atomic>
 #include <mutex>
+#include <atomic>
 
 using namespace std::chrono_literals;
 using namespace std;
@@ -44,9 +38,10 @@ Where:
 
 
 mutex iomutex;  // for locking std::cout
-atomic_bool cancelRequest = false; // Flag to end program based on user
-                                        // input. Not yet used.
-static const int MAX_PATH = 1512; // char buffer length for file paths
+atomic_bool cancelRequest = false; // Flag to end program based on user input.
+                                   // Not yet changed based on user.
+
+// static const int MAX_PATH = 1512; // char buffer length for file paths
 
 // The 6 required command file arguments
 struct FarsiteCommand {
@@ -61,7 +56,8 @@ struct FarsiteCommand {
 istream& operator>>(istream& is, FarsiteCommand& fc)
 {
     FarsiteCommand nfc;
-    if(is >> nfc.lcp >> nfc.input >> nfc.ignitPath >> nfc.barrierPath >> nfc.outPath >> nfc.outType)
+    if(is >> nfc.lcp >> nfc.input >> nfc.ignitPath >> nfc.barrierPath
+       >> nfc.outPath >> nfc.outType)
     {
         fc = nfc;
     }
@@ -70,7 +66,8 @@ istream& operator>>(istream& is, FarsiteCommand& fc)
 
 ostream& operator<<(ostream& os, const FarsiteCommand fc)
 {
-    os << fc.lcp << " " << fc.input << " " << fc.ignitPath << " " << fc.barrierPath << " " << fc.outPath << " " << fc.outType;
+    os << fc.lcp << " " << fc.input << " " << fc.ignitPath << " "
+       << fc.barrierPath << " " << fc.outPath << " " << fc.outType;
     return os;
 }
     
@@ -94,27 +91,30 @@ void printMsg(const std::string msg)
 
 // This is very simple for now. It would be nice to have a progress bar of the
 // type in the indicators library.
-void ProgressThread(void *_pFarsite, int nFarsites)
+void ProgressThread(void *_pFarsites, int nFarsites)
 {
- 	CFarsite **pFarsite = (CFarsite **)_pFarsite;
+ 	CFarsite **pFarsites = (CFarsite **)_pFarsites;
 	int progress = 0;
 	while(!cancelRequest)
 	{
-//		printf("Progress on %d Farsites...\n", nFarsites);// Farsite %.2f percent complete.\n",
 		for(int f = 0; f < nFarsites; f++)        
 		{
             progress=0;
  			std::lock_guard<std::mutex> {iomutex};
-            if(pFarsite[f]) progress = pFarsite[f]->GetFarsiteProgress();
-            if (progress == 0)
-            {
-                cout << "Farsite #" << f+1 << " Preparing landscape. ";
-            } else if (progress == 100)
-            {
-                cout << "Farsite #" << f+1 << " Writing results. ";
-            } else
-            {              
-                cout << "Farsite #" << f+1 << " " << progress << "% complete. ";
+            if(pFarsites[f]) {
+                progress = pFarsites[f]->GetFarsiteProgress();
+                const char* status = pFarsites[f]->GetFarsiteStatusString();
+          
+                if (progress == 0)
+                {
+                    cout << "Farsite #" << f+1 << status;
+                } else if (progress == 100)
+                {
+                    cout << "Farsite #" << f+1 << " Writing results. " << status;
+                } else
+                {              
+                    cout << "Farsite #" << f+1 << " " << progress << "% complete. " << status;
+                }
             }
 		}
         iomutex.lock();
@@ -124,13 +124,13 @@ void ProgressThread(void *_pFarsite, int nFarsites)
 	}
 }
 
-
+// Write all outputs. outputPath is directory and base file name. The code
+// below appends an underscore, file type description, and extension to this
+// string to create the various output file name. outType is integer indicating
+// which group of outputs to porduce.
 int writeOutputs(CFarsite * pFarsite, int outType, std::string outputPath, int f)
 {
     int ret;
-    //  std::string outputName;
-
-//    printMsg(string("Writing outputs for Farsite #") + to_string(f+1) + ": " + outputPath);
     if(outType == 0 || outType == 1 || outType == 4)
     {
         if(outType == 4)
@@ -295,7 +295,8 @@ return ret;
 
 // This function must be called from the main thread -- it is unsafe to have
 // multiple versions running concurrently due to how the ICF class handles
-// error messages and strings.
+// error messages and strings. I'm not sure why because it seems like it should
+// be ok. A thread-safe ICF class would allow this to be run in a thread.
 int LoadCommandInputs(CFarsite *pFarsite, int f, FarsiteCommand fc)
 {
     int ret;
@@ -359,7 +360,6 @@ void LaunchFarsite(void *_pFarsite, int f, FarsiteCommand fc)
 // Multi process version of main(). 
 int MPMain(int argc, char* argv[])
 {
-	//char lcpFileName[MAX_PATH], inputsFileName[MAX_PATH], ignitName[MAX_PATH], barrierName[MAX_PATH], baseOutputsPath[MAX_PATH];
 	if(argc != 2)
 	{
         cout << help_str;

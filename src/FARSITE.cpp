@@ -148,12 +148,20 @@ int CFarsite::LaunchFarsite(void)
 }
 
 /****************************************************************************/
-int CFarsite::GetFarsiteProgress() const //int *ai_RunStatus, char cr[])
+int CFarsite::GetFarsiteProgress() const
 {
 	if (m_pFarsite)
-    return m_pFarsite->GetFarsiteProgress();//FPC.GetProgress(m_pFarsite, &m_pFarsite->WN2,&m_pFarsite->cfmc, cr);
+    return m_pFarsite->GetFarsiteProgress();
 	return 0;
 }
+
+const char* CFarsite::GetFarsiteStatusString() const
+{
+	if (m_pFarsite)
+    return m_pFarsite->GetFarsiteStatusString();
+	return "";
+}
+
 
 //#ifdef Larry-Out
 /*****************************************************************************/

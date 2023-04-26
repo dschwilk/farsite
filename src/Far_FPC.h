@@ -1,35 +1,39 @@
 /*****************************************************************************/
 /*                        Farsite Progress Class                    */
 
-#include "Farsite5.h" 
+#include <atomic>
 
 #ifndef Far_FPC_h
 #define Far_FPC_h
 
+enum ProgressState { e_Idle, e_Starting, e_PreConditioning, e_Conditioning, e_FarsiteRunning};
+
 class FPC {
 public:
+    std::atomic<ProgressState> _state{e_Idle};
+    std::atomic<int> _progress{0};
 
-    enum ProgressState { e_Start, e_PreCond, e_Cond, e_Far};
-    
-    ProgressState i_State;
-
-
-    float f_PreProg;
-    float f_pcCond;     /* is approximated to run */
-    float f_pcFar;
+    // float f_PreProg;
+    // float f_pcCond;     /* is approximated to run */
+    // float f_pcFar;
 
     FPC();
     ~FPC();
     void Init();
 
-    float GetProgress(Farsite5 *a_F5, CFMC *a_cfmc, char cr[]);
-
+//    float GetProgress(Farsite5 *a_F5, CFMC *a_cfmc, char cr[]);
+    int GetProgress() const;
+    ProgressState GetProgressState() const;
+    const char* ProgressStateString() const;
+    void SetProgress(int progress);
 //    int SetTimeSlice (int i_NumNinRun, Farsite5 *aFar);
-    float GetCondTime (Farsite5 *a_F5);
+//    float GetCondTime (Farsite5 *a_F5);
 
-    void Set_CondRunning ();
-    void Set_FarsiteRunning ();
-
+    // states:
+    void SetStarting();
+    void SetPreConditioning ();
+    void SetConditioning ();
+    void SetFarsiteRunning ();
  };
 
 #endif

@@ -401,15 +401,10 @@ Farsite5::Farsite5(void) :
 	CanModifyInputs(true);
 	ResetNewFuels();
 	SetModelParams() ;
-#ifdef WIN32
-	InitializeCriticalSection(&progressCS);
-#endif
 	InputsFName[0] = 0;
 	LandFName[0] = 0;
-	SetFarsiteProgress(0);
-
-	progress = 0.0;
-// SetFarsiteRunStatus (e_StartUp);
+	this->m_FPC.SetProgress(0);
+    this->m_FPC.SetStarting();
 
     //fN_WNToDo = 0;
     //fN_WNDone = 0;
@@ -435,9 +430,6 @@ Farsite5::~Farsite5(void)
     if (lcptheme) {
         delete lcptheme;
         lcptheme = 0;  }
-#ifdef WIN32
-	DeleteCriticalSection(&progressCS);
-#endif
 }
 
 void Farsite5::SetModelParams()
@@ -8198,7 +8190,7 @@ int  Farsite5::FarsiteSimulationLoop()
 
 //    m_FPC.SetTimeSlice (0,this);
 
-    m_FPC.Set_CondRunning(); /* Progress Class Conditioning will start */
+    m_FPC.SetConditioning(); /* Progress Class Conditioning will start */
 
 
 	CheckSteps();						// check visual and actual timestep for changes
@@ -8209,7 +8201,7 @@ int  Farsite5::FarsiteSimulationLoop()
     while (burn.SIMTIME <= maximum)	{
 
         if (maximum > 0) {
-            SetFarsiteProgress(std::round(100.0 * burn.SIMTIME / (double)maximum));
+            this->m_FPC.SetProgress(std::round(100.0 * burn.SIMTIME / (double)maximum));
         }
         if (LEAVEPROCESS)				// allows exit from FARSITE process control
 		   	break;
@@ -8229,7 +8221,7 @@ int  Farsite5::FarsiteSimulationLoop()
 //          SetFarsiteRunStatus (e_Condition);
                     i_Ret = this->Run_CondDLL();       /* Run Moisture Cond, load/check inputs, run */
 
-                    m_FPC.Set_FarsiteRunning();  /* Notify Process Class, Farsite is runnin */
+                    m_FPC.SetFarsiteRunning();  /* Notify Process Class, Farsite is runnin */
 
 //          SetFarsiteRunStatus (e_Farsite);
                     if ( i_Ret < 0 )              /* Error or terminate requested */
@@ -8388,7 +8380,7 @@ int  Farsite5::FarsiteSimulationLoop()
 
 
 	ProcessSimRequest();
-	SetFarsiteProgress(100);
+	this->m_FPC.SetProgress(100);
     return i_Ret;
 }
 
@@ -9699,7 +9691,7 @@ int Farsite5::Execute_StartRestart()
 					//WriteMessageBar(0);
 					//mb->NULLHintTextPointer();
 					LEAVEPROCESS = false;
-					SetFarsiteProgress(0);
+					this->m_FPC.SetProgress(0);
 					burn.SIMTIME = 0.0;				   // reset start of FARSITE iterations
 					burn.CuumTimeIncrement = 0.0;
 					maximum = 0;
@@ -11569,18 +11561,26 @@ int Farsite5::WriteSpotShapeFile(const char *trgName)
 }
 
 /*************************************************************************************/
-int Farsite5::SetFarsiteProgress(int newProgress)
-{
-	progress = newProgress;
-	return progress;
-}
+// DONE: Why not just have this class call FPC::SetProgress directly. Users
+// should not need to set prorgress, only read it
+// int Farsite5::SetFarsiteProgress(int newProgress)
+// {
+//     m_FPC.SetProgress
+// 	progress = newProgress;
+// 	return progress;
+// }
 
 /*************************************************************
- * This function will get called from within a critical section
+ * 
  **************************************************************/
 int Farsite5::GetFarsiteProgress() const
 {
-	return this->progress;
+	return this->m_FPC.GetProgress();
+}
+
+const char* Farsite5::GetFarsiteStatusString() const
+{
+    return this->m_FPC.ProgressStateString();
 }
 
 
@@ -11591,10 +11591,6 @@ int Farsite5::CancelFarsite(void)
     this->cfmc.Terminate();    /* Cond DLL - cancel if running */
 	return 1;
 }
-
-
-
-
 
 int Farsite5::AddIgnitionToSpotGrid()
 {
