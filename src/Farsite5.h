@@ -1220,7 +1220,7 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	void ProcessSimRequest();
 
 	void LoadIgnitions();
-	void SaveIgnitions();					// for internal use with start/restart
+	//void SaveIgnitions();					// for internal use with start/restart
 	void StartMoistThread();
 	unsigned RunMoistThread(void*);
 	void MoistThread();

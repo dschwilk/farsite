@@ -16,33 +16,33 @@
 #include <algorithm>
 #include <cstdlib>
 #include <cstdio>
+#include <filesystem>
 
 //#include <cassert>
 
 #ifndef WIN32
 // TODO use c++ std code avoid platform specific
 
-#include <fcntl.h>
-#include <sys/sendfile.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
+//#include <sys/sendfile.h>
+//#include <sys/stat.h>
+//#include <sys/types.h>
+//#include <unistd.h>
 
-void CopyFile(char *in, char *out, bool unused)
-{
+// void CopyFile(char *in, char *out, bool unused)
+// {
 
-    int read_fd;
-    int write_fd;
-    struct stat stat_buf;
-    off_t offset = 0;
+//     int read_fd;
+//     int write_fd;
+//     struct stat stat_buf;
+//     off_t offset = 0;
 
-    read_fd = open(in, O_RDONLY);
-    fstat(read_fd, &stat_buf);
-    write_fd = open(out, O_WRONLY | O_CREAT, stat_buf.st_mode);
-    sendfile(write_fd, read_fd, &offset, stat_buf.st_size);
-    close(read_fd);
-    close(write_fd);
-}
+//     read_fd = open(in, O_RDONLY);
+//     fstat(read_fd, &stat_buf);
+//     write_fd = open(out, O_WRONLY | O_CREAT, stat_buf.st_mode);
+//     sendfile(write_fd, read_fd, &offset, stat_buf.st_size);
+//     close(read_fd);
+//     close(write_fd);
+// }
 #endif  // not win32
 
 using namespace std;
@@ -2868,7 +2868,7 @@ int Farsite5::LoadCustomFuelFile(char *FileName)
         {    if(FileFormat==1)
             {  	strcat(BackupFile, FileName);
                 strcat(BackupFile, ".old");
-                CopyFile( FileName,  BackupFile, false);
+                std::filesystem::copy(FileName,  BackupFile);
                 fclose(CurrentFile);
                 CurrentFile=fopen(BackupFile, "r");
 #ifdef WIN32
@@ -8231,12 +8231,10 @@ bool Farsite5::GetShapeMake()
 int  Farsite5::FarsiteSimulationLoop()
 {
     int i_Ret,  CondSw = 0;
-//bool b;
-//char cr_ErrMes[1000];
 
     i_Ret = 1;
 
-// Init the Burn Spot Grid Class, this keeps track of burned cells and spot hits
+    // Init the Burn Spot Grid Class, this keeps track of burned cells and spot hits
 	if(icf.f_FarsiteSpotGridResolution > 0.0)
 	{
 	    //char nullStr[16] = "";
@@ -8246,7 +8244,7 @@ int  Farsite5::FarsiteSimulationLoop()
 		AddIgnitionToSpotGrid();
 	}
 
-    m_FPC.SetTimeSlice (0,this);
+//    m_FPC.SetTimeSlice (0,this);
 
     m_FPC.Set_CondRunning(); /* Progress Class Conditioning will start */
 
@@ -8300,8 +8298,8 @@ int  Farsite5::FarsiteSimulationLoop()
             }
 
 			else	{
-// This original code never gets called so - ok to comment out
-//			 	burn.env->CalcMapFuelMoistures(burn.SIMTIME +	GetActualTimeStep());
+                // This original code never gets called so - ok to comment out
+                // burn.env->CalcMapFuelMoistures(burn.SIMTIME +	GetActualTimeStep());
                 LastFMCalcTime = burn.SIMTIME + GetActualTimeStep();	}
 
 			if (ProcNum < 3) 				// if all inputs ready for FARSITE model
@@ -8333,19 +8331,12 @@ int  Farsite5::FarsiteSimulationLoop()
 					}
 				}
 			}
-			//}
-			//else
-			//	break;
-			//CheckMessageLoop();				  // allow messages to be received
+
 			if (LEAVEPROCESS)				// allows exit from FARSITE process control
 				break;
-			//CheckSteps();						// check visual and actual timesteps for changes
-			//if(FARSITE_GO)
-			//{
+
 			if (ProcNum == 3)
 			{
-				//if(burn.SIMTIME==0)
-				//	WriteOutputs(1);
 				FarsiteProcess3();  		 	// mergers between fires and increment iteration
 				ProcNum = 1;
 				if (!OutputVectsAsGrown && NextFireAfterInterrupt == 0)
@@ -8431,28 +8422,12 @@ int  Farsite5::FarsiteSimulationLoop()
 		if (burn.SIMTIME > maximum)
 		{
 			FARSITE_GO = false;
-			/*if (GetRastMake()) {
-              WriteGISLogFile(0);
-              }
-              if (GetVectMake())
-              WriteGISLogFile(1);
-              if (GetShapeMake())
-              WriteGISLogFile(2);*/
-			//EB commentsout 1 line
-			//printf("  End of Run    Simulation Completed\n");
 			sprintf(MBStatus, "    %s", "SIMULATION COMPLETED");
-			//EB 1 line
-			//WriteMessageBar(0);
 			SimRequest = SIMREQ_NULL ;
-			//SetXORArrows(false);
 			SIM_SUSPENDED = true;
 			StepThrough = false;
 			SIM_COMPLETED = true;
-			//SetEvent(hWaitEvent);
 			CanModifyInputs(true);
-			//SuspendThread(hSimThread);
-			//WaitForSingleObject(hFarSimEvent, INFINITE);
-			//ResetEvent(hWaitEvent);
 			CheckSteps();
 		}
 
@@ -8462,24 +8437,6 @@ int  Farsite5::FarsiteSimulationLoop()
 
 	ProcessSimRequest();
 	SetFarsiteProgress(100);
-	//progress = 1.0;
-	// write raster files at end of timestep...
-	/*if (GetRastMake()) {
-      burn.rast->SelectMemOutputs(GetRastFormat());	// write to raster file
-      }	*/
-
-	//std::cerr << "In FarsiteBurnLoop()" << burn.SIMTIME << std::endl ;
-/*	if (burn.SIMTIME > maximum)
-	{
-    FARSITE_GO = false;
-    if (GetRastMake())
-    WriteGISLogFile(0);
-    if (GetVectMake())
-    WriteGISLogFile(1);
-    if (GetShapeMake())
-    WriteGISLogFile(2);
-    //printf("End of Run Simulation Completed\n");
-	}*/
     return i_Ret;
 }
 
@@ -9675,11 +9632,6 @@ int Farsite5::Execute_StartRestart()
 {
     int i_Ret;
 
-	/*     if(DDE.DDE_SIMCOMMAND)   	// delay response for dde return
-           {    Sleep(500);
-           DDE.DDE_SIMCOMMAND=false;
-           }
-    */
 	if (SIMULATE_GO)
 	{
 		//Beep(24000, 150);
@@ -9893,8 +9845,6 @@ void Farsite5::Initiate()
 {
 	long i;
 
-	//CopyDDEFileInfo();
-	//mb->NULLHintTextPointer();
 	a1 = 0;
 	p1 = 0;
 	p2 = 0;
@@ -10030,50 +9980,50 @@ void Farsite5::LoadIgnitions()
 	}
 }
 
-void Farsite5::SaveIgnitions()
-{
-	// for saving ignitions before restarting
-	long i, j, k;
-	double xpt, ypt, ros, fli;
-	FILE* IgFile;
+// void Farsite5::SaveIgnitions()
+// {
+// 	// for saving ignitions before restarting
+// 	long i, j, k;
+// 	double xpt, ypt, ros, fli;
+// 	FILE* IgFile;
 
-	//memset(IgFileName, 0x0, sizeof(IgFileName));
-	//strcpy(IgFileName, FarsiteDirectory);
-	//strcat(IgFileName, "\\ignition.ign");
-	IgFile = fopen(IgFileName, "w") ;
-#if 0
-	if (IgFile == NULL)
-	{
-		//SetFileAttributes(IgFileName, FILE_ATTRIBUTE_NORMAL);
-		chmod(IgFileName,S_IRWXO);
-		IgFile = fopen(IgFileName, "w");
-	}
-#endif
+// 	//memset(IgFileName, 0x0, sizeof(IgFileName));
+// 	//strcpy(IgFileName, FarsiteDirectory);
+// 	//strcat(IgFileName, "\\ignition.ign");
+// 	IgFile = fopen(IgFileName, "w") ;
+// #if 0
+// 	if (IgFile == NULL)
+// 	{
+// 		//SetFileAttributes(IgFileName, FILE_ATTRIBUTE_NORMAL);
+// 		chmod(IgFileName,S_IRWXO);
+// 		IgFile = fopen(IgFileName, "w");
+// 	}
+// #endif
 
-	if (IgFile)
-	{
-		fprintf(IgFile, "%ld\n", GetNewFires());
-		for (i = 0; i < GetNewFires(); i++)
-		{
-			k = GetNumPoints(i) + 1;
-			if (k > 0)
-			{
-				fprintf(IgFile, "%ld %ld %ld\n", i, k, GetInout(i));
-				for (j = 0; j < k; j++)
-				{
-					xpt = GetPerimeter1Value(i, j, XCOORD);
-					ypt = GetPerimeter1Value(i, j, YCOORD);
-					ros = GetPerimeter1Value(i, j, ROSVAL);
-					fli = GetPerimeter1Value(i, j, FLIVAL);
-					fprintf(IgFile, "%lf %lf %lf %lf\n", xpt, ypt, ros, fli);
-				}
-			}
-		}
-		fclose(IgFile);
-	}
-	else
-		printf("Check File Attributes and Change From 'READ ONLY' Could Not Write File\n");
-}
+// 	if (IgFile)
+// 	{
+// 		fprintf(IgFile, "%ld\n", GetNewFires());
+// 		for (i = 0; i < GetNewFires(); i++)
+// 		{
+// 			k = GetNumPoints(i) + 1;
+// 			if (k > 0)
+// 			{
+// 				fprintf(IgFile, "%ld %ld %ld\n", i, k, GetInout(i));
+// 				for (j = 0; j < k; j++)
+// 				{
+// 					xpt = GetPerimeter1Value(i, j, XCOORD);
+// 					ypt = GetPerimeter1Value(i, j, YCOORD);
+// 					ros = GetPerimeter1Value(i, j, ROSVAL);
+// 					fli = GetPerimeter1Value(i, j, FLIVAL);
+// 					fprintf(IgFile, "%lf %lf %lf %lf\n", xpt, ypt, ros, fli);
+// 				}
+// 			}
+// 		}
+// 		fclose(IgFile);
+// 	}
+// 	else
+// 		printf("Check File Attributes and Change From 'READ ONLY' Could Not Write File\n");
+// }
 
 void Farsite5::ResetDuration()
 {
@@ -12272,9 +12222,10 @@ int ParseFileNamesFromAtmRec(char *recBuf, std::string *spdName, std::string *di
 
 int CWindGrids::Create(char *atmFileName)
 {
-    char path[256], oldPath[256];
-    getcwd(oldPath, 255);
-    strcpy(path, atmFileName);
+    std::filesystem::path path;  //[256]; //, oldPath[256];
+    std::filesystem::oldPath = std::filesystem::current_path();
+//    getcwd(oldPath, 255);
+    path = atmFileName;
     char *p = strrchr(path, '\\');
     if (p)
     {

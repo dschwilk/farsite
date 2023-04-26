@@ -120,7 +120,7 @@ void ProgressThread(void *_pFarsite, int nFarsites)
         iomutex.lock();
         cout << "\n" <<  std::flush;
         iomutex.unlock();
-        std::this_thread::sleep_for(2000ms);
+        std::this_thread::sleep_for(1000ms);
 	}
 }
 
@@ -299,14 +299,14 @@ return ret;
 int LoadCommandInputs(CFarsite *pFarsite, int f, FarsiteCommand fc)
 {
     int ret;
-    printMsg(string( "Loading lcp file for Farsite #") + to_string(f+1) + ": " + fc.lcp + "\n");
+    printMsg(string( "Loading lcp file for Farsite #") + to_string(f+1) + ": " + fc.lcp);
     if ( !pFarsite->SetLandscapeFile(fc.lcp.c_str()))
     {
-        printMsg(string( "Error Loading lcp file for Farsite #") + to_string(f+1) + ": " + fc.lcp + "\n");
+        printMsg(string( "Error Loading lcp file for Farsite #") + to_string(f+1) + ": " + fc.lcp);
         return -1;
     }
 
-    printMsg(string( "Loading inputs file for Farsite #") + to_string(f+1) + ": " + fc.input + "\n");
+    printMsg(string( "Loading inputs file for Farsite #") + to_string(f+1) + ": " + fc.input);
     ret = pFarsite->LoadFarsiteInputs(fc.input.c_str());
     if ( ret != 1 )
     {
@@ -315,7 +315,7 @@ int LoadCommandInputs(CFarsite *pFarsite, int f, FarsiteCommand fc)
         return ret;
     }
 
-    printMsg(string( "Loading ignition file for Farsite #") + to_string(f+1) + ": " + fc.ignitPath + "\n");
+    printMsg(string( "Loading ignition file for Farsite #") + to_string(f+1) + ": " + fc.ignitPath);
     ret = pFarsite->SetIgnition(fc.ignitPath.c_str());
     if ( ret != 1 )
     {
@@ -326,16 +326,18 @@ int LoadCommandInputs(CFarsite *pFarsite, int f, FarsiteCommand fc)
     
     if(fc.barrierPath.length() > 2)
     {
-        printMsg(string( "Loading barrier file for Farsite #") + to_string(f+1) + ": " + fc.barrierPath + "\n");
+        printMsg(string( "Loading barrier file for Farsite #") + to_string(f+1) + ": " + fc.barrierPath);
         pFarsite->SetBarriers(fc.barrierPath.c_str());
     }
     return ret;
 }
 
 
-// For handing to std:thread()
+// Launch a farsite run. this can run asynchronously in its own thread.
+// LoadCommandInputs must have been already called on the Farsite object.
 void LaunchFarsite(void *_pFarsite, int f, FarsiteCommand fc)
 {
+    // cast array of pointers to farsite objects.
   	CFarsite *pFarsite = (CFarsite *)_pFarsite;
     int ret;
     ret = pFarsite->LaunchFarsite();
@@ -426,7 +428,6 @@ int MPMain(int argc, char* argv[])
 	{
 		printMsg("Done\n");
 	}
-
     
 	for(int i = 0; i < nFarsites; i++)
 	{
@@ -769,7 +770,6 @@ int MPMain(int argc, char* argv[])
 // Call main function depending on platform
 int main(int argc, char* argv[])
 {
-
 	MPMain(argc, argv);
 //	linuxMain(argc, argv);
 }
