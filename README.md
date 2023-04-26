@@ -8,7 +8,7 @@ The compiled windows GUI version of farsite is no longer avialable, but the mean
 
 This is a fork of the command line code that was released as a mix of public domain and GNU gpl in 2016 and that source includes code by Finney, Collin Bevins and others. This version includes some additions to the weather handling by Loren Atwood in 2018-2019. This is based on file headers and commits so there may be others.
 
-# Notes on this fork by DWS #
+## Notes on this fork by DWS  ##
 
 I downloaded the public domain linux farsite code in September 2016 from the website maintained by Stuart Brittain [Farsite for Linux](http://sbrittain.net/Farsite/Distrib/Linux/Farsite_Linux.htm). I found a couple of minor reasons the code would not compile and fixed those. Following successful compilation, I then made some changes to reorganize the code, create a makefile, and move the examples to their own directory. I got things running, fixed some more compile issues on newer C++ compilers, tested against the examples, and wrote some steering code for batch use in simulations. However, I never used this for the simulation project I was preparing it for. I hosted the code on github and called the repo "firemod" with a README explaining its genealogy. 
 
@@ -16,8 +16,17 @@ A few years later, the RMRS Missoula Fire Sciences Lab GitHub organization page 
 
 With the deletion of the Missoula Fire Lab's public GitHub repository I am assuming this is abandoned code. I've therefore not been conservative about making unimportant changes that do not influence function. Instead I prioritized understanding the code so did things like re-indent confusingly indented code sections and converting line endings. That said, it should not be too difficult to merge in changes that are based on the original repo if those are ever available.
 
+## Notes on inputs ##
 
-# Text that was in the README.md in firelab GitHub repo prior to March 2023:#
+TODO: Document command files, input files, input types
+
+
+RAWS: dateTime, temp_c, rh, windSpeed_kmh, wind speed (km/hr), precip_mm
+
+
+
+
+# Text that was in the README.md in firelab GitHub repo prior to March 2023: #
 
 [Author apparently Loren Atwood in 2019. When the author(s) of the original readme below I've included below refer to the "github version" they mean this repository's ancestor with an original code commit in March 2018 by nwagenbrenner.]
 
