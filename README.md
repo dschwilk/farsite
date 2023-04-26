@@ -72,6 +72,11 @@ make
 
 Note from DWS: at this point there was a bunch of text about absolute paths. I'll move all that to a historical record files. The above example runs as is for a start. The input files all do work with paths relative to the working directory (where the executable was called). Allowing paths relative to the files in which they occur would be an important improvement (see issue #2).
 
+To replace all "$scriptRoot/farsite" occurrences with path to current working dir do:
+
+```grep -rli '\$scriptRoot/farsite' * | xargs -i@ sed -i 's#\$scriptRoot/farsite#\.#g' @```
+
+
 # Additional notes #
 
 ## Quick notes on code structure by DWS:

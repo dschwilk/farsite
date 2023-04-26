@@ -17,13 +17,13 @@ SPOTTING_SEED: 253
 FUEL_MOISTURES_DATA: 1
 0 3 4 6 70 100
 
-FARSITE_ATM_FILE: $scriptRoot/farsite/examples/flatland/Inputs/e_atmFiles/flatland_3mph60deg7hr.atm
+FARSITE_ATM_FILE: ./examples/flatland/Inputs/e_atmFiles/flatland_3mph60deg7hr.atm
 
-#WIND_FILE: $scriptRoot/farsite/examples/flatland/Inputs/d_weatherFiles/flatland_3mph60deg7hr_RAWStoWind.wnd
-#WEATHER_FILE: $scriptRoot/farsite/examples/flatland/Inputs/d_weatherFiles/flatland_3mph60deg7hr_RAWStoWeather.wtr
+#WIND_FILE: ./examples/flatland/Inputs/d_weatherFiles/flatland_3mph60deg7hr_RAWStoWind.wnd
+#WEATHER_FILE: ./examples/flatland/Inputs/d_weatherFiles/flatland_3mph60deg7hr_RAWStoWeather.wtr
 
 #year, month, day, hour/time, temp(temperature), humid(humidity), ppt(hourly precipitation), wspeed(wind speed), wdir(wind direction), cldcover(cloud cover)
-RAWS_FILE: $scriptRoot/farsite/examples/flatland/Inputs/d_weatherFiles/flatland_3mph60deg7hr.raws
+RAWS_FILE: ./examples/flatland/Inputs/d_weatherFiles/flatland_3mph60deg7hr.raws
 
 
 FOLIAR_MOISTURE_CONTENT: 100
