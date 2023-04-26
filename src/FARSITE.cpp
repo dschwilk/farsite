@@ -459,3 +459,4 @@ int CFarsite::GetNumIgnitionCells()
 	}
 	return 0;
 }
+

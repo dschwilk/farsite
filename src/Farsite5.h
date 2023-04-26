@@ -1,6 +1,7 @@
 /* Farsite5.h
- * This is main simulation class backend, circa 2011? The exported
- * class CFarsite is found in FARSITE.h
+ *  This is main simulation class backend, main fire growth functionality circa
+ * 2011? The exported class CFarsite is found in FARSITE.h. The CLI main() code
+ * should use the exported class interface.
  */
 
 #pragma once
@@ -397,10 +398,10 @@ typedef list<CSpotData> CSpotList;
 // Main simulation class.
 class Farsite5
 {
+private:
+  FPC m_FPC;    /* Farsite Progress Class */
 public:
   BSG m_BSG;    /* Burn Spot Grid - tracks burnt areas and spotting hits */
-  FPC m_FPC;    /* Farsite Progress Class */
-
   int ExportMoistureDataText(const char *trgName);
 
 //___________________________________________________________________
@@ -547,7 +548,7 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
         long    WoodyCombineOptions(long Options);
         bool    PreserveInactiveEnclaves(long YesNo);
 
-        int    Run_CondDLL();
+        int     Run_CondDLL();  // defined in Far_Cond.cpp
         int     FMC_LoadInputs (ICF *icf, headdata *lcp, CFMC *cfmc, char cr_ErrMes[]);
         CFMC  cfmc;       /* Fuel Moisture Conditioning Class - Cond DLL export class */
 
@@ -1026,7 +1027,6 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	bool 	ChangeInputMode(long YesNo);                 // set & retrieve input mode changes
 
 	long NumCrews;// = 0;
-//static Crew*	crew[200];
 	Crew* crew[200];
 	long LandscapeInputMode;// = NULLLOCATION;
 
@@ -1104,12 +1104,12 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	bool LEAVEPROCESS, SIMULATE_GO,   IN_BURNPERIOD;	// using input data instead of files;
 
 
-    // TODO remove below? Should be handled by FPC?
- #define e_StartUp  0
- #define e_Farsite 1
- #define e_Condition 2
-// #define e_WindNinja 3   // WN-Test
- int    i_RunStatus;   /* set as Farsite or Fuel Conditioning is running */
+   // Remvoing defines below; should be handled by FPC.
+   // #define e_StartUp  0
+   // #define e_Farsite 1
+   // #define e_Condition 2
+   // #define e_WindNinja 3   // WN-Test    
+   //int    i_RunStatus;   /* set as Farsite or Fuel Conditioning is running */
 
 	unsigned long systime1, systime2, systime;
 	bool CanModify;// = true;
@@ -1118,7 +1118,8 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	short ProcNum;
 	long CountInwardFires, CountTotalFires, VectorBarriers;		// just for display purposes
 	long CurrentFire;
-	char MBStatus[64], MBMode[64];
+	char MBStatus[64];
+//    char MBMode[64];
 	char ElTime[12], CurTime[14];
 
 	double MoistSimTime;
@@ -1167,6 +1168,7 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	bool WriteFireData();			  		// write fire data to window
 	bool WritePFData();						// write post frontal fire data to window
 
+    // Below necessary? Seems like front-end stuff?
 	void ProcessSimRequest();
 
 	void LoadIgnitions();
@@ -1289,5 +1291,5 @@ private:
 	random_engine_t _random_engine;  // random number engine
     std::uniform_real_distribution<double> _runif; // random number generator
 public:
-    double Runif(void);
+    double Runif(void); // get random uniform variate 0,1
 };  // class Farsite5

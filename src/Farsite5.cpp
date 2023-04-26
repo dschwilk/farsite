@@ -8190,8 +8190,7 @@ int  Farsite5::FarsiteSimulationLoop()
 
 //    m_FPC.SetTimeSlice (0,this);
 
-    m_FPC.SetConditioning(); /* Progress Class Conditioning will start */
-
+//    m_FPC.SetPreConditioning(); /* Progress Class "PreConditioning" */
 
 	CheckSteps();						// check visual and actual timestep for changes
 	systime1 = clock();
@@ -8201,6 +8200,7 @@ int  Farsite5::FarsiteSimulationLoop()
     while (burn.SIMTIME <= maximum)	{
 
         if (maximum > 0) {
+            // Set current progress percentage
             this->m_FPC.SetProgress(std::round(100.0 * burn.SIMTIME / (double)maximum));
         }
         if (LEAVEPROCESS)				// allows exit from FARSITE process control
@@ -8217,13 +8217,11 @@ int  Farsite5::FarsiteSimulationLoop()
 
         if (FARSITE_GO)		{
             if (PreCalcMoistures(GETVAL)) {
-                if ( CondSw == 0 ) {             /* Do once to do all conditioning */
-//          SetFarsiteRunStatus (e_Condition);
-                    i_Ret = this->Run_CondDLL();       /* Run Moisture Cond, load/check inputs, run */
+                m_FPC.SetConditioning();
+                if ( CondSw == 0 ) {                   /* Do once to do all conditioning */
+                    i_Ret = this->Run_CondDLL();       /* Run Moisture Conditioning, load/check inputs, run */
 
-                    m_FPC.SetFarsiteRunning();  /* Notify Process Class, Farsite is runnin */
-
-//          SetFarsiteRunStatus (e_Farsite);
+//                    m_FPC.SetFarsiteRunning();  /* Notify Progress Class, Farsite is running */
                     if ( i_Ret < 0 )              /* Error or terminate requested */
                         break;
 
@@ -8244,7 +8242,11 @@ int  Farsite5::FarsiteSimulationLoop()
 			else	{
                 // This original code never gets called so - ok to comment out
                 // burn.env->CalcMapFuelMoistures(burn.SIMTIME +	GetActualTimeStep());
-                LastFMCalcTime = burn.SIMTIME + GetActualTimeStep();	}
+                LastFMCalcTime = burn.SIMTIME + GetActualTimeStep();
+            }
+
+            // DWS: is this correct spot to notify farsite model is "running"?
+            m_FPC.SetFarsiteRunning();  /* Notify Progress Class, Farsite is running */
 
 			if (ProcNum < 3) 				// if all inputs ready for FARSITE model
 			{
@@ -9198,6 +9200,7 @@ void Farsite5::WriteGISLogFile(long LogType)
     fclose(logfile);
     //free(LogFile);
 }
+
 void Farsite5::ProcessSimRequest()
 {
 	switch (SimRequest)
@@ -9686,12 +9689,13 @@ int Farsite5::Execute_StartRestart()
 					////mb->NULLHintTextPointer();
 					SIMULATE_GO = true;
 					FARSITE_GO = true;
+                    // set progress to zero:
+                    this->m_FPC.SetProgress(0);
 					sprintf(MBStatus, "    %s", "SIMULATION RUNNING");
 					//NULLINPUTS();
 					//WriteMessageBar(0);
 					//mb->NULLHintTextPointer();
 					LEAVEPROCESS = false;
-					this->m_FPC.SetProgress(0);
 					burn.SIMTIME = 0.0;				   // reset start of FARSITE iterations
 					burn.CuumTimeIncrement = 0.0;
 					maximum = 0;
@@ -11792,13 +11796,12 @@ int Farsite5::GetNumIgnitionCells()
 	return m_nCellsLit;
 }
 
-
+// Object specific random number engine.
 double Farsite5::Runif()
 {
     return(this->_runif(_random_engine));
 }
         
-
 
 
 // END: Farsite5 class stuff

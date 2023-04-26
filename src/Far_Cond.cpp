@@ -47,6 +47,9 @@ int CheckMonthDay (int m, int  d);
 *       < 0  negative error code, the error message can be obtained using
 *            the icf.ErrorMessage()
 **********************************************************************/
+
+//TODO: this function name is weird. This is a function supplied by a library
+//but calling it DLL is confusing (and windows-specific).
 int Farsite5::Run_CondDLL()
 {
 long i, i_AdjTim;
@@ -262,6 +265,10 @@ CondDate:
      cfmc->FuelStickModel_Nelson_070();  /* This is the Original one used */
 
 // Still have to put an switch in the inputs for the newer Nelson in the inputs file
+
+     // TODO: add option to input file to use this conditioning model. This
+     // newer one runs slower.
+     
     //cfmc->FuelStickModel_Nelson_100();  /* Nelson 1.0.0 added in Oct 09 */
 
 

@@ -16,34 +16,34 @@
 long GUniqueInstance = 1;
 int critsec = 0;
 
-#ifdef WIN32
-CRITICAL_SECTION FMC_InstanceCS;
+// #ifdef WIN32
+// CRITICAL_SECTION FMC_InstanceCS;
 
-//*********************************************************
-BOOL APIENTRY DllMain ( HMODULE hModule, DWORD ul_reason_for_call,LPVOID lpReserved)
-{
-   // Perform actions based on the reason for calling.
-    switch( ul_reason_for_call )  {
-        case DLL_PROCESS_ATTACH:  // Init once for each new process. Return FALSE to fail DLL load.
-		        	if ( !critsec )	{
-			 	        InitializeCriticalSection(&FMC_InstanceCS);
-			         	critsec = 1;	}
-           break;
+// //*********************************************************
+// BOOL APIENTRY DllMain ( HMODULE hModule, DWORD ul_reason_for_call,LPVOID lpReserved)
+// {
+//    // Perform actions based on the reason for calling.
+//     switch( ul_reason_for_call )  {
+//         case DLL_PROCESS_ATTACH:  // Init once for each new process. Return FALSE to fail DLL load.
+// 		        	if ( !critsec )	{
+// 			 	        InitializeCriticalSection(&FMC_InstanceCS);
+// 			         	critsec = 1;	}
+//            break;
 
-        case DLL_THREAD_ATTACH:  // Do thread-specific initialization.
-            break;
+//         case DLL_THREAD_ATTACH:  // Do thread-specific initialization.
+//             break;
 
-        case DLL_THREAD_DETACH:  // Do thread-specific cleanup.
-            break;
+//         case DLL_THREAD_DETACH:  // Do thread-specific cleanup.
+//             break;
 
-        case DLL_PROCESS_DETACH:   // Perform any necessary cleanup.
-			       if ( critsec )	{
-		         		DeleteCriticalSection(&FMC_InstanceCS);
-			         	critsec = 0;	}
-          break;}
-    return TRUE;
-}
-#endif
+//         case DLL_PROCESS_DETACH:   // Perform any necessary cleanup.
+// 			       if ( critsec )	{
+// 		         		DeleteCriticalSection(&FMC_InstanceCS);
+// 			         	critsec = 0;	}
+//           break;}
+//     return TRUE;
+// }
+// #endif
 /**************************************************************************/
 void CFMC::Set_RunTime ( double d)
 {

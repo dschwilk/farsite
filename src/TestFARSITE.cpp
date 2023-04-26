@@ -105,10 +105,7 @@ void ProgressThread(void *_pFarsites, int nFarsites)
                 progress = pFarsites[f]->GetFarsiteProgress();
                 const char* status = pFarsites[f]->GetFarsiteStatusString();
           
-                if (progress == 0)
-                {
-                    cout << "Farsite #" << f+1 << status;
-                } else if (progress == 100)
+                if (progress == 100)
                 {
                     cout << "Farsite #" << f+1 << " Writing results. " << status;
                 } else
@@ -124,11 +121,51 @@ void ProgressThread(void *_pFarsites, int nFarsites)
 	}
 }
 
+// This function must be called from the main thread -- it is unsafe to have
+// multiple versions running concurrently due to how the ICF class handles
+// error messages and strings. I'm not sure why because it seems like it should
+// be ok. A thread-safe ICF class would allow this to be run in a thread.
+int LoadCommandInputs(CFarsite *pFarsite, int f, FarsiteCommand fc)
+{
+    int ret;
+    printMsg(string( "Loading lcp file for Farsite #") + to_string(f+1) + ": " + fc.lcp);
+    if ( !pFarsite->SetLandscapeFile(fc.lcp.c_str()))
+    {
+        printMsg(string( "Error Loading lcp file for Farsite #") + to_string(f+1) + ": " + fc.lcp);
+        return -1;
+    }
+
+    printMsg(string( "Loading inputs file for Farsite #") + to_string(f+1) + ": " + fc.input);
+    ret = pFarsite->LoadFarsiteInputs(fc.input.c_str());
+    if ( ret != 1 )
+    {
+        char *a = pFarsite->CommandFileError(ret);
+        printError(fc.input.c_str(), a);
+        return ret;
+    }
+
+    printMsg(string( "Loading ignition file for Farsite #") + to_string(f+1) + ": " + fc.ignitPath);
+    ret = pFarsite->SetIgnition(fc.ignitPath.c_str());
+    if ( ret != 1 )
+    {
+        char *a = pFarsite->CommandFileError(ret);
+        printError(fc.input.c_str(), a);
+        return ret;
+    }
+    
+    if(fc.barrierPath.length() > 2)
+    {
+        printMsg(string( "Loading barrier file for Farsite #") + to_string(f+1) + ": " + fc.barrierPath);
+        pFarsite->SetBarriers(fc.barrierPath.c_str());
+    }
+    return ret;
+}
+
 // Write all outputs. outputPath is directory and base file name. The code
 // below appends an underscore, file type description, and extension to this
 // string to create the various output file name. outType is integer indicating
 // which group of outputs to porduce.
-int writeOutputs(CFarsite * pFarsite, int outType, std::string outputPath, int f)
+int writeOutputs(CFarsite *pFarsite, int outType, std::string outputPath, int f)
 {
     int ret;
     if(outType == 0 || outType == 1 || outType == 4)
@@ -292,46 +329,6 @@ int writeOutputs(CFarsite * pFarsite, int outType, std::string outputPath, int f
 return ret;
 }
 
-
-// This function must be called from the main thread -- it is unsafe to have
-// multiple versions running concurrently due to how the ICF class handles
-// error messages and strings. I'm not sure why because it seems like it should
-// be ok. A thread-safe ICF class would allow this to be run in a thread.
-int LoadCommandInputs(CFarsite *pFarsite, int f, FarsiteCommand fc)
-{
-    int ret;
-    printMsg(string( "Loading lcp file for Farsite #") + to_string(f+1) + ": " + fc.lcp);
-    if ( !pFarsite->SetLandscapeFile(fc.lcp.c_str()))
-    {
-        printMsg(string( "Error Loading lcp file for Farsite #") + to_string(f+1) + ": " + fc.lcp);
-        return -1;
-    }
-
-    printMsg(string( "Loading inputs file for Farsite #") + to_string(f+1) + ": " + fc.input);
-    ret = pFarsite->LoadFarsiteInputs(fc.input.c_str());
-    if ( ret != 1 )
-    {
-        char *a = pFarsite->CommandFileError(ret);
-        printError(fc.input.c_str(), a);
-        return ret;
-    }
-
-    printMsg(string( "Loading ignition file for Farsite #") + to_string(f+1) + ": " + fc.ignitPath);
-    ret = pFarsite->SetIgnition(fc.ignitPath.c_str());
-    if ( ret != 1 )
-    {
-        char *a = pFarsite->CommandFileError(ret);
-        printError(fc.input.c_str(), a);
-        return ret;
-    }
-    
-    if(fc.barrierPath.length() > 2)
-    {
-        printMsg(string( "Loading barrier file for Farsite #") + to_string(f+1) + ": " + fc.barrierPath);
-        pFarsite->SetBarriers(fc.barrierPath.c_str());
-    }
-    return ret;
-}
 
 
 // Launch a farsite run. this can run asynchronously in its own thread.
