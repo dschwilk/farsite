@@ -12,7 +12,7 @@
 #include "fsxpfront.h"
 #include "fsxwattk.h"
 #include "fsx4.hpp"
-#include "themes.h"
+//#include "themes.h"
 #include "fsxwignt.h"
 #include "fsxwshap.h"
 #include "polygon.h"
@@ -171,7 +171,7 @@ struct CoarseWoody
 typedef struct
 {
      long ID;
-     VectorTheme theme;
+//     VectorTheme theme;
      void *next;
      void *last;
 } VectorStorage;
@@ -1046,11 +1046,11 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	double 	ConvertActualTimeToSimtime(long mo, long dy, long hr, long mn, bool FromCondit);
 	void 	ConvertSimtimeToActualTime(double SimTime, long *mo, long *dy, long *hr, long *mn, bool FromCondit);
 
-	LandscapeTheme *GetLandscapeTheme();
-	LandscapeTheme* lcptheme;// = 0;
+    //LandscapeTheme *GetLandscapeTheme();
+	//LandscapeTheme* lcptheme;// = 0;
 
-	long		GetTheme_HiValue(short DataTheme);
-	long		GetTheme_LoValue(short DataTheme);
+	//long		GetTheme_HiValue(short DataTheme);
+	//long		GetTheme_LoValue(short DataTheme);
 
 	long WindLoc;
     long WindLoc_New;

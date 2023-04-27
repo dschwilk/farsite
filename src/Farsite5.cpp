@@ -356,7 +356,7 @@ Farsite5::Farsite5(void) :
 	ShapePolygonsNotLines = 1;
 	ShapeBarriersSeparately = 0;
 
-	lcptheme = 0;
+//	lcptheme = 0;
 
 	NextFireAfterInterrupt = 0;
 	RastMake = false;
@@ -427,9 +427,9 @@ Farsite5::~Farsite5(void)
 	}
 	CleanPerimeters();
 	Terminate();
-    if (lcptheme) {
-        delete lcptheme;
-        lcptheme = 0;  }
+    // if (lcptheme) {
+    //     delete lcptheme;
+    //     lcptheme = 0;  }
 }
 
 void Farsite5::SetModelParams()
@@ -807,12 +807,12 @@ void Farsite5::ReadHeader()
 	}
 	CantAllocLCP = false;
 
-	if (lcptheme)
-	{
-		delete lcptheme;
-		lcptheme = nullptr;
-	}
-	lcptheme = new LandscapeTheme(false, this);
+	// if (lcptheme)
+	// {
+	// 	delete lcptheme;
+	// 	lcptheme = nullptr;
+	// }
+	// lcptheme = new LandscapeTheme(false, this);
 
 	if (landscape == 0)
 	{
@@ -6797,72 +6797,72 @@ void Farsite5::ConvertSimtimeToActualTime(double SimTime, long* mo, long* dy, lo
 	*mn = mins;
 }
 
-LandscapeTheme* Farsite5::GetLandscapeTheme()
-{
-	return lcptheme;
-}
+// LandscapeTheme* Farsite5::GetLandscapeTheme()
+// {
+// 	return lcptheme;
+// }
 
-long Farsite5::GetTheme_HiValue(short DataTheme)
-{
-	long hi;
+// long Farsite5::GetTheme_HiValue(short DataTheme)
+// {
+// 	long hi;
 
-	switch (DataTheme)
-	{
-	case 0:
-		hi = Header.hielev; break;
-	case 1:
-		hi = Header.hislope; break;
-	case 2:
-		hi = Header.hiaspect; break;
-	case 3:
-		hi = Header.hifuel; break;
-	case 4:
-		hi = Header.hicover; break;
-	case 5:
-		hi = Header.hiheight; break;
-	case 6:
-		hi = Header.hibase; break;
-	case 7:
-		hi = Header.hidensity; break;
-	case 8:
-		hi = Header.hiduff; break;
-	case 9:
-		hi = Header.hiwoody; break;
-	}
+// 	switch (DataTheme)
+// 	{
+// 	case 0:
+// 		hi = Header.hielev; break;
+// 	case 1:
+// 		hi = Header.hislope; break;
+// 	case 2:
+// 		hi = Header.hiaspect; break;
+// 	case 3:
+// 		hi = Header.hifuel; break;
+// 	case 4:
+// 		hi = Header.hicover; break;
+// 	case 5:
+// 		hi = Header.hiheight; break;
+// 	case 6:
+// 		hi = Header.hibase; break;
+// 	case 7:
+// 		hi = Header.hidensity; break;
+// 	case 8:
+// 		hi = Header.hiduff; break;
+// 	case 9:
+// 		hi = Header.hiwoody; break;
+// 	}
 
-	return hi;
-}
+// 	return hi;
+// }
 
-long Farsite5::GetTheme_LoValue(short DataTheme)
-{
-	long lo;
+// long Farsite5::GetTheme_LoValue(short DataTheme)
+// {
+// 	long lo;
 
-	switch (DataTheme)
-	{
-	case 0:
-		lo = Header.loelev; break;
-	case 1:
-		lo = Header.loslope; break;
-	case 2:
-		lo = Header.loaspect; break;
-	case 3:
-		lo = Header.lofuel; break;
-	case 4:
-		lo = Header.locover; break;
-	case 5:
-		lo = Header.loheight; break;
-	case 6:
-		lo = Header.lobase; break;
-	case 7:
-		lo = Header.lodensity; break;
-	case 8:
-		lo = Header.loduff; break;
-	case 9:
-		lo = Header.lowoody; break;
-	}
+// 	switch (DataTheme)
+// 	{
+// 	case 0:
+// 		lo = Header.loelev; break;
+// 	case 1:
+// 		lo = Header.loslope; break;
+// 	case 2:
+// 		lo = Header.loaspect; break;
+// 	case 3:
+// 		lo = Header.lofuel; break;
+// 	case 4:
+// 		lo = Header.locover; break;
+// 	case 5:
+// 		lo = Header.loheight; break;
+// 	case 6:
+// 		lo = Header.lobase; break;
+// 	case 7:
+// 		lo = Header.lodensity; break;
+// 	case 8:
+// 		lo = Header.loduff; break;
+// 	case 9:
+// 		lo = Header.lowoody; break;
+// 	}
 
-	return lo;
-}
+// 	return lo;
+// }
 
 void Farsite5::InitializeNewFuel()
 {
@@ -9622,10 +9622,10 @@ int Farsite5::Execute_StartRestart()
 					printf("Set Model | Parameters before Starting the Simulation Time- and Space-resolutions not set\n");				}
 				else
 				{
-					long i;
+//					long i;
 					bool NEEDMX = false;
 					char msg[128] = "", msg2[128] = "";
-					LandscapeTheme* grid;
+//					LandscapeTheme* grid;
 
 					/*
                       for(i=14;  i<257; i++)
@@ -9640,26 +9640,31 @@ int Farsite5::Execute_StartRestart()
                       }
                     */
 
-					if (!NEEDMX)
-					{
-						grid = GetLandscapeTheme();
-						for (i = 1; i <= grid->NumAllCats[3]; i++)
-						{
-							if (GetFuelConversion(grid->AllCats[3][i]) > 0 &&
-								GetFuelConversion(grid->AllCats[3][i]) < 257)
-							{
-								if (!InitialFuelMoistureIsHere(GetFuelConversion(grid->AllCats[3][i])))
-								{
-									NEEDMX = true;
-									//sprintf(msg, "Fuel Model %ld Has No Initial Fuel Moisture",(long) GetFuelConversion(grid->AllCats[3][i]));
-									//sprintf(msg2,
-									//	"Update File %s before continuing",
-									//	Inputs.MBMois.c_str());
-									break;
-								}
-							}
-						}
-					}
+					//if (!NEEDMX)
+                    //	{
+//						grid = GetLandscapeTheme();
+                        //DWS: what is this about? This looks like front-end
+                        //stuff? Why for the love of god are we calculating
+                        //things based on the display? I'm removing this as
+                        //well as theme.h and gridthem.cpp
+                    
+						// for (i = 1; i <= grid->NumAllCats[3]; i++)
+						// {
+						// 	if (GetFuelConversion(grid->AllCats[3][i]) > 0 &&
+						// 		GetFuelConversion(grid->AllCats[3][i]) < 257)
+						// 	{
+						// 		if (!InitialFuelMoistureIsHere(GetFuelConversion(grid->AllCats[3][i])))
+						// 		{
+						// 			NEEDMX = true;
+						// 			//sprintf(msg, "Fuel Model %ld Has No Initial Fuel Moisture",(long) GetFuelConversion(grid->AllCats[3][i]));
+						// 			//sprintf(msg2,
+						// 			//	"Update File %s before continuing",
+						// 			//	Inputs.MBMois.c_str());
+						// 			break;
+						// 		}
+						// 	}
+						// }
+                        //}
 
 					if (!NEEDMX)
 					{
