@@ -9,7 +9,7 @@
 #include "fsxwatm.h"
 #include "icf_def.h"
 #include "fsairatk.h"
-#include "fsxpfront.h"
+//#include "fsxpfront.h"
 #include "fsxwattk.h"
 #include "fsx4.hpp"
 //#include "themes.h"
