@@ -8984,11 +8984,7 @@ void Farsite5::WriteVectorOutputs()
 }
 
 
-/*******************************************************************************************
- *
- *  NOTE as of Nov 11 2010 - This functions DOESN'T REALLY do anything yet.
- *
- *******************************************************************************************/
+
 void Farsite5::WriteOutputs(int type)
 {
 	// if area and perimeter calculations are desired

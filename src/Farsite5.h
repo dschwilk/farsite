@@ -1103,14 +1103,6 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	long SimRequest;
 	bool LEAVEPROCESS, SIMULATE_GO,   IN_BURNPERIOD;	// using input data instead of files;
 
-
-   // Remvoing defines below; should be handled by FPC.
-   // #define e_StartUp  0
-   // #define e_Farsite 1
-   // #define e_Condition 2
-   // #define e_WindNinja 3   // WN-Test    
-   //int    i_RunStatus;   /* set as Farsite or Fuel Conditioning is running */
-
 	unsigned long systime1, systime2, systime;
 	bool CanModify;// = true;
 	bool PreCalcFuelMoistures;// = true;

@@ -36,7 +36,6 @@ Where:
                   2 = FlamMap binary grid)
 )";
 
-mutex iomutex;  // for locking std::cout
 atomic_bool cancelRequest = false; // Flag to end program based on user input.
                                    // Not yet changed based on user.
 
@@ -67,11 +66,12 @@ ostream& operator<<(ostream& os, const FarsiteCommand fc)
        << fc.barrierPath << " " << fc.outPath << " " << fc.outType;
     return os;
 }
-    
+
+// std::mutex iomutex provide by FARSITE.h
 void printError(const char *theerr,  const char *fname)
 {
     std::lock_guard<std::mutex> iolock(iomutex);
-    cout << "Error: " << theerr << " for " << fname << "\n";
+    cerr << "Error: " << theerr << " for " << fname << "\n";
 }
 
 void printMsg(const char *msg)
@@ -88,7 +88,7 @@ void printMsg(const std::string msg)
 
 // This is very simple for now. It would be nice to have a progress bar of the
 // type in the indicators library.
-void ProgressThread(void *_pFarsites, int nFarsites)
+void ProgressThread(void *_pFarsites, int nFarsites, int interval)
 {
  	CFarsite **pFarsites = (CFarsite **)_pFarsites;
 	int progress = 0;
@@ -115,7 +115,7 @@ void ProgressThread(void *_pFarsites, int nFarsites)
         iomutex.lock();
         cout << std::flush;
         iomutex.unlock();
-        std::this_thread::sleep_for(1000ms);
+        std::this_thread::sleep_for(std::chrono::milliseconds(interval));
 	}
 }
 
@@ -159,175 +159,6 @@ int LoadCommandInputs(CFarsite *pFarsite, int f, FarsiteCommand fc)
     return ret;
 }
 
-// Write all outputs. outputPath is directory and base file name. The code
-// below appends an underscore, file type description, and extension to this
-// string to create the various output file name. outType is integer indicating
-// which group of outputs to porduce.
-int writeOutputs(CFarsite *pFarsite, int outType, std::string outputPath, int f)
-{
-    int ret;
-    if(outType == 0 || outType == 1 || outType == 4)
-    {
-        if(outType == 4)
-        {
-            pFarsite->WriteOneHours(outputPath.c_str());
-            pFarsite->WriteTenHours(outputPath.c_str());
-        }
-        ret = pFarsite->WriteCrownFireGrid( (outputPath + "_CrownFire.asc").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-        ret = pFarsite->WriteIntensityGrid( (outputPath + "_Intensity.asc").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-        ret = pFarsite->WriteFlameLengthGrid((outputPath + "_FlameLength.asc").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-        ret = pFarsite->WriteSpreadRateGrid( (outputPath + "_SpreadRate.asc").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-        ret = pFarsite->WriteSpreadDirectionGrid( (outputPath + "_SpreadDirection.asc").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-        ret = pFarsite->WriteHeatPerUnitAreaGrid( (outputPath + "_HeatPerUnitArea.asc").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-        ret = pFarsite->WriteReactionIntensityGrid( (outputPath + "_ReactionIntensity.asc").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-        ret = pFarsite->WriteArrivalTimeGrid((outputPath + "_ArrivalTime.asc").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-    }
-    if(outType == 0 || outType == 2)
-    {
-        ret = pFarsite->WriteCrownFireGridBinary( (outputPath + "_CrownFire.fbg").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-        ret = pFarsite->WriteArrivalTimeGridBinary( (outputPath + "ArrivalTime.fbg").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-        ret = pFarsite->WriteIntensityGridBinary( (outputPath + "_Intensity.fbg").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-        ret = pFarsite->WriteFlameLengthGridBinary( (outputPath + "_FlameLength.fbg").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-        ret = pFarsite->WriteSpreadRateGridBinary( (outputPath + "_SpreadRate.fbg").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-        ret = pFarsite->WriteSpreadDirectionGridBinary((outputPath + "_SpreadDirection.fbg").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-        ret = pFarsite->WriteHeatPerUnitAreaGridBinary( (outputPath + "_HeatPerUnitArea.fbg").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-        ret = pFarsite->WriteReactionIntensityGridBinary((outputPath + "_ReactionIntensity.fbg").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-        ret = pFarsite->WriteArrivalTimeGridBinary( (outputPath + "_ArrivalTime.fbg").c_str());
-        if(ret != 1)
-        {
-            char *a = pFarsite->CommandFileError(ret);
-            printError(a, outputPath.c_str());
-        }
-    }
-    /*sprintf(outputPath.c_str(), "%s_Moistures.txt", outs[f]);
-      ret = pFarsite->WriteMoistData(outputPath.c_str());
-      if(ret != 1)
-      {
-      char *a = pFarsite->CommandFileError(ret);
-      printError(a, outputPath.c_str());
-      }*/
-    ret = pFarsite->WriteIgnitionGrid( (outputPath + "_Ignitions.asc").c_str());
-    if(ret != 1)
-    {
-        char *a = pFarsite->CommandFileError(ret);
-        printError(a, outputPath.c_str());
-    }
-    ret = pFarsite->WritePerimetersShapeFile( (outputPath + "_Perimeters.shp").c_str());
-    if(ret != 1)
-    {
-        char *a = pFarsite->CommandFileError(ret);
-        printError(a, outputPath.c_str());
-    }
-    ret = pFarsite->WriteSpotGrid( (outputPath + "_SpotGrid.asc").c_str());
-    if(ret != 1)
-    {
-        char *a = pFarsite->CommandFileError(ret);
-        printError(a, outputPath.c_str());
-    }
-    ret = pFarsite->WriteSpotDataFile( (outputPath + "_Spots.csv").c_str());
-    if(ret != 1)
-    {
-        char *a = pFarsite->CommandFileError(ret);
-        printError(a, outputPath.c_str());
-    }
-    ret = pFarsite->WriteSpotShapeFile( (outputPath + "_Spots.shp").c_str());
-    if(ret != 1)
-    {
-        char *a = pFarsite->CommandFileError(ret);
-        printError(a, outputPath.c_str());
-    }
-    ret = pFarsite->WriteTimingsFile( (outputPath + "_Timings.txt").c_str());
-
-    if(ret != 1)
-    {
-        char *a = pFarsite->CommandFileError(ret);
-        printError(a, outputPath.c_str());
-    }
-    
-return ret;
-}
-
-
 
 // Launch a farsite run. this can run asynchronously in its own thread.
 // LoadCommandInputs must have been already called on the Farsite object.
@@ -344,7 +175,7 @@ void LaunchFarsite(void *_pFarsite, int f, FarsiteCommand fc)
         return;  // throw?
     }
      // write outputs
-    ret = writeOutputs(pFarsite, fc.outType, fc.outPath, f);
+    ret = pFarsite->writeOutputs(fc.outType, fc.outPath);
     if(ret != 1) 
     {
         printMsg(string("Error: Writing results failure for farsite #") + to_string(f+1) );
@@ -382,7 +213,7 @@ int MPMain(int argc, char* argv[])
 		pFarsites[i] = nullptr;  // start empty
 
 	//printMsg("Starting 'ProgressThread' thread.");
-    auto progressThread = std::thread(ProgressThread, &pFarsites[0], nFarsites);
+    auto progressThread = std::thread(ProgressThread, &pFarsites[0], nFarsites, 600);
 	int f;
            
 	for(f = 0; f < nFarsites; f++)

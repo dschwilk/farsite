@@ -4,6 +4,19 @@
 #include "FARSITE.h"
 #include "Farsite5.h"
 
+#include <iostream>
+#include <sstream>
+
+std::mutex iomutex;
+
+// helper function for error logging. Need better solution
+void CFarsite::printError(const char *theerr,  const char *fname)
+{
+    std::lock_guard<std::mutex> iolock(iomutex);
+    std::cerr << "Error: " << theerr << " for " << fname << "\n";
+}
+
+
 CFarsite::CFarsite()
 {
 	m_pFarsite = new Farsite5();//NULL;
@@ -458,5 +471,197 @@ int CFarsite::GetNumIgnitionCells()
 		return m_pFarsite->GetNumIgnitionCells();
 	}
 	return 0;
+}
+
+/*******************************************************************************************
+ * WriteOutputs
+ * Write all outputs. outputPath is directory and base file name. The code
+ * below appends an underscore, file type description, and extension to this
+ * string to create the various output file name. outType is integer indicating
+ * which group of outputs to produce.
+ *
+ *******************************************************************************************/
+int CFarsite::writeOutputs(int outType, const std::string outputPath)
+{
+    // 0 = all outputs, 1 = ascii grids, 2 = binary grids, 4 = same as 1 plus
+    // one and ten hour fuels
+    int ret;
+    int nOutputs, outN=0;
+    switch(outType) {
+    case 1 :
+        nOutputs = 14;
+        break;
+    case 2 :
+        nOutputs = 14;
+        break;
+    case 4 :
+        nOutputs = 16;
+        break;
+    case 0 :
+        nOutputs = 22;
+        break;
+    default :
+        nOutputs = 6;
+    }
+
+        
+    if(outType == 0 || outType == 1 || outType == 4)
+    {
+        // type 4:
+        if(outType == 4)
+        {
+            this->WriteOneHours(outputPath.c_str());
+            this->WriteTenHours(outputPath.c_str());
+        }
+        // type 0 and 1:
+        ret = this->WriteCrownFireGrid( (outputPath + "_CrownFire.asc").c_str());
+        if(ret != 1)
+        {
+            char *a = this->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        ret = this->WriteArrivalTimeGrid((outputPath + "_ArrivalTime.asc").c_str());
+        if(ret != 1)
+        {
+            char *a = this->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        ret = this->WriteIntensityGrid( (outputPath + "_Intensity.asc").c_str());
+        if(ret != 1)
+        {
+            char *a = this->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        ret = this->WriteFlameLengthGrid((outputPath + "_FlameLength.asc").c_str());
+        if(ret != 1)
+        {
+            char *a = this->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        ret = this->WriteSpreadRateGrid( (outputPath + "_SpreadRate.asc").c_str());
+        if(ret != 1)
+        {
+            char *a = this->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        ret = this->WriteSpreadDirectionGrid( (outputPath + "_SpreadDirection.asc").c_str());
+        if(ret != 1)
+        {
+            char *a = this->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        ret = this->WriteHeatPerUnitAreaGrid( (outputPath + "_HeatPerUnitArea.asc").c_str());
+        if(ret != 1)
+        {
+            char *a = this->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        ret = this->WriteReactionIntensityGrid( (outputPath + "_ReactionIntensity.asc").c_str());
+        if(ret != 1)
+        {
+            char *a = this->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+    }
+        
+    if(outType == 0 || outType == 2)
+    {
+        ret = this->WriteCrownFireGridBinary( (outputPath + "_CrownFire.fbg").c_str());
+        if(ret != 1)
+        {
+            char *a = this->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        ret = this->WriteArrivalTimeGridBinary( (outputPath + "ArrivalTime.fbg").c_str());
+        if(ret != 1)
+        {
+            char *a = this->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        ret = this->WriteIntensityGridBinary( (outputPath + "_Intensity.fbg").c_str());
+        if(ret != 1)
+        {
+            char *a = this->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        ret = this->WriteFlameLengthGridBinary( (outputPath + "_FlameLength.fbg").c_str());
+        if(ret != 1)
+        {
+            char *a = this->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        ret = this->WriteSpreadRateGridBinary( (outputPath + "_SpreadRate.fbg").c_str());
+        if(ret != 1)
+        {
+            char *a = this->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        ret = this->WriteSpreadDirectionGridBinary((outputPath + "_SpreadDirection.fbg").c_str());
+        if(ret != 1)
+        {
+            char *a = this->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        ret = this->WriteHeatPerUnitAreaGridBinary( (outputPath + "_HeatPerUnitArea.fbg").c_str());
+        if(ret != 1)
+        {
+            char *a = this->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        ret = this->WriteReactionIntensityGridBinary((outputPath + "_ReactionIntensity.fbg").c_str());
+        if(ret != 1)
+        {
+            char *a = this->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+    }
+    /*sprintf(outputPath.c_str(), "%s_Moistures.txt", outs[f]);
+      ret = this->WriteMoistData(outputPath.c_str());
+      if(ret != 1)
+      {
+      char *a = this->CommandFileError(ret);
+      printError(a, outputPath.c_str());
+      }*/
+
+    // all output types:
+    ret = this->WriteIgnitionGrid( (outputPath + "_Ignitions.asc").c_str());
+    if(ret != 1)
+    {
+        char *a = this->CommandFileError(ret);
+        printError(a, outputPath.c_str());
+    }
+    ret = this->WritePerimetersShapeFile( (outputPath + "_Perimeters.shp").c_str());
+    if(ret != 1)
+    {
+        char *a = this->CommandFileError(ret);
+        printError(a, outputPath.c_str());
+    }
+    ret = this->WriteSpotGrid( (outputPath + "_SpotGrid.asc").c_str());
+    if(ret != 1)
+    {
+        char *a = this->CommandFileError(ret);
+        printError(a, outputPath.c_str());
+    }
+    ret = this->WriteSpotDataFile( (outputPath + "_Spots.csv").c_str());
+    if(ret != 1)
+    {
+        char *a = this->CommandFileError(ret);
+        printError(a, outputPath.c_str());
+    }
+    ret = this->WriteSpotShapeFile( (outputPath + "_Spots.shp").c_str());
+    if(ret != 1)
+    {
+        char *a = this->CommandFileError(ret);
+        printError(a, outputPath.c_str());
+    }
+    ret = this->WriteTimingsFile( (outputPath + "_Timings.txt").c_str());
+
+    if(ret != 1)
+    {
+        char *a = this->CommandFileError(ret);
+        printError(a, outputPath.c_str());
+    }
+    
+return ret;
 }
 

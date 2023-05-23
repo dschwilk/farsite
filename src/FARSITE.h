@@ -8,6 +8,11 @@
 #endif */
 #define FARSITEDLL_EXPORT
 
+#include <string>
+#include <mutex>
+
+extern std::mutex iomutex;  // for locking std::cout and cerr
+
 class Farsite5;
 
 class FARSITEDLL_EXPORT CFarsite
@@ -43,6 +48,10 @@ public:
 	int CancelFarsite(void);
 
 	//output functions
+    // all outputs
+    int writeOutputs(int outType, const std::string outputPath);
+
+    //individual
 	int WriteArrivalTimeGrid(const char *trgName);
 	int WriteIntensityGrid(const char *trgName);
 	int WriteFlameLengthGrid(const char *trgName);
@@ -73,5 +82,8 @@ public:
 
 private:
 	Farsite5 *m_pFarsite;
+
+    // For error output thread safe
+    void printError(const char *theerr,  const char *fname);
 
 };
