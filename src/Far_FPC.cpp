@@ -12,11 +12,12 @@ constexpr const char* ProgressStateToString(ProgressState s)
 {
     switch (s)
     {
-      case e_Idle:            return "Idle";
-      case e_Starting:        return "Starting";
-      case e_PreConditioning: return "Preconditioning";
-      case e_Conditioning:    return "Conditioning";
-      case e_FarsiteRunning:  return "Farsite running";
+    case e_Idle:            return "Idle";
+    case e_Starting:        return "Starting";
+    case e_PreConditioning: return "Preconditioning";
+    case e_Conditioning:    return "Conditioning";
+    case e_FarsiteRunning:  return "Burning";
+    case e_Done:            return "Complete";
     default: return "ERROR:UNKNOWN STATE";      
     }
 }
@@ -69,6 +70,11 @@ void FPC::SetConditioning ()
 void FPC::SetFarsiteRunning ()
 {
    this->_state = e_FarsiteRunning;
+}
+
+void FPC::SetDone ()
+{
+   this->_state = e_Done;
 }
 
 void FPC::SetProgress(int progress)

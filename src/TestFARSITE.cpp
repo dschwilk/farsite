@@ -12,6 +12,8 @@
 #include <mutex>
 #include <atomic>
 
+#include <cstring>
+
 using namespace std::chrono_literals;
 using namespace std;
 
@@ -102,12 +104,12 @@ void ProgressThread(void *_pFarsites, int nFarsites)
                 progress = pFarsites[f]->GetFarsiteProgress();
                 const char* status = pFarsites[f]->GetFarsiteStatusString();
           
-                if (progress == 100)
+                if (std::strcmp(status, "Complete")==0)
                 {
-                    cout << "Farsite #" << f+1 << " Writing results. " << status;
+                    cout << "Farsite #" << f+1 << ": Writing results.";
                 } else
                 {              
-                    cout << "Farsite #" << f+1 << " " << progress << "% complete. " << status;
+                    cout << "Farsite #" << f+1 << ": " << status << " " << progress << "% complete. ";
                 }
             }
             cout << "\n";

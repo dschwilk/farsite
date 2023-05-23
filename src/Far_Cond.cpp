@@ -52,10 +52,11 @@ int CheckMonthDay (int m, int  d);
 //but calling it DLL is confusing (and windows-specific).
 int Farsite5::Run_CondDLL()
 {
-long i, i_AdjTim;
-char  cr_ErrMes[1000];
+    long i, i_AdjTim;
+    char  cr_ErrMes[1000];
 
-  this->cfmc.Init();
+    this->cfmc.Init(&this->m_FPC);  // hand the CFMC object a reference to a FarsiteProgress
+                        // object
 
   i_AdjTim = FMC_LoadInputs (&this->icf,       /* input command file data */
                       &this->Header,    /* Landscape file header data */

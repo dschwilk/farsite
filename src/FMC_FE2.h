@@ -1,7 +1,12 @@
-// ?
+//  FireEnvironment2 class
+// This is used by the CFMC conditioning class
 
-#include "deadfuelmoisture.h"
-#include "newfms.h"
+// We have two alternative dead fuel moisture conditioning methods
+#include "newfms.h"  // Old 0.7.0 Nelson Model
+#include "deadfuelmoisture.h" //1.0.0 Nelson model
+#include "Far_FPC.h"
+
+#include <atomic>
 
 using namespace Sem;
 
@@ -182,52 +187,49 @@ struct DeadMoistureDescription {
 
 /*****************************************************************************/
 class FmsThread {
-	  bool 	FirstTime;
-   unsigned 	ThreadID;
-	  long 	StationNumber, FuelType, FuelSize,	Begin, End, Date, Hour;
-   double 	SimTime, *temp;
-   FuelMoistureMap	*Stations;
-   DeadMoistureHistory **CurHist;
-   DeadMoistureDescription *MxDesc;
+    bool FirstTime;
+    unsigned ThreadID;
+    long StationNumber, FuelType, FuelSize,	Begin, End, Date, Hour;
+    double SimTime, *temp;
+    FuelMoistureMap	*Stations;
+    DeadMoistureHistory **CurHist;
+    DeadMoistureDescription *MxDesc;
 
-   static unsigned  RunFmsThread(void *fmsthread);
-   static unsigned  RunFmsThread_RAWS(void *fmsthread);
+    static unsigned  RunFmsThread(void *fmsthread);
+    static unsigned  RunFmsThread_RAWS(void *fmsthread);
 
-   void  UpdateMapMoisture_RAWS();
-   void  UpdateMoistures_RAWS();
+    void  UpdateMapMoisture_RAWS();
+    void  UpdateMoistures_RAWS();
 
-   void  UpdateMapMoisture();
-   void  UpdateMapMoisture_NewDFM();
+    void  UpdateMapMoisture();
+    void  UpdateMapMoisture_NewDFM();
 
-   void Stick07_Mngr (long n, FMS_Cover *cov, double Radiate, double Ctemp, double humid, double Rain, long loc);
-   void Stick07_First(long n, FMS_Cover *cov, double Radiant, double Ctemp, double humid, double Rain, long loc);
-   void Stick07_Next (long n, FMS_Cover *cov, double Radiate, double Ctemp, double humid, double Rain, long loc);
+    void Stick07_Mngr (long n, FMS_Cover *cov, double Radiate, double Ctemp, double humid, double Rain, long loc);
+    void Stick07_First(long n, FMS_Cover *cov, double Radiant, double Ctemp, double humid, double Rain, long loc);
+    void Stick07_Next (long n, FMS_Cover *cov, double Radiate, double Ctemp, double humid, double Rain, long loc);
+    void Stick10_Mngr (long n, FMS_Cover *cov, double Radiate, double Ctemp, double humid, double Rain, long loc);
 
+    void Stick10_First (long n, FMS_Cover *cov, double Radiate, double Ctemp, double humid, double Rain, long loc);
+    void Stick10_Next (long n, FMS_Cover *cov, double Radiate, double Ctemp, double humid, double Rain, long loc);
 
-   void Stick10_Mngr (long n, FMS_Cover *cov, double Radiate, double Ctemp, double humid, double Rain, long loc);
-
-   void Stick10_First (long n, FMS_Cover *cov, double Radiate, double Ctemp, double humid, double Rain, long loc);
-   void Stick10_Next (long n, FMS_Cover *cov, double Radiate, double Ctemp, double humid, double Rain, long loc);
-
-   long GetLoc (long FuelSize, long i, long j, long k, long m, long n, long sn);
+    long GetLoc (long FuelSize, long i, long j, long k, long m, long n, long sn);
 
 public:
-	  CI *a_CI;
-   long ThreadOrder, LastTime;
+    CI *a_CI;
+    long ThreadOrder, LastTime;
    //HANDLE hFmsEvent;
 
-	  FmsThread(CI *_a_CI = NULL);
-   ~FmsThread();
+    FmsThread(CI *_a_CI = NULL);
+    ~FmsThread();
 
-   void 	StartFmsThread(long ID, long SizeClass, DeadMoistureDescription *mxdesc, bool FirstTime);
-   void 	StartFmsThread_RAWS(long ID, long SizeClass, DeadMoistureDescription *mxdesc, bool FirstTime);
-
-   void 	SetRange (double simTime, long date, long hour, long stationNumber,
-     				          	long fuelType,	FuelMoistureMap *map, DeadMoistureHistory **hist,
-                    long begin, long bnd);
-   void 	SiteSpecific(long ElevDiff, double tempref, double *temp,	double humref, double *humid);
-   double 	SimpleRadiation(long date, double hour, long cloud, long elev,	long slope, long aspect, long cover);
-   void 	UpdateMoistures();
+    void 	StartFmsThread(long ID, long SizeClass, DeadMoistureDescription *mxdesc, bool FirstTime);
+    void 	StartFmsThread_RAWS(long ID, long SizeClass, DeadMoistureDescription *mxdesc, bool FirstTime);
+    void 	SetRange (double simTime, long date, long hour, long stationNumber,
+                      long fuelType,	FuelMoistureMap *map, DeadMoistureHistory **hist,
+                      long begin, long bnd);
+    void 	SiteSpecific(long ElevDiff, double tempref, double *temp,	double humref, double *humid);
+    double 	SimpleRadiation(long date, double hour, long cloud, long elev,	long slope, long aspect, long cover);
+    void 	UpdateMoistures();
 };
 
 /****************************************************************************/
@@ -235,83 +237,73 @@ public:
 // An object of this class is a member of the CFMC class
 class  FE2 {
 public:
-   bool  b_Terminate;  /* Terminate Conditioning run */
-   double d_Progress;  /* percent of conditioning completed  */
+    bool b_Terminate;  /* Terminate Conditioning run */
+     std::atomic<int> a_Progress;  /* percent of conditioning completed  */
 
-   long		HistoryCount, NumFmsThreads;
-   long 	 CloudCount, NumStations;
-   long		StationNumber, elevref;
-   double 	tempref, humref, rain;
-   double 	humidmx, humidmn, tempmx, tempmn;
+    long HistoryCount, NumFmsThreads;
+    long CloudCount, NumStations;
+    long StationNumber, elevref;
+    double tempref, humref, rain;
+    double humidmx, humidmn, tempmx, tempmn;
 
 /* it looks the part of the code that uses this never gets run */
-   double SimStart;
+    double SimStart;
 
 /***********************************************************************/
 
-   int Init ();
+    int Init ();
+    void SiteSpecific (long elev, double *ad_airtemp, double *ad_relhumd);
+    bool HaveFuelMoist (long station, long fuel);
+    void ElevTempHum (long *al_elev, double *ad_temp, double *ad_hum);
 
-   void SiteSpecific (long elev, double *ad_airtemp, double *ad_relhumd);
+    CI *a_CI;
+    FmsThread	*fmsthread;
 
-   bool HaveFuelMoist (long station, long fuel);
-   void ElevTempHum (long *al_elev, double *ad_temp, double *ad_hum);
+    FuelMoistureMap 	   	*Stations;
+    DeadMoistureDescription	MxDesc;
+    DeadMoistureHistory		*FirstHist[eC_Sta] [4];    // four types of fuels, 1hr 10hr, 100hr, 1000hr X 5 streams,
+    DeadMoistureHistory		*CurHist  [eC_Sta] [4];
+    DeadMoistureHistory		*NextHist [eC_Sta] [4];
 
-   CI *a_CI;
-   FmsThread	*fmsthread;
+    bool AllocData (double lo, double hi, long interval, long elev, long fuel, long StationNumber);
 
-   FuelMoistureMap 	   	*Stations;
-   DeadMoistureDescription	MxDesc;
-   DeadMoistureHistory		*FirstHist[eC_Sta] [4];    // four types of fuels, 1hr 10hr, 100hr, 1000hr X 5 streams,
-   DeadMoistureHistory		*CurHist  [eC_Sta] [4];
-   DeadMoistureHistory		*NextHist [eC_Sta] [4];
-
-   bool 	AllocData (double lo, double hi, long interval, long elev, long fuel, long StationNumber);
-
-   int DeadMoistureHistory_Display (int FuelSize, int sn);
+    int DeadMoistureHistory_Display (int FuelSize, int sn);
 
 // -------------------------------------------------------------------------------------------------
-   void 	HumTemp_Stu ( long date, long hour, double *tempref, double *humref, long *elevref, double *rain,
+    void HumTemp_Stu ( long date, long hour, double *tempref, double *humref, long *elevref, double *rain,
      				        double *humidmx, double *humidmn, double *tempmx, double *tempmn, long *tr1, long *tr2);
 
-   void 	RunFmsThreads_Lar(double SimTime, long StationNumber, long FuelType, long FuelSize);
-
-   void 	RunFmsThreads_Stu (double SimTime, long StationNumber, long FuelType, long FuelSize);
-
-   void RunFmsThreads_RAWS (double SimTime, long sn, long FuelType, long FuelSize);
-
-   void Load_CurHist (DeadMoistureHistory *CurHist, d_RAWS *a_RAWS, int i_Elev, double d_RaiAcm, long SimTim, long l_Intv);
-
-
+    void RunFmsThreads_Lar(double SimTime, long StationNumber, long FuelType, long FuelSize);
+    void RunFmsThreads_Stu (double SimTime, long StationNumber, long FuelType, long FuelSize);
+    void RunFmsThreads_RAWS (double SimTime, long sn, long FuelType, long FuelSize);
+    void Load_CurHist (DeadMoistureHistory *CurHist, d_RAWS *a_RAWS, int i_Elev, double d_RaiAcm, long SimTim, long l_Intv);
     bool ExportMoistureDataText(const char* FileName, const char* LCP_FilNam);
-
     int Set_FarsiteTime (long l_Adj);
-
     void Disp_CurHistMoist (long FuelSize, long FuelType);
 
 //______________________________________________________________________________________________
 
-   bool		CheckMoistureHistory(long Station, long FuelSize, double SimTime);
-   void		CopyMoistureHistory(long Station, long FuelSize);
-   bool 	AllocHistory(long Station, long FuelSize);
-   DeadMoistureHistory *DMH_FindRec (long FuelSize, double d_Time);
+    bool CheckMoistureHistory(long Station, long FuelSize, double SimTime);
+    void CopyMoistureHistory(long Station, long FuelSize);
+    bool AllocHistory(long Station, long FuelSize);
+    DeadMoistureHistory *DMH_FindRec (long FuelSize, double d_Time);
 
+    void FreeHistory(long Station, long FuelSize);
+    void RefreshHistoryDescription(long Station, long FuelSize);
+    long GetClouds(long date, double hour);
+    bool AllocFmsThreads();
+    void FreeFmsThreads();
+    void CloseFmsThreads();
 
-   void 	FreeHistory(long Station, long FuelSize);
-   void		RefreshHistoryDescription(long Station, long FuelSize);
-   long 	GetClouds(long date, double hour);
-   bool		AllocFmsThreads();
-   void 	FreeFmsThreads();
-   void 	CloseFmsThreads();
-
-   void 	ResetData(long FuelSize);
-   void 	ResetAllThreads();
-   bool 	AllocStations(long Num);
-   void 	FreeStations();
-   double 	GetMx(double Time, long fuel, long elev, long slope,
+    void ResetData(long FuelSize);
+    void ResetAllThreads();
+    bool AllocStations(long Num);
+    void FreeStations();
+    double GetMx(double Time, long fuel, long elev, long slope,
      	        			 	double aspectf, long cover, double *equil, double *solrad, long FuelSize);
-   bool 	CalcMapFuelMoistures(double SimTime);
-   int   CondMngr ();
-   bool		CheckMoistureTimes(double SimTime);
-   double Get_Progress ();
-   void  Terminate ();
+    bool CalcMapFuelMoistures(double SimTime);
+    int CondMngr (FPC *progress);
+    bool CheckMoistureTimes(double SimTime);
+    double Get_Progress ();
+    void Terminate ();
 };

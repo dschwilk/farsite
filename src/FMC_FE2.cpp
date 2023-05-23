@@ -31,6 +31,8 @@
 #include "FMC_CI.h"
 #include "FMC_FE2.h"
 
+#include "Far_FPC.h" // farsite progress class
+
 #include <cmath>
 #include <cstdio>
 #include <cstring>
@@ -38,22 +40,14 @@
 
 #include <sys/stat.h>
 
-#ifdef WIN32
-  #include <windows.h>
-  #include <process.h>
-  #include <conio.h>
-#endif
-
-
 using namespace std;
 
 static const double PI=acos(-1.0);
-
 static long WindLoc;
 
 // Test-lar
-void TestFile (char cr[]);
-char gcr[1000];
+//void TestFile (char cr[]);
+//char gcr[1000];
 // test-lar
 
 /**********************************************************************
@@ -69,12 +63,13 @@ char gcr[1000];
  *  Ret: 1 = completed successfully,
  *       0 = terminated by user
  *
- * TODO: would be helpful to have this be able to update the Farsite5 class
- * progress object. Would need to take a pointer to the containing Farsite5
- * object as an argument, I think. More complicated solution would be a
- * callback std::function using Farsite5::SetFarsiteProgress()
+ * TODO: DWS: 2023-05-23 It would be helpful to have this be able to update the
+ * Farsite5 class progress object. Would need to take a pointer to the
+ * containing Farsite5 object as an argument, I think. More complicated
+ * solution would be a callback std::function using
+ * Farsite5::SetFarsiteProgress()
  ***********************************************************************/
-int  FE2::CondMngr ()
+int  FE2::CondMngr (FPC *progress)
 {
     double MoistSimTime, Interval, MaxTime;
     long  lX;
@@ -84,9 +79,9 @@ int  FE2::CondMngr ()
     lX = a_CI->Get_MoistCalcHourInterval();
     Interval = a_CI->GetMoistCalcInterval (lX, FM_INTERVAL_TIME);
     MaxTime = a_CI->d_RunTime;                /* time of simulation - minutes */
-    d_Progress = 0.0;
+    progress->SetProgress(0);
 
-/* Set Minute-Date in RAWS table if we have RAWS data */
+    /* Set Minute-Date in RAWS table if we have RAWS data */
     this->a_CI->RAWS_SetMinuteDate();
 
 // test-larry
@@ -98,11 +93,8 @@ int  FE2::CondMngr ()
 //            break;
         MoistSimTime += Interval;
         CalcMapFuelMoistures(MoistSimTime);
-        d_Progress = MoistSimTime / MaxTime;  /* Percent completed */
+        progress->SetProgress(std::round(100 * MoistSimTime / MaxTime));  /* Percent completed */
         // TODO: update containing Farsite5 object with percent progress?
-        
-        if ( d_Progress > 1.0 )               /* might go a little over */
-            d_Progress = 1.0;
     } while ( MoistSimTime < MaxTime);       // MaxTime is class variable
 
 //    if ( b_Terminate == true )  /* If conditiong run had a termination request */
@@ -352,7 +344,7 @@ int FE2::Init ()
     a_CI->Init();       /* Init the CI class */
 
     b_Terminate = false;
-    d_Progress = -1.0;      /* % completed, -1 indicated not started */
+    a_Progress = -1;      /* % completed, -1 indicated not started */
     Stations = 0;
     NumStations = 0;
     CloudCount = 0;
@@ -2126,7 +2118,7 @@ bool FE2::HaveFuelMoist(long Station, long FuelSize)
  *************************************************************************/
 double FE2::Get_Progress()
 {
-    return this->d_Progress;
+    return this->a_Progress;
 }
 
 

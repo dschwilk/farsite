@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "Far_FPC.h"
 #include <cstdint>
 
 /*#ifdef BUILD_FMC_DLL
@@ -24,15 +25,15 @@ typedef int32_t int32;
 class FMC_DLL_EXPORT CFMC {
 public:
   	CFMC();
-	 ~CFMC();
+    ~CFMC();
 
-   FE2 *a_FE2;
-
-   void FuelStickModel_Nelson_070 ();
-   void FuelStickModel_Nelson_100 ();
+    FE2 *a_FE2;     // pointer to Fire Environment 2 class (FE2)
+    FPC *m_fpc; // pointer to farsite progress class
+    void FuelStickModel_Nelson_070 ();
+    void FuelStickModel_Nelson_100 ();
 
    int Run ();
-   int Init ();
+   int Init (FPC *fpc);
    void Delete ();
    void Terminate ();
    bool HaveFuelMoist(long Station, long FuelSize);

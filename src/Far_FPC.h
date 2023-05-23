@@ -6,7 +6,7 @@
 #ifndef Far_FPC_h
 #define Far_FPC_h
 
-enum ProgressState { e_Idle, e_Starting, e_PreConditioning, e_Conditioning, e_FarsiteRunning};
+enum ProgressState { e_Idle, e_Starting, e_PreConditioning, e_Conditioning, e_FarsiteRunning, e_Done};
 
 class FPC {
 public:
@@ -34,6 +34,7 @@ public:
     void SetPreConditioning ();
     void SetConditioning ();
     void SetFarsiteRunning ();
+    void SetDone ();
  };
 
 #endif

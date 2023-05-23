@@ -8367,6 +8367,7 @@ int  Farsite5::FarsiteSimulationLoop()
 
 		if (burn.SIMTIME > maximum)
 		{
+            this->m_FPC.SetDone();
 			FARSITE_GO = false;
 			sprintf(MBStatus, "    %s", "SIMULATION COMPLETED");
 			SimRequest = SIMREQ_NULL ;

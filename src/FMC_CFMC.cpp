@@ -182,7 +182,7 @@ int  CFMC::Set_DateStart (int i_StartYear, long month, long day, long hour)
 int CFMC::Run ()
 {
 int i;
-   i = this->a_FE2->CondMngr();
+   i = this->a_FE2->CondMngr(this->m_fpc);
    return i;
 }
 
@@ -193,11 +193,11 @@ int i;
 *        it handles doing the dead fuel moisture conditioning.
 *  Ret: 1 ok
 **************************************************************/
-int CFMC::Init()
+int CFMC::Init(FPC *fpc)
 {
-   this->a_FE2 = new FE2;
-   if ( !this->a_FE2->Init() )
-      return 0;
+    this->a_FE2 = new FE2;
+    if ( !this->a_FE2->Init() )
+        return 0;
 // #ifdef WIN32
 // 	EnterCriticalSection(&FMC_InstanceCS);
 // #endif
@@ -206,7 +206,8 @@ int CFMC::Init()
 // #ifdef WIN32
 // 	LeaveCriticalSection(&FMC_InstanceCS);
 // #endif
-   return 1;
+    m_fpc = fpc;
+    return 1;
 }
 
 /*************************************************************
