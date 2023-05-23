@@ -110,9 +110,10 @@ void ProgressThread(void *_pFarsites, int nFarsites)
                     cout << "Farsite #" << f+1 << " " << progress << "% complete. " << status;
                 }
             }
+            cout << "\n";
 		}
         iomutex.lock();
-        cout << "\n" <<  std::flush;
+        cout << std::flush;
         iomutex.unlock();
         std::this_thread::sleep_for(1000ms);
 	}
