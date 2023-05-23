@@ -26,10 +26,7 @@
 //
 //------------------------------------------------------------------------------
 
-//#ifdef WIN32
 #include "fsxsync.h"
-//#endif
-
 
 #include <cstring>
 #include <cstdlib>

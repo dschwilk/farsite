@@ -9,7 +9,6 @@
 #include "FMC_CI.h"
 #include "FMC_FE2.h"
 #include "cdtlib.h"
-
 #include "semtime.h"
 #include "deadfuelmoisture.h"
 
@@ -163,17 +162,17 @@ int  CFMC::Set_DateStart (int i_StartYear, long month, long day, long hour)
 
 /***********************************************************************/
 
-#ifdef  NOT_SURE_NEEDED
-int  CFMC::Set_DateEnd (long date, long month, long day, long hour, long min)
-{
-   this->a_FE2->a_CI->enddate = date;
-   this->a_FE2->a_CI->endmonth = month;
-   this->a_FE2->a_CI->endday = day;
-   this->a_FE2->a_CI->endhour = hour;
-   this->a_FE2->a_CI->endmin = min;
-   return 1;
-}
-#endif
+// #ifdef  NOT_SURE_NEEDED
+// int  CFMC::Set_DateEnd (long date, long month, long day, long hour, long min)
+// {
+//    this->a_FE2->a_CI->enddate = date;
+//    this->a_FE2->a_CI->endmonth = month;
+//    this->a_FE2->a_CI->endday = day;
+//    this->a_FE2->a_CI->endhour = hour;
+//    this->a_FE2->a_CI->endmin = min;
+//    return 1;
+// }
+// #endif
 
 /********************************************************
 * Name: Run
@@ -199,14 +198,14 @@ int CFMC::Init()
    this->a_FE2 = new FE2;
    if ( !this->a_FE2->Init() )
       return 0;
-#ifdef WIN32
-	EnterCriticalSection(&FMC_InstanceCS);
-#endif
+// #ifdef WIN32
+// 	EnterCriticalSection(&FMC_InstanceCS);
+// #endif
 	GUniqueInstance++;
 	SetInstanceID(GUniqueInstance);
-#ifdef WIN32
-	LeaveCriticalSection(&FMC_InstanceCS);
-#endif
+// #ifdef WIN32
+// 	LeaveCriticalSection(&FMC_InstanceCS);
+// #endif
    return 1;
 }
 
@@ -215,7 +214,7 @@ int CFMC::Init()
 * Desc: NEED to do this when when done with object to clean
 *        up
 * NOTE: There is no destructor for the class SO THIS needs
-*         must be called
+*         must be called. DWS 2023-05-23: Not true? destructor exists?
 * Note-1: This pointer will only have something in it if the
 *         CFMC::Init() was run, otherwise it will be NULL from
 *          the consructor function....So it's safe to call this
@@ -223,20 +222,20 @@ int CFMC::Init()
 **************************************************************/
 void CFMC::Delete()
 {
-  if ( this->a_FE2 == NULL ) /* See Note-1 Above */
-    return;
+    if ( this->a_FE2 == NULL ) /* See Note-1 Above */
+        return;
 
-  this->a_FE2->a_CI->Delete();
-  this->a_FE2->FreeStations();
-  this->a_FE2->FreeFmsThreads();
+    this->a_FE2->a_CI->Delete();
+    this->a_FE2->FreeStations();
+    this->a_FE2->FreeFmsThreads();
 
-  if ( this->a_FE2->a_CI) {
-    delete this->a_FE2->a_CI;
-    this->a_FE2->a_CI = NULL; }
+    if ( this->a_FE2->a_CI) {
+        delete this->a_FE2->a_CI;
+        this->a_FE2->a_CI = NULL; }
 
-  if ( this->a_FE2) {
-    delete this->a_FE2;
-    this->a_FE2 = NULL; }
+    if ( this->a_FE2) {
+        delete this->a_FE2;
+        this->a_FE2 = NULL; }
 }
 /***********************************************************
 * Name: Terminate
@@ -245,10 +244,10 @@ void CFMC::Delete()
 ***********************************************************/
 void CFMC::Terminate()
 {
- if ( this->a_FE2 == NULL )
-   return;
+    if ( this->a_FE2 == NULL )
+        return;
 
-  this->a_FE2->Terminate();
+    this->a_FE2->Terminate();
 }
 
 /*******************************************************
@@ -279,8 +278,8 @@ SYSTEM_INFO sysinf;
 
 void CFMC::ResetThreads ()
 {
-   this->a_FE2->ResetAllThreads();
- 	 this->a_FE2->a_CI->ResetThreads();
+    this->a_FE2->ResetAllThreads();
+    this->a_FE2->a_CI->ResetThreads();
 }
 
 void CFMC::SetInstanceID (long id)
@@ -402,7 +401,7 @@ CFMC::CFMC()
 **************************************************************/
 CFMC::~CFMC ()
 {
-  Delete ();
+    Delete();
 }
 
 /***************************************************************
@@ -413,9 +412,9 @@ CFMC::~CFMC ()
 ****************************************************************/
 bool CFMC::HaveFuelMoist(long Station, long FuelSize)
 {
-bool b;
-  b = this->a_FE2->HaveFuelMoist(Station,FuelSize);
-  return b;
+    bool b;
+    b = this->a_FE2->HaveFuelMoist(Station,FuelSize);
+    return b;
 }
 
 /***************************************************************
@@ -424,7 +423,7 @@ bool b;
 ***************************************************************/
 void CFMC::ElevTempHum (long *al_elev, double *ad_temp, double *ad_hum)
 {
-   this->a_FE2->ElevTempHum (al_elev,ad_temp, ad_hum);
+    this->a_FE2->ElevTempHum (al_elev,ad_temp, ad_hum);
 }
 
 /**************************************************************
@@ -437,12 +436,12 @@ void CFMC::ElevTempHum (long *al_elev, double *ad_temp, double *ad_hum)
 **************************************************************/
 void CFMC::FuelStickModel_Nelson_070 ()
 {
-  this->a_FE2->a_CI->FuelStickModel_Nelson_070();
+    this->a_FE2->a_CI->FuelStickModel_Nelson_070();
 }
 
 void CFMC::FuelStickModel_Nelson_100 ()
 {
-  this->a_FE2->a_CI->FuelStickModel_Nelson_100();
+    this->a_FE2->a_CI->FuelStickModel_Nelson_100();
 }
 
 /****************************************************************
@@ -457,35 +456,35 @@ void CFMC::FuelStickModel_Nelson_100 ()
 *****************************************************************/
 double CFMC::Get_ProgressD()
 {
-double d;
-  if ( this->a_FE2 == NULL )   /* See Note-1 above */
-     return 0;
-  d = this->a_FE2->Get_Progress();
-  return d;
+    double d;
+    if ( this->a_FE2 == NULL )   /* See Note-1 above */
+        return 0;
+    d = this->a_FE2->Get_Progress();
+    return d;
 }
 /*-------------------------------------------------------------------*/
 float CFMC::Get_ProgressF()
 {
-float f;
-  if ( this->a_FE2 == NULL )   /* incase not alloced yet */
-     return 0;
+    float f;
+    if ( this->a_FE2 == NULL )   /* incase not alloced yet */
+        return 0;
 
-  f = (float) this->a_FE2->Get_Progress();
-  return f;
+    f = (float) this->a_FE2->Get_Progress();
+    return f;
 }
 /*------------------------------------------------------------------*/
 /* Return as integer value 0 --> 100  */
 int CFMC::Get_ProgressInt()
 {
-int i;
-double d;
-  if ( this->a_FE2 == NULL )   /* incase not alloced yet */
-     return 0;
+    int i;
+    double d;
+    if ( this->a_FE2 == NULL )   /* incase not alloced yet */
+        return 0;
 
-  d = this->a_FE2->Get_Progress();
-  d = d * 100.0;  /* Get to whole number */
-  i = (int) d;
-  return i;
+    d = this->a_FE2->Get_Progress();
+    d = d * 100.0;  /* Get to whole number */
+    i = (int) d;
+    return i;
 }
 
 /*******************************************************************
@@ -499,13 +498,13 @@ double d;
 ********************************************************************/
 void CFMC::Set_MoistCalcHourInterval (int i)
 {
-  this->a_FE2->a_CI->Set_MoistCalcHourInterval(i);
+    this->a_FE2->a_CI->Set_MoistCalcHourInterval(i);
 }
 
 /*************************************************************************/
 void CFMC::SiteSpecific (long elev, double *ad_airtemp, double *ad_relhumd)
 {
-   this->a_FE2->SiteSpecific (elev, ad_airtemp, ad_relhumd);
+    this->a_FE2->SiteSpecific (elev, ad_airtemp, ad_relhumd);
 }
 
 
@@ -517,17 +516,17 @@ void CFMC::SiteSpecific (long elev, double *ad_airtemp, double *ad_relhumd)
 int CFMC::RAWS_LoadInfo ( int iX, float f_Temp, float f_Humidity, float f_PerHou,
                          float f_CloCov)
 {
-int i;
-   i = this->a_FE2->a_CI->RAWS_LoadInfo (iX, f_Temp, f_Humidity, f_PerHou, f_CloCov);
-   return i;
+    int i;
+    i = this->a_FE2->a_CI->RAWS_LoadInfo (iX, f_Temp, f_Humidity, f_PerHou, f_CloCov);
+    return i;
 }
 
 /*----------------------------------------------------------------------------*/
 int CFMC::RAWS_LoadDate (int iX, int i_Yr, int i_Mth, int i_Day, int i_Time)
 {
-int i;
-   i = this->a_FE2->a_CI->RAWS_LoadDate (iX, i_Yr, i_Mth, i_Day, i_Time);
-   return i;
+    int i;
+    i = this->a_FE2->a_CI->RAWS_LoadDate (iX, i_Yr, i_Mth, i_Day, i_Time);
+    return i;
  }
 
 
@@ -536,9 +535,9 @@ int i;
 ---------------------------------------------------------------------------*/
 int CFMC::RAWS_Allocate (int iN)
 {
-int i;
-   i= this->a_FE2->a_CI->RAWS_Allocate (iN);
-   return i;
+    int i;
+    i= this->a_FE2->a_CI->RAWS_Allocate (iN);
+    return i;
 }
 
 /*--------------------------------------------------------------------------
@@ -547,35 +546,33 @@ int i;
 ---------------------------------------------------------------------------*/
 void CFMC::RAWS_SetElev(int i_Elev)
 {
-  this->a_FE2->a_CI->i_RAWS_Elev = i_Elev;
+    this->a_FE2->a_CI->i_RAWS_Elev = i_Elev;
 }
 
 /*----------------------------------------------------------------------------*/
 void CFMC::RAWS_Display()
 {
-   this->a_FE2->a_CI->RAWS_Display();
+    this->a_FE2->a_CI->RAWS_Display();
 }
 
 
 bool CFMC::ExportMoistureDataText(const char *FileName, const char * LCP_FilNam)
 {
-bool b;
-   b = this->a_FE2->ExportMoistureDataText(FileName, LCP_FilNam);
-   return b;
+    bool b;
+    b = this->a_FE2->ExportMoistureDataText(FileName, LCP_FilNam);
+    return b;
 }
 
 int CFMC::Set_FarsiteDef (long l)
 {
-int i;
-   i = this->a_FE2->Set_FarsiteTime(l);
-   return i;
+    int i;
+    i = this->a_FE2->Set_FarsiteTime(l);
+    return i;
 }
 
 int CFMC::SimTime_ActualTime (double SimTime, long* mo, long* dy, long* hr, long* mn)
 {
-   this->a_FE2->a_CI->ConvertSimtimeToActualTime (SimTime, mo, dy, hr, mn);
-
-   return 1;
-
+    this->a_FE2->a_CI->ConvertSimtimeToActualTime (SimTime, mo, dy, hr, mn);
+    return 1;
 }
 

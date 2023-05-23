@@ -28,7 +28,6 @@
 #include "fsxlandt.h"
 #include "fsxpfront.h"
 
-
 #include <map>
 #include <utility>
 #include <cstdio>

@@ -5,8 +5,9 @@
 **********************************************************************************/
 #pragma once
 
-#include <cstdint>
+#include "fsxsync.h"
 
+#include <cstdint>
 
 #define GETVAL -1
 
@@ -18,11 +19,7 @@
 /* Used for initializing and checking for unloaded input data in CI class */
 #define eI_init -9999
 #define eF_init -99999.0
-
 #define eC_Sta  5           /* Number of Stations */
-//#ifdef WIN32
-#include "fsxsync.h"
-//#endif
 
 #ifndef int32
 typedef int32_t int32;
@@ -91,7 +88,7 @@ typedef struct {  // wind data structure
 struct FuelConversions
 {
 #define eC_FCTyp 257
-	int Type[eC_FCTyp];            // each fuel type contains a fuel model corresponding
+	int Type[eC_FCTyp];  // each fuel type contains a fuel model corresponding
 	void Init();		 // load defaults
 };
 
@@ -127,30 +124,9 @@ typedef struct
 } InitialFuelMoisture;
 
 
-/******************************************************************/
-/*class FarsiteEvent
-{
-public:
-	 X_HANDLE *hEvent;
-   unsigned long NumEvents;
-
-   FarsiteEvent();
-   ~FarsiteEvent();
-   bool AllocEvents(long numevents, char *basename, bool ManReset, bool InitState);
-   bool FreeEvents();
-
-	  X_HANDLE GetEvent(long ThreadNum);
-   bool SetEvent(long ThreadNum);
-   bool ResetEvent(long ThreadNum);
-   bool WaitForEvents(long numevents, bool All, unsigned long Wait);
-   bool WaitForOneEvent(long ThreadNum, unsigned long Wait);
-};*/
-
-
-
 /****************************************************************************/
-/*                    Conditioning Inputs Struct                                  */
-/* Still need to deal with this                                            */
+/*                    Conditioning Inputs Struct                            */
+/* Still need to deal with this                                             */
 #define eC_Hdr 100 /* same size as FlamMap.Header data arrays */
 class CI {
 

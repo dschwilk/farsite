@@ -29,9 +29,6 @@
 #ifndef  FARSITE_SYNCEVENTS
 #define  FARSITE_SYNCEVENTS
 
-//#include <process.h>
-//#include <windows.h>
-
 #define EVENT_BURN 		1
 #define EVENT_MOIST 	2
 #define EVENT_BURNUP	3
@@ -48,7 +45,6 @@
 typedef long X_HANDLE;
 #endif // FARSITE_HANDLE
 
-//#ifdef WIN32
 class FarsiteEvent
 {
 	X_HANDLE* hEvent;
@@ -70,19 +66,16 @@ public:
 
 
 bool AllocFarsiteEvents(long EventNum, long numevents, char* basename,
-	bool ManReset, bool InitState);
+                        bool ManReset, bool InitState);
 bool FreeFarsiteEvents(long EventNum);
 bool SetFarsiteEvent(long EventNum, long ThreadNum);
 bool ResetFarsiteEvent(long EventNum, long ThreadNum);
 bool WaitForFarsiteEvents(long EventNum, long NumEvents, bool All,
-	unsigned long Wait);
+                          unsigned long Wait);
 bool WaitForOneFarsiteEvent(long EventNum, long ThreadNum, unsigned long Wait);
 X_HANDLE GetFarsiteEvent(long EventNum, long ThreadNum);
-
 X_HANDLE GetLandscapeSemaphore();
 bool CreateLandscapeSemaphore();
 void CloseLandscapeSemaphore();
-
-//#endif //WIN32
 
 #endif // FARSITE_SYNCEVENTS
