@@ -15,6 +15,7 @@
 
 #include <cstdio>
 #include <cstring>
+#include <algorithm>
 
 //.....................................................
 // Need to include icf_def.h for the error return #defines
@@ -32,10 +33,6 @@ int  CheckNextDayTime (int m, int d, int t, int mm, int dd, int tt );
 int  CheckMonthDay (int m, int  d);
 int  CheckNextDay (int m, int d, int mm, int dd );
 int RAWS_Seq (int y, int m, int d, int t, int ny,int nm,int nd, int nt );
-
-
-float _Min (long A, long B);
-float _Max (long A, long B);
 
 /*******************************************************************/
 void CI::ResetThreads()
@@ -920,8 +917,8 @@ double CI::RAWS_GetAccumRain (long l_StrMinDate, long l_EndMinDate )
     iX = RAWS_GetRecord (l_StrMinDate, &s_RAWS); /* index to rec with start minute date */
 
     /* Deal with the 1st rec - See Notes above */
-    A = _Max ( a_RAWS[0][iX].l_MinDate, l_StrMinDate);
-    B = _Min ( a_RAWS[0][iX+1].l_MinDate, l_EndMinDate );
+    A = std::max( a_RAWS[0][iX].l_MinDate, l_StrMinDate);
+    B = std::min( a_RAWS[0][iX+1].l_MinDate, l_EndMinDate );
     Dif = (float) B - A;   /* Minutes in record */
     MIR = (float) RAWS_MinInRec(iX);
     pc = ( Dif / MIR ) ;
@@ -944,24 +941,6 @@ double CI::RAWS_GetAccumRain (long l_StrMinDate, long l_EndMinDate )
 
     return d_Tot;
 }
-
-
-/*****************************************************************************************/
-float _Min (long A, long B)
-{
-    if ( A < B )
-        return (float) A;
-    return (float) B;
-}
-
-float _Max (long A, long B)
-{
-    if ( A > B )
-        return (float) A;
-    return (float) B;
-}
-
-
 
 
 /******************************************************************************/
@@ -1026,4 +1005,3 @@ d_RAWS *a;
              a->f_CloCov);
   }
 }
-
