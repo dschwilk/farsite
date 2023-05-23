@@ -16,16 +16,6 @@
 #include <cstdio>
 #include <cstring>
 
-
-#ifdef WIN32
-  #define  _CRT_SECURE_NO_WARNINGS   /* Get rid of sprintf Warnings */
-  #include <windows.h>
-  #include <conio.h>
-#endif
-
-
-
-
 //.....................................................
 // Need to include icf_def.h for the error return #defines
 //  and the error message table, BUT there is a d_RAWS struct
@@ -33,7 +23,6 @@
 //  this will cause it to not use it.......
 #define SKIP_RAWS_TYPEDEF
 #include "icf_def.h"
-
 
 
 /*.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.*/
@@ -54,80 +43,79 @@ void CI::ResetThreads()
 // I put this call in CFMC::ResetThreads becasue env-> isn't in CI anymore
 //    burn->env->ResetAllThreads();
 
-  FreeFarsiteEvents(EVENT_MOIST);
-  FreeFarsiteEvents(EVENT_MOIST_THREAD);
+    FreeFarsiteEvents(EVENT_MOIST);
+    FreeFarsiteEvents(EVENT_MOIST_THREAD);
 
-	 char eventInstanceStr[64];
+    char eventInstanceStr[64];
 
-	 sprintf(eventInstanceStr, "FlamEventMoist_%ld", instanceID);
-  AllocFarsiteEvents(EVENT_MOIST, GetMaxThreads(), eventInstanceStr, false, false);
+    sprintf(eventInstanceStr, "FlamEventMoist_%ld", instanceID);
+    AllocFarsiteEvents(EVENT_MOIST, GetMaxThreads(), eventInstanceStr, false, false);
 
-	 sprintf(eventInstanceStr, "FlamEventMoistThread_%ld", instanceID);
-  AllocFarsiteEvents(EVENT_MOIST_THREAD, GetMaxThreads(), eventInstanceStr, true, false);
+    sprintf(eventInstanceStr, "FlamEventMoistThread_%ld", instanceID);
+    AllocFarsiteEvents(EVENT_MOIST_THREAD, GetMaxThreads(), eventInstanceStr, true, false);
 
-	 for (int i = 0; i < 64; i++)
-	 	 ThreadProgress[i] = 0.0;
-
-
+    for (int i = 0; i < 64; i++)
+        ThreadProgress[i] = 0.0;
 // May have to implement this later
 //	 conditioningProgress = 0.0;
 
 }
+
 /*********************************************************/
 bool	CI::FreeFarsiteEvents(long EventNum)
 {
-bool ret = false;
+    bool ret = false;
 
-#ifdef WIN32
-   switch (EventNum) {
-//     	case 1: ret=hBurnEvent.FreeEvents(); break;
+// #ifdef WIN32
+//    switch (EventNum) {
+// //     	case 1: ret=hBurnEvent.FreeEvents(); break;
 
-     	case 2:
-         ret = hMoistEvent.FreeEvents();
-         break;
+//      	case 2:
+//          ret = hMoistEvent.FreeEvents();
+//          break;
 
-//     	case 3: ret=hBurnupEvent.FreeEvents(); break;
-//     	case 4: ret=hIntegEvent.FreeEvents(); break;
-//     	case 5: ret=hBurnThreadEvent.FreeEvents(); break;
-      	case 6:
-          ret=hMoistThreadEvent.FreeEvents();
-          break;
-//     	case 7: ret=hBurnupThreadEvent.FreeEvents(); break;
-//     	case 8: ret=hIntegThreadEvent.FreeEvents(); break;
-//     	case 9: ret=hCrossEvent.FreeEvents(); break;
-//     	case 10: ret=hCrossThreadEvent.FreeEvents(); break;
-     default:
-        this->LogicError(" CI::FreeFarsiteEvents() ERROR");
-        break;
-     }
-#endif
-     return ret;
+// //     	case 3: ret=hBurnupEvent.FreeEvents(); break;
+// //     	case 4: ret=hIntegEvent.FreeEvents(); break;
+// //     	case 5: ret=hBurnThreadEvent.FreeEvents(); break;
+//       	case 6:
+//           ret=hMoistThreadEvent.FreeEvents();
+//           break;
+// //     	case 7: ret=hBurnupThreadEvent.FreeEvents(); break;
+// //     	case 8: ret=hIntegThreadEvent.FreeEvents(); break;
+// //     	case 9: ret=hCrossEvent.FreeEvents(); break;
+// //     	case 10: ret=hCrossThreadEvent.FreeEvents(); break;
+//      default:
+//         this->LogicError(" CI::FreeFarsiteEvents() ERROR");
+//         break;
+//      }
+// #endif
+    return ret;
 }
 
 bool CI::AllocFarsiteEvents(long EventNum, long numevents, char *basename, bool ManReset, bool InitState)
 {
 	bool ret = false;
-#ifdef WIN32
-     switch(EventNum) {
-//	     case 1: ret=hBurnEvent.AllocEvents(numevents, basename, ManReset, InitState); break;
-     	case 2:
-         ret = hMoistEvent.AllocEvents(numevents, basename, ManReset, InitState);
-         break;
-//     	case 3: ret=hBurnupEvent.AllocEvents(numevents, basename, ManReset, InitState); break;
-//     	case 4: ret=hIntegEvent.AllocEvents(numevents, basename, ManReset, InitState); break;
-//     	case 5: ret=hBurnThreadEvent.AllocEvents(numevents, basename, ManReset, InitState); break;
-     	case 6:
-         ret = hMoistThreadEvent.AllocEvents(numevents, basename, ManReset, InitState);
-         break;
-//     	case 7: ret=hBurnupThreadEvent.AllocEvents(numevents, basename, ManReset, InitState); break;
-//     	case 8: ret=hIntegThreadEvent.AllocEvents(numevents, basename, ManReset, InitState); break;
-//     	case 9: ret=hCrossEvent.AllocEvents(numevents, basename, ManReset, InitState); break;
-//     	case 10: ret=hCrossThreadEvent.AllocEvents(numevents, basename, ManReset, InitState); break;
-     default:
-        this->LogicError(" CI::AllocFarsiteEvents() ERROR");
-        break;
-     }
-#endif
+// #ifdef WIN32
+//      switch(EventNum) {
+// //	     case 1: ret=hBurnEvent.AllocEvents(numevents, basename, ManReset, InitState); break;
+//      	case 2:
+//          ret = hMoistEvent.AllocEvents(numevents, basename, ManReset, InitState);
+//          break;
+// //     	case 3: ret=hBurnupEvent.AllocEvents(numevents, basename, ManReset, InitState); break;
+// //     	case 4: ret=hIntegEvent.AllocEvents(numevents, basename, ManReset, InitState); break;
+// //     	case 5: ret=hBurnThreadEvent.AllocEvents(numevents, basename, ManReset, InitState); break;
+//      	case 6:
+//          ret = hMoistThreadEvent.AllocEvents(numevents, basename, ManReset, InitState);
+//          break;
+// //     	case 7: ret=hBurnupThreadEvent.AllocEvents(numevents, basename, ManReset, InitState); break;
+// //     	case 8: ret=hIntegThreadEvent.AllocEvents(numevents, basename, ManReset, InitState); break;
+// //     	case 9: ret=hCrossEvent.AllocEvents(numevents, basename, ManReset, InitState); break;
+// //     	case 10: ret=hCrossThreadEvent.AllocEvents(numevents, basename, ManReset, InitState); break;
+//      default:
+//         this->LogicError(" CI::AllocFarsiteEvents() ERROR");
+//         break;
+//      }
+// #endif
      return ret;
 }
 
@@ -155,92 +143,94 @@ long CI::GetStartProcessor ()
 ********************************************************************/
 int CI::CheckInputs ()
 {
-int i;//,j,n;
+    int i;//,j,n;
 
-  strcpy (cr_ErrMes,"");
+    strcpy (cr_ErrMes,"");
 
-  if ( !this->InitCheck(cr_ErrMes) )  /* simple check to make sure */
-    return e_EMS_cMiss;               /*  were at least loaded */
+    if ( !this->InitCheck(cr_ErrMes) )  /* simple check to make sure */
+        return e_EMS_cMiss;               /*  were at least loaded */
+    
+    if ( NumWeatherStations < 1 || NumWeatherStations > eC_Sta ) {
+        sprintf (cr_ErrMes,"Bad # w stations %ld",NumWeatherStations );
+        return e_EMS_cWtSt;  }
 
-  if ( NumWeatherStations < 1 || NumWeatherStations > eC_Sta ) {
-    sprintf (cr_ErrMes,"Bad # w stations %ld",NumWeatherStations );
-    return e_EMS_cWtSt;  }
+    if ( NumWindStations < 1 ) {
+        sprintf (cr_ErrMes,"Bad # wind obs %ld",NumWindStations );
+        return e_EMS_cWdOb;  }
 
-  if ( NumWindStations < 1 ) {
-    sprintf (cr_ErrMes,"Bad # wind obs %ld",NumWindStations );
-    return e_EMS_cWdOb;  }
+    if ( //l_ElevHigh < 0 || l_ElevHigh > 20000 ||
+        //l_ElevLow  < 0 || l_ElevLow  > 20000 ||
+        l_ElevLow > l_ElevHigh ||
+        s_EUnits < 0 || s_EUnits > 1 )  {
+        strcpy (cr_ErrMes,"Bad Elev or Unit");
+        return e_EMS_cElv;  }
 
- if ( //l_ElevHigh < 0 || l_ElevHigh > 20000 ||
-       //l_ElevLow  < 0 || l_ElevLow  > 20000 ||
-       l_ElevLow > l_ElevHigh ||
-       s_EUnits < 0 || s_EUnits > 1 )  {
-      strcpy (cr_ErrMes,"Bad Elev or Unit");
-      return e_EMS_cElv;  }
-
-  if ( (l_SlopeHigh < l_SlopeLow) ||
-       s_SUnits < 0 || s_SUnits > 1 ) {
-      strcpy (cr_ErrMes,"Bad Slope or Unit");
-      return e_EMS_cSlp; }
-
-  if ( l_CoverHigh < 0 || l_CoverLow < 0 ||
-       l_CoverHigh > 100 || l_CoverLow > 100 ||
-       (l_CoverLow > l_CoverHigh)) {
-      strcpy (cr_ErrMes, "Bad Cover value");
-      return e_EMS_cCov; }
-
+    if ( (l_SlopeHigh < l_SlopeLow) ||
+         s_SUnits < 0 || s_SUnits > 1 ) {
+        strcpy (cr_ErrMes,"Bad Slope or Unit");
+        return e_EMS_cSlp; }
+    
+    if ( l_CoverHigh < 0 || l_CoverLow < 0 ||
+         l_CoverHigh > 100 || l_CoverLow > 100 ||
+         (l_CoverLow > l_CoverHigh)) {
+        strcpy (cr_ErrMes, "Bad Cover value");
+        return e_EMS_cCov; }
+    
 /*...............................................................................*/
-  i = 0;
-  if ( !CheckMonthDay (startmonth,startday ) )i++;
-  if ( starthour < 0 || startday > 2400 ) i++;
-  if ( i > 0 ) {
-    strcpy (cr_ErrMes, "Bad start date/time");
-    return e_EMS_cSDt; }
-
+    i = 0;
+    if ( !CheckMonthDay (startmonth,startday ) )i++;
+    if ( starthour < 0 || startday > 2400 ) i++;
+    if ( i > 0 ) {
+        strcpy (cr_ErrMes, "Bad start date/time");
+        return e_EMS_cSDt;
+    }
 /*...............................................................................*/
-  if ( StartProcessor < 0 || MaxThreads < 0 ) {
-     strcpy (cr_ErrMes, "Bad # processors");
-     return e_EMS_cPro; }
-
+    if ( StartProcessor < 0 || MaxThreads < 0 ) {
+        strcpy (cr_ErrMes, "Bad # processors");
+        return e_EMS_cPro;
+    }
 /*------------------------------------------------------------------------------*/
 /* Check weather/wind or weather stream data table */
- if ( a_RAWS[0] != 0 ) {                   /* if we have  Weather Stream Data */
-    if ( !CheckWeatherStream())
-      return e_EMS_cSqWt;
-    return 1; }
+    if ( a_RAWS[0] != 0 ) {                   /* if we have  Weather Stream Data */
+        if ( !CheckWeatherStream())
+            return e_EMS_cSqWt;
+        return 1;
+    }
 
 /* If there is no weather stream data than we need weather & wind data */
- if ( wtrdt[0] == 0 ) {
-    strcpy (this->cr_ErrMes,"No Weather Data");
-    return e_EMS_cNoWt; }
+    if ( wtrdt[0] == 0 ) {
+        strcpy (this->cr_ErrMes,"No Weather Data");
+        return e_EMS_cNoWt;
+    }
 
- if ( this->wddt[0] == 0 ) {
-    strcpy (this->cr_ErrMes,"No Wind Data");
-    return e_EMS_cNoWn; }
+    if ( this->wddt[0] == 0 ) {
+        strcpy (this->cr_ErrMes,"No Wind Data");
+        return e_EMS_cNoWn;
+    }
 
- i = CheckWeatherWind ();
- if ( i < 0 )
-   return i;
+    i = CheckWeatherWind ();
+    if ( i < 0 )
+        return i;
 
-  return 1;
+    return 1;
 }
 
 /***********************************************************************************/
 int CI::CheckWeatherStream()
 {
-int i;
-d_RAWS *a,*b;
+    int i;
+    d_RAWS *a,*b;
 
-  for ( i = 1; i < this->irN_RAWS[0]; i++ ) {
-      a = &this->a_RAWS[0][i-1];
-      b = &this->a_RAWS[0][i];
+    for ( i = 1; i < this->irN_RAWS[0]; i++ ) {
+        a = &this->a_RAWS[0][i-1];
+        b = &this->a_RAWS[0][i];
 
-      if ( !RAWS_Seq (a->i_Yr,a->i_Mth,a->i_Day,a->i_Time,
-                     b->i_Yr,b->i_Mth,b->i_Day,b->i_Time) ) {
-        sprintf (this->cr_ErrMes,"Bad Wth Rec order %d %d %d",b->i_Mth,b->i_Day,b->i_Time);
-        return 0; }
-
-  }
-  return 1;
+        if ( !RAWS_Seq (a->i_Yr,a->i_Mth,a->i_Day,a->i_Time,
+                        b->i_Yr,b->i_Mth,b->i_Day,b->i_Time) ) {
+            sprintf (this->cr_ErrMes,"Bad Wth Rec order %d %d %d",b->i_Mth,b->i_Day,b->i_Time);
+            return 0; }
+    }
+    return 1;
 }
 
 /***********************************************************************
@@ -251,25 +241,25 @@ d_RAWS *a,*b;
 ***********************************************************************/
 int RAWS_Seq (int y, int m, int d, int t, int ny,int nm,int nd, int nt )
 {
-  if ( ny > y )
-    return 1;
-  if ( ny < y )
+    if ( ny > y )
+        return 1;
+    if ( ny < y )
+        return 0;
+
+    if ( nm > m )
+        return 1;
+    if ( nm < m )
+        return 0;
+
+    if ( nd > d )
+        return 1;
+    if ( nd < d )
+        return 0;
+
+    if ( nt > t )
+        return 1;
+
     return 0;
-
-  if ( nm > m )
-    return 1;
-  if ( nm < m )
-    return 0;
-
-  if ( nd > d )
-    return 1;
-  if ( nd < d )
-    return 0;
-
-  if ( nt > t )
-    return 1;
-
-  return 0;
 }
 
 /**********************************************************************************
@@ -288,35 +278,39 @@ int RAWS_Seq (int y, int m, int d, int t, int ny,int nm,int nd, int nt )
 ***********************************************************************************/
 int CI::CheckWeatherWind()
 {
-int i,j,k, n;
-   strcpy (this->cr_ErrMes,"");
+    int i,j,k, n;
+    strcpy (this->cr_ErrMes,"");
 
 /* basic error check, only do for station 0, setup to only report the  */
-  j = 0;
-  n = MaxWindObs[0] -1;   /* See Note-1 above */
-  for ( i = 0; i < n ; i++ ) {
-    Chk (wddt[0][i].mo, 1, 12, &j);
-		  Chk (wddt[0][i].dy, 1, 31, &j);
-		  Chk (wddt[0][i].hr, 0, 2359, &j);
-		  Chk (wddt[0][i].cl, 0, 100, &j);
-    if ( j > 0 ) {  /* if anything was found in error */
-      sprintf (this->cr_ErrMes,"Invalid wind date, see line %d", i+1);
-      return e_EMS_cInWn; } }
+    j = 0;
+    n = MaxWindObs[0] -1;   /* See Note-1 above */
+    for ( i = 0; i < n ; i++ ) {
+        Chk (wddt[0][i].mo, 1, 12, &j);
+        Chk (wddt[0][i].dy, 1, 31, &j);
+        Chk (wddt[0][i].hr, 0, 2359, &j);
+        Chk (wddt[0][i].cl, 0, 100, &j);
+        if ( j > 0 ) {  /* if anything was found in error */
+            sprintf (this->cr_ErrMes,"Invalid wind date, see line %d", i+1);
+            return e_EMS_cInWn;
+        }
+    }
 
 /*......................................................................*/
 /* Check weather stream data */
-  for ( i = 0; i < this->MaxWeatherObs[0]; i++ ) {
-    k = ChkWeather (&wtrdt[0][i],cr_ErrMes);
-     if ( k < 0 )
-       return k; }
+    for ( i = 0; i < this->MaxWeatherObs[0]; i++ ) {
+        k = ChkWeather (&wtrdt[0][i],cr_ErrMes);
+        if ( k < 0 )
+            return k;
+    }
 
 /* Check that all weather month-days are consecutive */
-   for ( i = 0; i < (this-> MaxWeatherObs[0] - 1); i++ ) {
-     if ( !CheckNextDay (wtrdt[0][i].mo,    wtrdt[0][i].dy,
-                         wtrdt[0][i+1].mo,  wtrdt[0][i+1].dy )){
-        sprintf (this->cr_ErrMes,"Bad wthr date M%ld D%ld ", wtrdt[0][i+1].mo, wtrdt[0][i+1].dy);
-       return e_EMS_cInWt;}}
-
+    for ( i = 0; i < (this-> MaxWeatherObs[0] - 1); i++ ) {
+        if ( !CheckNextDay (wtrdt[0][i].mo,    wtrdt[0][i].dy,
+                            wtrdt[0][i+1].mo,  wtrdt[0][i+1].dy )){
+            sprintf (this->cr_ErrMes,"Bad wthr date M%ld D%ld ", wtrdt[0][i+1].mo, wtrdt[0][i+1].dy);
+            return e_EMS_cInWt;
+        }
+    }
   return 1;
 }
 
@@ -324,8 +318,8 @@ int i,j,k, n;
 /*********************************************************************/
 void Chk (long val, long low, long high, int *aj)
 {
-  if ( val < low || val > high )
-    *aj = 1;
+    if ( val < low || val > high )
+        *aj = 1;
 }
 
 /**********************************************************
@@ -337,10 +331,10 @@ void Chk (long val, long low, long high, int *aj)
 **********************************************************/
 int  CI::GetErrMes(char cr_EMess[])
 {
-  if ( !strcmp ( this->cr_ErrMes,"") )
-    return 1;
-  strcpy (cr_EMess, this->cr_ErrMes);
-  return 0;
+    if ( !strcmp ( this->cr_ErrMes,"") )
+        return 1;
+    strcpy (cr_EMess, this->cr_ErrMes);
+    return 0;
 }
 
 
@@ -371,68 +365,69 @@ int ChkWeather (WeatherData *w, char cr_ErrMes[])
 {
 #define e_HrMax 2359
 
-   strcpy (cr_ErrMes,"");
-   if ( w->mo < 1 || w->mo > 12 ) {
-     sprintf (cr_ErrMes,"Bad wtr month %ld",w->mo);
-     return e_EMS_cbMt;  }
-   if ( w->dy < 1 || w->dy > 31 ) {
-     sprintf (cr_ErrMes,"Bad wth day %ld",w->dy);
-     return e_EMS_cbDy;  }
+    strcpy (cr_ErrMes,"");
+    if ( w->mo < 1 || w->mo > 12 ) {
+        sprintf (cr_ErrMes,"Bad wtr month %ld",w->mo);
+        return e_EMS_cbMt;  }
+    if ( w->dy < 1 || w->dy > 31 ) {
+        sprintf (cr_ErrMes,"Bad wth day %ld",w->dy);
+        return e_EMS_cbDy;  }
 
-   if ( w->rn < 0 || w->rn > 10000 ) {
-       sprintf (cr_ErrMes,"Bad Precip amt %f",w->rn);
-       return e_EMS_cbPr; }
+    if ( w->rn < 0 || w->rn > 10000 ) {
+        sprintf (cr_ErrMes,"Bad Precip amt %f",w->rn);
+        return e_EMS_cbPr; }
 
-   if ( w->t1 < 0 || w->t1 > e_HrMax ) {
-     sprintf (cr_ErrMes,"Bad Min temp time %ld", w->t1);
-     return e_EMS_cbMtt; }
-   if ( w->t2 < 0 || w->t2 > e_HrMax ) {
-     sprintf (cr_ErrMes,"Bad Max temp time %ld", w->t2);
-     return e_EMS_cbXt; }
+    if ( w->t1 < 0 || w->t1 > e_HrMax ) {
+        sprintf (cr_ErrMes,"Bad Min temp time %ld", w->t1);
+        return e_EMS_cbMtt; }
+    if ( w->t2 < 0 || w->t2 > e_HrMax ) {
+        sprintf (cr_ErrMes,"Bad Max temp time %ld", w->t2);
+        return e_EMS_cbXt; }
 
-   if ( w->H1 > 100 || w->H1 < 1 ){
-     sprintf (cr_ErrMes,"Bad Max Humidity %ld", w->H1);
-     return e_EMS_cbXh; }
+    if ( w->H1 > 100 || w->H1 < 1 ){
+        sprintf (cr_ErrMes,"Bad Max Humidity %ld", w->H1);
+        return e_EMS_cbXh; }
 
-   if ( w->H2 < 1 || w->H2 > 100 ) {
-     sprintf (cr_ErrMes,"Bad Min Humidity %ld", w->H2);
-     return e_EMS_cbMh; }
+    if ( w->H2 < 1 || w->H2 > 100 ) {
+        sprintf (cr_ErrMes,"Bad Min Humidity %ld", w->H2);
+        return e_EMS_cbMh; }
 
 /* Take this out, this may not always be the case */
 //   if ( w->H2 > w->H1 ) {
 //     sprintf (cr_ErrMes,"Humidity Min %d is > Max %d",w->H2, w->H1);
 //    return 0; }
 
-   if ( w->el < 0 || w->el > 14000 ) {
-     sprintf (cr_ErrMes,"Bad Elev %4.0f", w->el);
-     return e_EMS_cbEl; }
+    if ( w->el < 0 || w->el > 14000 ) {
+        sprintf (cr_ErrMes,"Bad Elev %4.0f", w->el);
+        return e_EMS_cbEl; }
 
+    if ( w->H2 < 0 || w->H2 > e_HrMax ) {
+        sprintf (cr_ErrMes,"Bad Precip start time %ld", w->H2);
+        return e_EMS_cbPs; }
 
+    if ( w->H1 < 0 || w->H1 > e_HrMax ) {
+        sprintf (cr_ErrMes,"Bad Precip end time %ld", w->H1);
+        return  e_EMS_cbPe; }
 
-     if ( w->H2 < 0 || w->H2 > e_HrMax ) {
-      sprintf (cr_ErrMes,"Bad Precip start time %ld", w->H2);
-      return e_EMS_cbPs; }
+    if ( w->rn > 0 ) {
+        if ( w->tr2 == 0 ){
+            sprintf (cr_ErrMes, "Precip %6.1f no str/end time", w->rn);
+            return e_EMS_cbPrr;
+        }
 
-     if ( w->H1 < 0 || w->H1 > e_HrMax ) {
-      sprintf (cr_ErrMes,"Bad Precip end time %ld", w->H1);
-      return  e_EMS_cbPe; }
-
-
-	   if ( w->rn > 0 ) {
-	      if ( w->tr2 == 0 ){
-	         sprintf (cr_ErrMes, "Precip %6.1f no str/end time", w->rn);
-	       	 return e_EMS_cbPrr; }
-
-	      if ( w->tr1 >= w->tr2 ) {
-		       sprintf (cr_ErrMes, "Bad Precip str/end time %ld/%ld", w->tr1, w->tr2);
-	        return e_EMS_cbPB; } }
-
+        if ( w->tr1 >= w->tr2 ) {
+            sprintf (cr_ErrMes, "Bad Precip str/end time %ld/%ld", w->tr1, w->tr2);
+            return e_EMS_cbPB;
+        }
+    }
 
     if ( w->rn == 0 ) {
-	     	if ( w->tr2 > 0 || w->tr1 > 0 ){
-	      	 sprintf (cr_ErrMes, "0 Precip bad str/end time %ld/%ld", w->t2, w->t1);
-	        return e_EMS_cbP; } }
-  return 1;
+        if ( w->tr2 > 0 || w->tr1 > 0 ){
+            sprintf (cr_ErrMes, "0 Precip bad str/end time %ld/%ld", w->t2, w->t1);
+            return e_EMS_cbP;
+        }
+    }
+    return 1;
 }
 
 
@@ -448,25 +443,25 @@ int ChkWeather (WeatherData *w, char cr_ErrMes[])
 {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}*/
 int  CheckNextDayTime (int m, int d, int t, int mm, int dd, int tt )
 {
-int i,j,k;
+    int i,j,k;
 
-   if ( m == 12 && d == 31 && mm == 1 && dd == 1 )
-     return 1;                      /* Special Case - Year end wrap around */
+    if ( m == 12 && d == 31 && mm == 1 && dd == 1 )
+        return 1;                      /* Special Case - Year end wrap around */
 
-   i = CheckMonthDay (mm, dd);      /* Get julian dates  */
-   j = CheckMonthDay (m, d);
-   if ( i == 0 || j == 0 )          /* First check for valid month day  */
-     return 0;
-   k = i - j;                       /* number of days apart */
-   if ( k > 0)//== 1 )                    /* If they are consectutive days   */
-     return 1;                      /*  OK */
+    i = CheckMonthDay (mm, dd);      /* Get julian dates  */
+    j = CheckMonthDay (m, d);
+    if ( i == 0 || j == 0 )          /* First check for valid month day  */
+        return 0;
+    k = i - j;                       /* number of days apart */
+    if ( k > 0)//== 1 )                    /* If they are consectutive days   */
+        return 1;                      /*  OK */
    //if ( k > 1 || k < 0 )            /* if days are more than one day apart */
    //  return 0;                      /*    error  */
 
-   if ( t >= tt )                   /* Days are same, is time later */
-     return 0;                      /*  time is not in order - error */
+    if ( t >= tt )                   /* Days are same, is time later */
+        return 0;                      /*  time is not in order - error */
 
-   return 1;
+    return 1;
 }
 
 
@@ -481,15 +476,15 @@ int i,j,k;
 {*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}*/
 int  CheckNextDay (int m, int d, int mm, int dd )
 {
-int i;
+    int i;
 
-   if ( m == 12 && d == 31 && mm == 1 && dd == 1 )
-     return 1;                      /* Special Case - Year end wrap around */
+    if ( m == 12 && d == 31 && mm == 1 && dd == 1 )
+        return 1;                      /* Special Case - Year end wrap around */
 
-   i = CheckMonthDay (mm, dd) - CheckMonthDay (m, d);
-   if ( i != 1 )
-     return 0;
-   return 1;
+    i = CheckMonthDay (mm, dd) - CheckMonthDay (m, d);
+    if ( i != 1 )
+        return 0;
+    return 1;
 }
 
 /*{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}{*}
@@ -532,22 +527,22 @@ int i,n;
 ****************************************************************************/
 void CI::Set_MoistCalcHourInterval (int i)
 {
-  if ( i == 1 )
-    this->i_MCHI = SIZECLASS_1HR;
-  else if ( i == 10 )
-    this->i_MCHI = SIZECLASS_10HR;
-  else if ( i == 100 )
-    this->i_MCHI = SIZECLASS_100HR;
-  else if ( i == 1000 )
-    this->i_MCHI = SIZECLASS_1000HR;
-  else                                 /* Use the default */
-    this->i_MCHI = SIZECLASS_10HR;
+    if ( i == 1 )
+        this->i_MCHI = SIZECLASS_1HR;
+    else if ( i == 10 )
+        this->i_MCHI = SIZECLASS_10HR;
+    else if ( i == 100 )
+        this->i_MCHI = SIZECLASS_100HR;
+    else if ( i == 1000 )
+        this->i_MCHI = SIZECLASS_1000HR;
+    else                                 /* Use the default */
+        this->i_MCHI = SIZECLASS_10HR;
 }
 /*-----------------------------------------------------------------------*/
 /* See the above function */
 long CI::Get_MoistCalcHourInterval ()
 {
-  return (long) this->i_MCHI;
+    return (long) this->i_MCHI;
 }
 
 /**********************************************************************************
@@ -558,21 +553,21 @@ long CI::Get_MoistCalcHourInterval ()
 ********************************************************************************/
 int CI::RAWS_Allocate (int iN)
 {
-int i,i_Station;
-   i_Station = 0;   /* For now all were doing is station 1 */
-   if ( this->a_RAWS[i_Station] )
-     delete[] this->a_RAWS[i_Station];
+    int i,i_Station;
+    i_Station = 0;   /* For now all were doing is station 1 */
+    if ( this->a_RAWS[i_Station] )
+        delete[] this->a_RAWS[i_Station];
 
-   this->a_RAWS[i_Station] = new d_RAWS[iN + 1]; /* NOTE do 1 extra to mark end of table */
-   if (this->a_RAWS[i_Station] == NULL )
-     return 0;
+    this->a_RAWS[i_Station] = new d_RAWS[iN + 1]; /* NOTE do 1 extra to mark end of table */
+    if (this->a_RAWS[i_Station] == NULL )
+        return 0;
 
-   this->irN_RAWS[i_Station] = iN;
+    this->irN_RAWS[i_Station] = iN;
 
-   for ( i = 0; i <= iN; i++ )
-     this->a_RAWS[i_Station][i].i_Yr = e_RAWSend;  /* might use this to detect end of table */
+    for ( i = 0; i <= iN; i++ )
+        this->a_RAWS[i_Station][i].i_Yr = e_RAWSend;  /* might use this to detect end of table */
 
-   return 1;
+    return 1;
 }
 
 /*****************************************************************************
@@ -589,14 +584,14 @@ int i,i_Station;
 *****************************************************************************/
 int CI::RAWS_LoadDate (int iX, int i_Yr, int i_Mth, int i_Day, int i_Time)
 {
-  if ( iX < 0 || iX >= this->irN_RAWS[0] )
-     return 0;
+    if ( iX < 0 || iX >= this->irN_RAWS[0] )
+        return 0;
 
-  this->a_RAWS[0][iX].i_Yr = i_Yr;             /* Year, not sure if/how we'll use this */
-  this->a_RAWS[0][iX].i_Mth = i_Mth;
-  this->a_RAWS[0][iX].i_Day = i_Day;
-  this->a_RAWS[0][iX].i_Time = i_Time;         /* Military 0000->2359 */
-  return 1;
+    this->a_RAWS[0][iX].i_Yr = i_Yr;             /* Year, not sure if/how we'll use this */
+    this->a_RAWS[0][iX].i_Mth = i_Mth;
+    this->a_RAWS[0][iX].i_Day = i_Day;
+    this->a_RAWS[0][iX].i_Time = i_Time;         /* Military 0000->2359 */
+    return 1;
 }
 
 /******************************************************************************
@@ -609,15 +604,15 @@ int CI::RAWS_LoadInfo ( int iX, float f_Temp, float f_Humidity, float f_PerHou,
                         float f_CloCov)
 {
 
-  if ( iX < 0 || iX >= this->irN_RAWS[0] )
-     return 0;
+    if ( iX < 0 || iX >= this->irN_RAWS[0] )
+        return 0;
 
-  this->a_RAWS[0][iX].f_Temp = f_Temp;         /* Temperature */
-  this->a_RAWS[0][iX].f_Humidity = f_Humidity;
-  this->a_RAWS[0][iX].f_PerHou = f_PerHou;        /* Perceipitation Hourly */
-  this->a_RAWS[0][iX].f_CloCov = f_CloCov;       /* Cloud Cover percent 0 -> 100  */
+    this->a_RAWS[0][iX].f_Temp = f_Temp;         /* Temperature */
+    this->a_RAWS[0][iX].f_Humidity = f_Humidity;
+    this->a_RAWS[0][iX].f_PerHou = f_PerHou;        /* Perceipitation Hourly */
+    this->a_RAWS[0][iX].f_CloCov = f_CloCov;       /* Cloud Cover percent 0 -> 100  */
 
-   return 1;
+    return 1;
 }
 
 /*****************************************************************
@@ -626,19 +621,18 @@ int CI::RAWS_LoadInfo ( int iX, float f_Temp, float f_Humidity, float f_PerHou,
 *****************************************************************/
 int CI::RAWS_Chrono (double d_SimTim, long *al_MilTim, double *ad_MilTim)
 {
-int date;
-long l_MinTime;
-d_RAWS  s_RAWS;
+    int date;
+    long l_MinTime;
+    d_RAWS  s_RAWS;
 
 /* Get the Minute Time */
-  l_MinTime = this->l_StartMinDate + (int) d_SimTim;
-  this->RAWS_GetRecord(l_MinTime, &s_RAWS);
+    l_MinTime = this->l_StartMinDate + (int) d_SimTim;
+    this->RAWS_GetRecord(l_MinTime, &s_RAWS);
 
-  date = GetJulian (s_RAWS.i_Mth,s_RAWS.i_Day);
-  *al_MilTim = (long) s_RAWS.i_Time;
-  *ad_MilTim = (double) s_RAWS.i_Time;
-  return date;
-
+    date = GetJulian (s_RAWS.i_Mth,s_RAWS.i_Day);
+    *al_MilTim = (long) s_RAWS.i_Time;
+    *ad_MilTim = (double) s_RAWS.i_Time;
+    return date;
 }
 
 /****************************************************************
@@ -655,17 +649,16 @@ d_RAWS  s_RAWS;
 ****************************************************************/
 long  CI::RAWS_CalcMinuteDate (int Yr, int Mth, int Day, int MilTim)
 {
-long min,JulDays;
-   min = MilTim_To_Min (MilTim);
-   JulDays = (long) GetJulian (Mth,Day);
-   JulDays = JulDays - 1;           /* See Note-1 above */
-   min = min + JulDays * ( 24 * 60 );
+    long min,JulDays;
+    min = MilTim_To_Min (MilTim);
+    JulDays = (long) GetJulian (Mth,Day);
+    JulDays = JulDays - 1;           /* See Note-1 above */
+    min = min + JulDays * ( 24 * 60 );
 
-   if ( Yr == e_SimYearTwo ) {
-      min = min + ( 365 * 24 * 60 ); }
+    if ( Yr == e_SimYearTwo ) {
+        min = min + ( 365 * 24 * 60 ); }
 
-   return min;
-
+    return min;
 }
 
 /******************************************************************
@@ -676,11 +669,11 @@ long min,JulDays;
 ********************************************************************/
 int CI::MilTim_To_Min (int i_MilTim)
 {
-int  i,h,m;
-  h = i_MilTim / 100;
-  m = i_MilTim % 100;
-  i = ( h * 60 ) + m;
-  return i;
+    int  i,h,m;
+    h = i_MilTim / 100;
+    m = i_MilTim % 100;
+    i = ( h * 60 ) + m;
+    return i;
 }
 
 
@@ -692,36 +685,36 @@ int CI::RAWS_GetCloud (int i_Date, int i_Time)
 {
 //int i, iX, i_CloCov;
 //d_RAWS *a;
-#ifdef wowo
-  i_CloCov = -1;
+// #ifdef wowo
+//   i_CloCov = -1;
 
-  for ( i = 0; i < irN_WDS[0]; i++ ) {
-       a = &a_RAWS[0][i];
-       i_JulFnd = CI::GetJulian(a->i_Mth, a->i_Day);
-       if ( i_JulFnd != i_Date )
-         continue;
+//   for ( i = 0; i < irN_WDS[0]; i++ ) {
+//        a = &a_RAWS[0][i];
+//        i_JulFnd = CI::GetJulian(a->i_Mth, a->i_Day);
+//        if ( i_JulFnd != i_Date )
+//          continue;
 
-       for ( j = i; j < irN_RAWS[0]; j++ )
-         a = &a_RAWS[0][j];
-         f_CloCov = a->f_CloCov;
-         i_Jul = CI::GetJulian(a->i_Mth, a->i_Day);
-         if ( i_Jul != i_JulFnd )
-            return f_CloCov;
-         if ( i_Time > a->i_Time )
-            return f_CloCov;
+//        for ( j = i; j < irN_RAWS[0]; j++ )
+//          a = &a_RAWS[0][j];
+//          f_CloCov = a->f_CloCov;
+//          i_Jul = CI::GetJulian(a->i_Mth, a->i_Day);
+//          if ( i_Jul != i_JulFnd )
+//             return f_CloCov;
+//          if ( i_Time > a->i_Time )
+//             return f_CloCov;
 
 
-         if ( i_Time >
+//          if ( i_Time >
 
-       if ( i_JulDat > i_Date )
+//        if ( i_JulDat > i_Date )
 
-         break;
-       if ( a->i_Time < i_Time )
-         continue;
-       if ( a->i_Time > i_Time )
-         break;          }
+//          break;
+//        if ( a->i_Time < i_Time )
+//          continue;
+//        if ( a->i_Time > i_Time )
+//          break;          }
 
-#endif
+// #endif
    return 1;
 }
 
@@ -738,39 +731,37 @@ int CI::RAWS_GetCloud (int i_Date, int i_Time)
 **************************************************************************/
 void CI::RAWS_SetMinuteDate()
 {
-int i_StrYr, iX;
-d_RAWS *a;
+    int i_StrYr, iX;
+    d_RAWS *a;
 
-   if ( this->a_RAWS[0] == NULL )   /* only do if we have RAWS input data  */
-     return;
+    if ( this->a_RAWS[0] == NULL )   /* only do if we have RAWS input data  */
+        return;
 
-   i_StrYr =  this->a_RAWS[0][0].i_Yr;   /* start year, first entry in tbl */
-   iX = 0;
-   while (1) {                           /* Go thru RAWS tbl */
-     a = &this->a_RAWS[0][iX++];
-     if ( a->i_Yr == e_RAWSend )         /* end of tbl */
-      break;
-     if ( a->i_Yr == i_StrYr )           /* if equal to starting year */
-        a->i_SimYear = e_SimYearOne;     /*  mark as Year one */
-     else
-        a->i_SimYear = e_SimYearTwo;     /* See Note-1 above */
+    i_StrYr =  this->a_RAWS[0][0].i_Yr;   /* start year, first entry in tbl */
+    iX = 0;
+    while (1) {                           /* Go thru RAWS tbl */
+        a = &this->a_RAWS[0][iX++];
+        if ( a->i_Yr == e_RAWSend )         /* end of tbl */
+            break;
+        if ( a->i_Yr == i_StrYr )           /* if equal to starting year */
+            a->i_SimYear = e_SimYearOne;     /*  mark as Year one */
+        else
+            a->i_SimYear = e_SimYearTwo;     /* See Note-1 above */
 
-     a->l_MinDate = this->RAWS_CalcMinuteDate(a->i_SimYear,a->i_Mth,a->i_Day,a->i_Time);
-  }  /* while */
+        a->l_MinDate = this->RAWS_CalcMinuteDate(a->i_SimYear,a->i_Mth,a->i_Day,a->i_Time);
+    }  /* while */
 
-  if ( this->i_StartYear == i_StrYr )
-    this->i_StartSimYear = e_SimYearOne;
-  else
-    this->i_StartSimYear = e_SimYearTwo;
+    if ( this->i_StartYear == i_StrYr )
+        this->i_StartSimYear = e_SimYearOne;
+    else
+        this->i_StartSimYear = e_SimYearTwo;
 
 /* Start Simulation Time, expressed as a Minute Date, see declaration notes */
-  this->l_StartMinDate = this->RAWS_CalcMinuteDate(this->i_StartSimYear,
-                                                 this->startmonth,
-                                                 this->startday,
-                                                 this->starthour);
-
+    this->l_StartMinDate = this->RAWS_CalcMinuteDate(this->i_StartSimYear,
+                                                     this->startmonth,
+                                                     this->startday,
+                                                     this->starthour);
  // RAWS_Display ();
-
 }
 
 /*****************************************************************
@@ -782,32 +773,32 @@ d_RAWS *a;
 *****************************************************************/
 int CI::RAWS_GetRecord (long l_MinDate, d_RAWS *a_RAWS)
 {
-int i,iX;
-d_RAWS *a;
+    int i,iX;
+    d_RAWS *a;
 
-  iX = 0;
-
-  while (1) {
-    i = this->RAWS_isEnd(iX);   /* Check for end of tbl */
-    if ( i != 0 ) {            /* if at end */
-      iX = i;                  /* point to last valid rec in tble */
-      break; }
-
-    a = &this->a_RAWS[0][iX];
-
-    if ( l_MinDate == a->l_MinDate )
-       break;
-    if ( l_MinDate < a->l_MinDate ) {
-       iX--;
-       break; }
-    iX++;
-  }
-
-  if ( iX < 0 )               /* This shouldn't happen */
     iX = 0;
 
-  memcpy (a_RAWS,&this->a_RAWS[0][iX],sizeof(d_RAWS));
-  return iX;
+    while (1) {
+        i = this->RAWS_isEnd(iX);   /* Check for end of tbl */
+        if ( i != 0 ) {            /* if at end */
+            iX = i;                  /* point to last valid rec in tble */
+            break; }
+
+        a = &this->a_RAWS[0][iX];
+
+        if ( l_MinDate == a->l_MinDate )
+            break;
+        if ( l_MinDate < a->l_MinDate ) {
+            iX--;
+            break; }
+        iX++;
+    }
+
+    if ( iX < 0 )               /* This shouldn't happen */
+        iX = 0;
+
+    memcpy (a_RAWS,&this->a_RAWS[0][iX],sizeof(d_RAWS));
+    return iX;
 }
 
 /***********************************************************************
@@ -819,13 +810,13 @@ d_RAWS *a;
 ***********************************************************************/
 int CI::RAWS_isEnd (int iX)
 {
-  if ( iX >= this->irN_RAWS[0] )     /* is iX > the # of recs in tbl */
-    return this->irN_RAWS[0] - 1;    /* if yes return idx to lst tbl rec */
+    if ( iX >= this->irN_RAWS[0] )     /* is iX > the # of recs in tbl */
+        return this->irN_RAWS[0] - 1;    /* if yes return idx to lst tbl rec */
 
-  if ( this->a_RAWS[0][iX].i_Yr == e_RAWSend ) /* if rec is marked and end tbl */
-      return this->irN_RAWS[0] - 1;  /* idx of lst rec in tbl */
+    if ( this->a_RAWS[0][iX].i_Yr == e_RAWSend ) /* if rec is marked and end tbl */
+        return this->irN_RAWS[0] - 1;  /* idx of lst rec in tbl */
 
-  return 0;
+    return 0;
 }
 
 /************************************************************************
@@ -848,54 +839,54 @@ int CI::RAWS_isEnd (int iX)
 ************************************************************************/
 void CI::RAWS_GetData (long l_StrMinDate, long l_Interval, d_RAWS *a_RAWS )
 {
-int iX;
-long l;
-float f_TotMin, f_MinInRec;
-float f_TotMinAvg = 0;
+    int iX;
+    long l;
+    float f_TotMin, f_MinInRec;
+    float f_TotMinAvg = 0;
 
-  f_TotMin = l_Interval;        /* Total Minutes to accumulate rain for */
+    f_TotMin = l_Interval;        /* Total Minutes to accumulate rain for */
 
 /* Get index of RAWS rec that has the starting Minute Date */
-  iX = RAWS_GetRecord (l_StrMinDate, a_RAWS);
+    iX = RAWS_GetRecord (l_StrMinDate, a_RAWS);
 
-  f_MinInRec = RAWS_MinInRec (iX);     /* # of minutes this rec represents */
+    f_MinInRec = RAWS_MinInRec (iX);     /* # of minutes this rec represents */
 
-  if ( l_StrMinDate > this->a_RAWS[0][iX].l_MinDate ){ /* if str time is in middl of rec */
-    l = l_StrMinDate - this->a_RAWS[0][iX].l_MinDate;
-    f_MinInRec = f_MinInRec - l; }
+    if ( l_StrMinDate > this->a_RAWS[0][iX].l_MinDate ){ /* if str time is in middl of rec */
+        l = l_StrMinDate - this->a_RAWS[0][iX].l_MinDate;
+        f_MinInRec = f_MinInRec - l; }
 
-  if ( f_MinInRec > f_TotMin )           /* if accum time is < than in rec */
-     f_MinInRec = f_TotMin;
+    if ( f_MinInRec > f_TotMin )           /* if accum time is < than in rec */
+        f_MinInRec = f_TotMin;
 
-  f_TotMin -= f_MinInRec;               /* minutes left to accum info */
+    f_TotMin -= f_MinInRec;               /* minutes left to accum info */
 
-  a_RAWS->f_Humidity = 0;
-  a_RAWS->f_Temp = 0;
-  a_RAWS->f_CloCov = 0;
-  f_TotMinAvg = 0;
-  RAWS_Sum (a_RAWS, &this->a_RAWS[0][iX], f_MinInRec, &f_TotMinAvg);
-  iX++;
+    a_RAWS->f_Humidity = 0;
+    a_RAWS->f_Temp = 0;
+    a_RAWS->f_CloCov = 0;
+    f_TotMinAvg = 0;
+    RAWS_Sum (a_RAWS, &this->a_RAWS[0][iX], f_MinInRec, &f_TotMinAvg);
+    iX++;
 
 /*.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-*/
 /* Go thru any prceeding records foward in time and accum info */
-  while (1) {
-    if ( f_TotMin <= 0 )
-       break;
+    while (1) {
+        if ( f_TotMin <= 0 )
+            break;
 
-    if ( this->a_RAWS[0][iX+1].i_Yr == e_RAWSend )        /* End of Table */
-      break;
+        if ( this->a_RAWS[0][iX+1].i_Yr == e_RAWSend )        /* End of Table */
+            break;
 
-    f_MinInRec = RAWS_MinInRec (iX);            /* minutes in rec */
-    if ( f_TotMin < f_MinInRec )               /* don't use all minutes */
-       f_MinInRec = f_TotMin;
-    RAWS_Sum (a_RAWS, &this->a_RAWS[0][iX], f_MinInRec, &f_TotMinAvg);
-    f_TotMin -= f_MinInRec;                    /* reduce minutes to accum */
-    iX++;
- }
+        f_MinInRec = RAWS_MinInRec (iX);            /* minutes in rec */
+        if ( f_TotMin < f_MinInRec )               /* don't use all minutes */
+            f_MinInRec = f_TotMin;
+        RAWS_Sum (a_RAWS, &this->a_RAWS[0][iX], f_MinInRec, &f_TotMinAvg);
+        f_TotMin -= f_MinInRec;                    /* reduce minutes to accum */
+        iX++;
+    }
 
-  a_RAWS->f_Temp     = a_RAWS->f_Temp / f_TotMinAvg;
-  a_RAWS->f_Humidity = a_RAWS->f_Humidity / f_TotMinAvg;
-  a_RAWS->f_CloCov   = a_RAWS->f_CloCov / f_TotMinAvg;
+    a_RAWS->f_Temp     = a_RAWS->f_Temp / f_TotMinAvg;
+    a_RAWS->f_Humidity = a_RAWS->f_Humidity / f_TotMinAvg;
+    a_RAWS->f_CloCov   = a_RAWS->f_CloCov / f_TotMinAvg;
 }
 
 
@@ -918,55 +909,56 @@ float f_TotMinAvg = 0;
 *       l_EndMinDate...accumulate up to but not including this Minute Date
 *  Ret: total rain
 **********************************************************************/
- double CI::RAWS_GetAccumRain (long l_StrMinDate, long l_EndMinDate )
+double CI::RAWS_GetAccumRain (long l_StrMinDate, long l_EndMinDate )
 {
-int iX;
-float A,B,Dif, MIR,pc;
-double d_Tot;
-d_RAWS  s_RAWS;
+    int iX;
+    float A,B,Dif, MIR,pc;
+    double d_Tot;
+    d_RAWS  s_RAWS;
 
-  d_Tot = 0;
-  iX = RAWS_GetRecord (l_StrMinDate, &s_RAWS); /* index to rec with start minute date */
+    d_Tot = 0;
+    iX = RAWS_GetRecord (l_StrMinDate, &s_RAWS); /* index to rec with start minute date */
 
-/* Deal with the 1st rec - See Notes above */
-  A = _Max ( a_RAWS[0][iX].l_MinDate, l_StrMinDate);
-  B = _Min ( a_RAWS[0][iX+1].l_MinDate, l_EndMinDate );
-  Dif = (float) B - A;   /* Minutes in record */
-  MIR = (float) RAWS_MinInRec(iX);
-  pc = ( Dif / MIR ) ;
-  d_Tot = pc * a_RAWS[0][iX].f_PerHou;
-  iX++;
-
-  while (1) {
-    if ( l_EndMinDate <= a_RAWS[0][iX].l_MinDate )
-       break;
-    if ( l_EndMinDate >= a_RAWS[0][iX+1].l_MinDate )
-       pc = 1.0;
-    else {
-       Dif = l_EndMinDate - a_RAWS[0][iX].l_MinDate;
-       MIR = (float) RAWS_MinInRec(iX);
-       pc = Dif / MIR; }
-
-    d_Tot += pc * a_RAWS[0][iX].f_PerHou;
+    /* Deal with the 1st rec - See Notes above */
+    A = _Max ( a_RAWS[0][iX].l_MinDate, l_StrMinDate);
+    B = _Min ( a_RAWS[0][iX+1].l_MinDate, l_EndMinDate );
+    Dif = (float) B - A;   /* Minutes in record */
+    MIR = (float) RAWS_MinInRec(iX);
+    pc = ( Dif / MIR ) ;
+    d_Tot = pc * a_RAWS[0][iX].f_PerHou;
     iX++;
-  }
 
-  return d_Tot;
+    while (1) {
+        if ( l_EndMinDate <= a_RAWS[0][iX].l_MinDate )
+            break;
+        if ( l_EndMinDate >= a_RAWS[0][iX+1].l_MinDate )
+            pc = 1.0;
+        else {
+            Dif = l_EndMinDate - a_RAWS[0][iX].l_MinDate;
+            MIR = (float) RAWS_MinInRec(iX);
+            pc = Dif / MIR; }
+
+        d_Tot += pc * a_RAWS[0][iX].f_PerHou;
+        iX++;
+    }
+
+    return d_Tot;
 }
 
 
 /*****************************************************************************************/
 float _Min (long A, long B)
 {
-  if ( A < B )
-    return (float) A;
-  return (float) B;
+    if ( A < B )
+        return (float) A;
+    return (float) B;
 }
+
 float _Max (long A, long B)
 {
-  if ( A > B )
-    return (float) A;
-  return (float) B;
+    if ( A > B )
+        return (float) A;
+    return (float) B;
 }
 
 

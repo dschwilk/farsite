@@ -6,27 +6,16 @@
 *
 **********************************************************************************/
 
-#define _CRT_SECURE_NO_WARNINGS
-
 #include "FMC_CI.h"    /* FlamMap Input Class */
 #include "FMC_FE2.h"   /* FireEnvironment2 Class */
 #include "FMC_CFMC.h"
 
-
 #include "cdtlib.h"  // date time class
 #include "semtime.h" // time class
 #include "newfms.h"
-
 #include "deadfuelmoisture.h"
 
-
 #include <cstdio>
-
-
-#ifdef WIN32
-#include <windows.h>
-#include <conio.h>
-#endif
 
 /***********************************************************************
 * Name: GetMoistCalcInteraval
@@ -219,9 +208,6 @@ void CI::SetAllMoistures(int _fm1, int _fm10, int _fm100,	int _fmHerb, int _fmWo
                          for (j=0; j<eC_Sta; j++)
 				  EnvtChanged[k][j]=true;} }
 }
-
-
-
 
 
 /**************************************************************************

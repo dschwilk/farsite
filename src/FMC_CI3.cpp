@@ -5,22 +5,15 @@
 *
 *
 **********************************************************************************/
-#define _CRT_SECURE_NO_WARNINGS    /* Get rid of sprintf Warnings */
 
 #include "FMC_CI.h"    /* FlamMap Input Class */
-#include "FMC_FE2.h"    /* FireEnvironment2 Class */
+#include "FMC_FE2.h"   /* FireEnvironment2 Class */
 #include "cdtlib.h"
 #include "newfms.h"
 #include "semtime.h"
 #include "deadfuelmoisture.h"
 
 #include <cstdio>
-
-#ifdef WIN32
-  #include <windows.h>
-  #include <conio.h>
-#endif
-
 
 /****************************************************************************
 * Name: AllocWindData_Sta0
@@ -94,29 +87,29 @@ long CI::AllocWeatherData_Sta0 ( long NumObs)
 int CI::SetWeatherData_Sta0 (long NumObs, long month, long day, double rain, long time1, long time2,
 				double temp1, double temp2, long humid1, long humid2, double elevation, long tr1, long tr2)
 {
+    
+    if ( NumObs >= MaxWeatherObs[0] )  /* Error trying to add more than we have room for */
+        return 0;
 
- if ( NumObs >= MaxWeatherObs[0] )  /* Error trying to add more than we have room for */
-    return 0;
+    wtrdt[0][NumObs].mo = month;
+    wtrdt[0][NumObs].dy = day;
+    wtrdt[0][NumObs].rn = rain;
+    wtrdt[0][NumObs].t1 = time1;
+    wtrdt[0][NumObs].t2 = time2;
+    wtrdt[0][NumObs].T1 = temp1;
+    wtrdt[0][NumObs].T2 = temp2;
+    wtrdt[0][NumObs].H1 = humid1;
+    wtrdt[0][NumObs].H2 = humid2;
+    wtrdt[0][NumObs].el = elevation;
+    wtrdt[0][NumObs].tr1 = tr1;
+    wtrdt[0][NumObs].tr2 = tr2;
 
-   wtrdt[0][NumObs].mo = month;
-	  wtrdt[0][NumObs].dy = day;
-	 	wtrdt[0][NumObs].rn = rain;
-	 	wtrdt[0][NumObs].t1 = time1;
-	 	wtrdt[0][NumObs].t2 = time2;
-	 	wtrdt[0][NumObs].T1 = temp1;
-	 	wtrdt[0][NumObs].T2 = temp2;
-	 	wtrdt[0][NumObs].H1 = humid1;
-	 	wtrdt[0][NumObs].H2 = humid2;
-	 	wtrdt[0][NumObs].el = elevation;
-	 	wtrdt[0][NumObs].tr1 = tr1;
-	 	wtrdt[0][NumObs].tr2 = tr2;
-
-   EnvtChanged[0][0]=true;   // 1hr fuels
-   EnvtChanged[1][0]=true;   // 10hr fuels
-   EnvtChanged[2][0]=true;   // 100hr fuels
-   EnvtChanged[3][0]=true;   // 1000hr fuels
-
-		 return 1;
+    EnvtChanged[0][0]=true;   // 1hr fuels
+    EnvtChanged[1][0]=true;   // 10hr fuels
+    EnvtChanged[2][0]=true;   // 100hr fuels
+    EnvtChanged[3][0]=true;   // 1000hr fuels
+    
+    return 1;
 }
 
 
@@ -126,87 +119,87 @@ int CI::SetWeatherData_Sta0 (long NumObs, long month, long day, double rain, lon
 bool CI::SetFarsiteEvent(long EventNum, long ThreadNum)
 {
 	bool ret = 0;
-#ifdef WIN32
-     switch(EventNum) {
-//      case 1: ret=hBurnEvent.SetEvent(ThreadNum); break;
-     	case 2:
-          ret = hMoistEvent.SetEvent (ThreadNum);
-          break;
-//     	case 3: ret=hBurnupEvent.SetEvent(ThreadNum); break;
-//     	case 4: ret=hIntegEvent.SetEvent(ThreadNum); break;
-//     	case 5: ret=hBurnThreadEvent.SetEvent(ThreadNum); break;
-     	case 6:
-          ret = hMoistThreadEvent.SetEvent(ThreadNum);
-          break;
-//     	case 7: ret=hBurnupThreadEvent.SetEvent(ThreadNum); break;
-//     	case 8: ret=hIntegThreadEvent.SetEvent(ThreadNum); break;
-//     	case 9: ret=hCrossEvent.SetEvent(ThreadNum); break;
-///     	case 10: ret=hCrossThreadEvent.SetEvent(ThreadNum); break;
+// #ifdef WIN32
+//      switch(EventNum) {
+// //      case 1: ret=hBurnEvent.SetEvent(ThreadNum); break;
+//      	case 2:
+//           ret = hMoistEvent.SetEvent (ThreadNum);
+//           break;
+// //     	case 3: ret=hBurnupEvent.SetEvent(ThreadNum); break;
+// //     	case 4: ret=hIntegEvent.SetEvent(ThreadNum); break;
+// //     	case 5: ret=hBurnThreadEvent.SetEvent(ThreadNum); break;
+//      	case 6:
+//           ret = hMoistThreadEvent.SetEvent(ThreadNum);
+//           break;
+// //     	case 7: ret=hBurnupThreadEvent.SetEvent(ThreadNum); break;
+// //     	case 8: ret=hIntegThreadEvent.SetEvent(ThreadNum); break;
+// //     	case 9: ret=hCrossEvent.SetEvent(ThreadNum); break;
+// ///     	case 10: ret=hCrossThreadEvent.SetEvent(ThreadNum); break;
 
-      default:
-        this->LogicError(" CI::SetFarsiteEvent() ERROR");
-        break;
+//       default:
+//         this->LogicError(" CI::SetFarsiteEvent() ERROR");
+//         break;
 
-     }
-#endif
+//      }
+// #endif
   return ret;
 }
 
 /****************************************************************/
-X_HANDLE CI::GetFarsiteEvent(long EventNum, long ThreadNum)
-{
-X_HANDLE ret = 0;
+// X_HANDLE CI::GetFarsiteEvent(long EventNum, long ThreadNum)
+// {
+// X_HANDLE ret = 0;
 
-#ifdef WIN32
-   switch (EventNum) {
-//      case 1: ret=hBurnEvent.GetEvent(ThreadNum); break;
-     	case 2:
-        ret = hMoistEvent.GetEvent(ThreadNum);
-        break;
-//     	case 3: ret=hBurnupEvent.GetEvent(ThreadNum); break;
-//     	case 4: ret=hIntegEvent.GetEvent(ThreadNum); break;
-//     	case 5: ret=hBurnThreadEvent.GetEvent(ThreadNum); break;
-     	case 6:
-         ret = hMoistThreadEvent.GetEvent(ThreadNum);
-         break;
-//     	case 7: ret=hBurnupThreadEvent.GetEvent(ThreadNum); break;
-//     	case 8: ret=hIntegThreadEvent.GetEvent(ThreadNum); break;
-//     	case 9: ret=hCrossEvent.GetEvent(ThreadNum); break;
-//     	case 10: ret=hCrossThreadEvent.GetEvent(ThreadNum); break;
-      default:
-        this->LogicError(" CI::GetFarsiteEvent() ERROR");
-        break;
-     }
-#endif
-     return ret;
-}
+// #ifdef WIN32
+//    switch (EventNum) {
+// //      case 1: ret=hBurnEvent.GetEvent(ThreadNum); break;
+//      	case 2:
+//         ret = hMoistEvent.GetEvent(ThreadNum);
+//         break;
+// //     	case 3: ret=hBurnupEvent.GetEvent(ThreadNum); break;
+// //     	case 4: ret=hIntegEvent.GetEvent(ThreadNum); break;
+// //     	case 5: ret=hBurnThreadEvent.GetEvent(ThreadNum); break;
+//      	case 6:
+//          ret = hMoistThreadEvent.GetEvent(ThreadNum);
+//          break;
+// //     	case 7: ret=hBurnupThreadEvent.GetEvent(ThreadNum); break;
+// //     	case 8: ret=hIntegThreadEvent.GetEvent(ThreadNum); break;
+// //     	case 9: ret=hCrossEvent.GetEvent(ThreadNum); break;
+// //     	case 10: ret=hCrossThreadEvent.GetEvent(ThreadNum); break;
+//       default:
+//         this->LogicError(" CI::GetFarsiteEvent() ERROR");
+//         break;
+//      }
+// #endif
+//      return ret;
+// }
 
 /**************************************************************************/
 bool CI::WaitForFarsiteEvents(long EventNum, long numevents, bool All, unsigned long Wait)
 {
-bool ret = false;
+    bool ret = false;
 
-#ifdef WIN32
-   switch (EventNum) {
-//      case 1: ret=hBurnEvent.WaitForEvents(numevents, All, Wait); break;
-     	case 2:
-         ret = hMoistEvent.WaitForEvents (numevents, All, Wait);
-         break;
-//     	case 3: ret=hBurnupEvent.WaitForEvents(numevents, All, Wait); break;
-//     	case 4: ret=hIntegEvent.WaitForEvents(numevents, All, Wait); break;
-//     	case 5: ret=hBurnThreadEvent.WaitForEvents(numevents, All, Wait); break;
-     	case 6:
-         ret = hMoistThreadEvent.WaitForEvents(numevents, All, Wait);
-         break;
-//     	case 7: ret=hBurnupThreadEvent.WaitForEvents(numevents, All, Wait); break;
-//     	case 8: ret=hIntegThreadEvent.WaitForEvents(numevents, All, Wait); break;
-//     	case 9: ret=hCrossEvent.WaitForEvents(numevents, All, Wait); break;
-//     	case 10: ret=hCrossThreadEvent.WaitForEvents(numevents, All, Wait); break;
-      default:
-        this->LogicError(" CI::WaitForFarsiteEvents() ERROR");
-        break;
-     }
-#endif
+// #ifdef WIN32
+//    switch (EventNum) {
+// //      case 1: ret=hBurnEvent.WaitForEvents(numevents, All, Wait); break;
+//      	case 2:
+//          ret = hMoistEvent.WaitForEvents (numevents, All, Wait);
+//          break;
+// //     	case 3: ret=hBurnupEvent.WaitForEvents(numevents, All, Wait); break;
+// //     	case 4: ret=hIntegEvent.WaitForEvents(numevents, All, Wait); break;
+// //     	case 5: ret=hBurnThreadEvent.WaitForEvents(numevents, All, Wait); break;
+//      	case 6:
+//          ret = hMoistThreadEvent.WaitForEvents(numevents, All, Wait);
+//          break;
+// //     	case 7: ret=hBurnupThreadEvent.WaitForEvents(numevents, All, Wait); break;
+// //     	case 8: ret=hIntegThreadEvent.WaitForEvents(numevents, All, Wait); break;
+// //     	case 9: ret=hCrossEvent.WaitForEvents(numevents, All, Wait); break;
+// //     	case 10: ret=hCrossThreadEvent.WaitForEvents(numevents, All, Wait); break;
+//       default:
+//         this->LogicError(" CI::WaitForFarsiteEvents() ERROR");
+//         break;
+//      }
+// #endif
      return ret;
 }
 

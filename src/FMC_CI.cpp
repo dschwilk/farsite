@@ -8,10 +8,8 @@
  **********************************************************************************/
 
 
-
-
 #include "FMC_CI.h"    /* Fuel Moisture Conditioning Input Class */
-#include "FMC_FE2.h"    /* FireEnvironment2 Class */
+#include "FMC_FE2.h"   /* FireEnvironment2 Class */
 
 #include "cdtlib.h"
 #include "newfms.h"
@@ -22,11 +20,11 @@
 #include <cstdio>
 #include <cstring>
 
-#ifdef WIN32
-#define _CRT_SECURE_NO_WARNINGS   /* Stop compiler 'depriciated' Warnings */
-#include <windows.h>
-#include <conio.h>
-#endif
+// #ifdef WIN32
+// #define _CRT_SECURE_NO_WARNINGS   /* Stop compiler 'depriciated' Warnings */
+// #include <windows.h>
+// #include <conio.h>
+// #endif
 
 
 
@@ -37,8 +35,6 @@
 //  this will cause it to not use it.......
 #define SKIP_RAWS_TYPEDEF
 #include "icf_def.h"
-
-
 
 void Get_MthDay (long JulDay, long *Mth, long *Day);
 
@@ -588,23 +584,23 @@ int CI::wtrdt_idx ( int i_JulDatFind, int sn)
 
 
 /**************************************************************************/
-#ifdef OLDOLD
-long CI::GetWeatherMonth(long StationNumber, long NumObs)
-{
-    if(NumObs>MaxWeatherObs[StationNumber]-1)
-        NumObs=MaxWeatherObs[StationNumber]-1;
+// #ifdef OLDOLD
+// long CI::GetWeatherMonth(long StationNumber, long NumObs)
+// {
+//     if(NumObs>MaxWeatherObs[StationNumber]-1)
+//         NumObs=MaxWeatherObs[StationNumber]-1;
 
-    return wtrdt[StationNumber][NumObs].mo;
-}
+//     return wtrdt[StationNumber][NumObs].mo;
+// }
 
-long CI::GetWeatherDay(long StationNumber, long NumObs)
-{
-    if(NumObs>MaxWeatherObs[StationNumber]-1)
-        NumObs=MaxWeatherObs[StationNumber]-1;
+// long CI::GetWeatherDay(long StationNumber, long NumObs)
+// {
+//     if(NumObs>MaxWeatherObs[StationNumber]-1)
+//         NumObs=MaxWeatherObs[StationNumber]-1;
 
-    return wtrdt[StationNumber][NumObs].dy;
-}
-#endif
+//     return wtrdt[StationNumber][NumObs].dy;
+// }
+// #endif
 
 /******************************************************************/
 double CI::GetWeatherTemp1(long StationNumber, long NumObs)
@@ -917,73 +913,8 @@ bool CI::FuelStickModel_IsNelson_070()
  * Name: ConvertSimtimeToActualTime
  * Desc: This functions takes the start condition mth day, adds the simtime to it
  *        and converts that to a mth day.
- * NOTE: this function had a bug in it, it didn't always get the right mth/day and
- *        minutes would come out as 59 sometimes instead 0. BUT it kind of seemed
- *        like it didn't matter much to the caller. BUT I rewrote it because it was
- *        cause the wronge mth/day to go into the moisture history records, which are
- *        mostly used for reference, but maybe needed later for actual use.
- *
  ************************************************************************************/
 void CI::ConvertSimtimeToActualTime (double SimTime, long *mo, long *dy, long *hr, long *mn)
-{
-
-/* This is the fixed function */
-    ConvertSimtimeToActualTime_Fix (SimTime, mo, dy, hr, mn);
-    return;
-
-//**************************************************************************
-// This is the orginal code
-//
-#ifdef OLD_CODE
-
-    long months, days, hours, mins;
-    double fday, fhour;
-    long i;
-
-    fday = (SimTime / 1440.0);  // days from minutes
-    days = (long) fday;
-    fhour = (fday-days)*24.0;  // hours from days
-    hours = (long) fhour;
-    mins = (fhour-hours)*60;     // minutes from hours
-
-    if (mins>60) {
-        mins-=60;
-        hours++; }
-
-    if(hours>=24) {
-        hours-=24;
-        days++; }
-
-    hours *= 100;
-
-    long ConDate = GetJulianDays(startmonth) + startday;
-    if ( ConDate + days > 365) {
-        days =- 365;
-        for (i=1; i<12; i++) {
-            if ( days < GetJulianDays(i))
-                break; }
-        days -= GetJulianDays(i);
-        months = i;}
-    else {
-        for ( i = 1; i < 12; i++) {
-            if (days + ConDate < GetJulianDays ( startmonth + i ))
-                break; }
-
-        days -= ( GetJulianDays (startmonth + i - 1 ) - ConDate);
-        months = startmonth + (i-1);}
-
-    *mo = months;
-    *dy = days;
-    *hr = hours;
-    *mn = mins;
-#endif
-}
-
-/**********************************************************************
- * See Calling function for comments.
- *
- ************************************************************************/
-void CI::ConvertSimtimeToActualTime_Fix (double SimTime, long *mo, long *dy, long *hr, long *mn)
 {
     long A,l, days, hours, mins, l_Time;
     long ConDays;
