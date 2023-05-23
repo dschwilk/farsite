@@ -33,10 +33,8 @@ Where:
     [BarrierFileName] is the path to the Barrier shape file (0 if no barrier)
     [outputDirPath] is the path to the output files base name (no extension)
     [outputsType] is the file type for outputs (0 = both, 1 = ASCII grid,
-                  2 = FlamMap binary grid
-
+                  2 = FlamMap binary grid)
 )";
-
 
 mutex iomutex;  // for locking std::cout
 atomic_bool cancelRequest = false; // Flag to end program based on user input.
