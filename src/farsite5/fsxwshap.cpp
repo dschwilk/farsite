@@ -28,9 +28,10 @@
 //				Mark A. Finney, Systems for Environemntal Management
 //******************************************************************************
 
-//#include "fsxwshap.h"
-#include "Farsite5.h"
+#include "fsxwshap.h"
 
+#include "Farsite5.h"
+#include "shapefil.h"
 
 ShapeFileUtils::ShapeFileUtils(Farsite5 *_pFarsite)
 {

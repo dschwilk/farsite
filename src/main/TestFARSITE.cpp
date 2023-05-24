@@ -1,7 +1,13 @@
 // TestFARSITE.cpp : Defines the entry point for the console application.
-//
 
-#include "FARSITE.h"
+// Authors: ?? and Dylan Schwilk
+
+
+// This source file only depends upon the main shared FARSITE library declared
+// in FARSITE.h and only interacts with the fire growth model through that
+// interface.qq
+
+#include "FARSITE.h"  
 
 #include <vector>
 #include <iostream>

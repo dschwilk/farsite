@@ -3,7 +3,7 @@
 // Date and authors?
 
 // Defines the main user-level (or shared library) class for the farsite fire
-// spread model. IN the windows version, this is built to `FARSITE.dll`
+// spread model. In the windows version, this is built to `FARSITE.dll`
 
 
 
@@ -17,14 +17,15 @@
 
 #define FARSITEDLL_EXPORT
 
+// Declare main implementation class. Note that this is used inside the
+// CFarsite class as a member object. No inheritance is used.
+class Farsite5;
+
 #include <mutex>
 
 extern std::mutex iomutex;  // for locking std::cout and cerr. An alternative
                             // with c++20 is to use a synced stream object.
 
-// Declare main implementation class. Note that this is sued inside the
-// CFarsite class as a member object. No inheritance is used.
-class Farsite5
 
 // CFarsite class. This is interface for application-level code.
 class FARSITEDLL_EXPORT CFarsite

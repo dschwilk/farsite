@@ -20,38 +20,42 @@
  *   - http://www.copyright.gov/title17/92chap1.html#105
  *   - http://www.gpoaccess.gov/uscode/  (enter "17USC105" in the search box.)
  */
-#include "shapefil.h"
-//#include "fsglbvar.h"
+#ifndef IgnitionHeader
+#define IgnitionHeader
+
+#include "fsx4.hpp"
+//#include "shapefil.h"
+
+//#include "Farsite5.h"
 class Farsite5;
 
-class ShapeFileUtils
+class IgnitionFile : public IgnitionCorrect
 {
-	char* ShapeFileName;
-	char* DataBaseName;
-	int nShapeType;
-	long Polygons;
-	long BarSeparate;
-	bool BarExport;
-
-	void RetrieveExportFileInfo();
+	FILE* IFile;
+	long count, count2;
+	long fposition1, NumVertex;
+	double startsize;
+	double CenterX, CenterY, xpt, ypt, angle;//, FireArea;
 	Farsite5 *pFarsite;
-
+	bool lightsLandscape;
 public:
-	void ConvertSimTime(double SimTime);
-	long VisOnly;
-	bool NewFile;
+	char TestEnd[30];
+	char ifile[256];
+	//HWND hW;
 
-	long Month, Day, Hour;
-	ShapeFileUtils(Farsite5 *_pFarsite);
-	~ShapeFileUtils();
-	void ResetShape();
-	char* GetShapeFileName();
-	bool ShapeData(long CurrentFire, double SimTime);
-	void InitializeShapeExport(char* FileName, long poly);
-	long ImportShapeData(const char* FileName, long PolygonType);
+	IgnitionFile(Farsite5 *_pFarsite);
+	~IgnitionFile();
+
+	void SelectFileInput() ;
+	bool GrassFile() ;
+	bool ArcLine()  ;
+	bool ArcPoly() ;
+	bool ArcPoint() ;
+	bool ShapeInput() ;
+	void SelectFileInputCmdL(int type) ;
+	bool GetLightsLandscape();
+	bool SetLightsLandscape(bool lightsLCP);
 };
 
-
-
-
+#endif
 

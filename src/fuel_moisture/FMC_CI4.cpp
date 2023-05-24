@@ -1,5 +1,5 @@
 /*********************************************************************************
-* Name: fmc_ci3.cpp - FlamMap Input Class
+* Name: fmc_ci4.cpp - FlamMap Input Class
 * Desc: This class holds and makes available all needed inputs.
 *
 *

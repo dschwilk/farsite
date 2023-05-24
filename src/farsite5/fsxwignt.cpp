@@ -24,7 +24,9 @@
 #define IDNO 2
 
 #include "fsxwignt.h"
+
 #include "Farsite5.h"
+#include "shapefil.h"
 
 #include <cstring>
 

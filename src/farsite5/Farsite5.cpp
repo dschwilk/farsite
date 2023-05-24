@@ -9,6 +9,7 @@
 #include "Far_FPC.h"
 #include "barriers.hpp"
 
+#include "shapefil.h"
 
 #include <memory>
 #include <cstring>

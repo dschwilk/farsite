@@ -1,48 +1,42 @@
+# makefile
+
 # project name (generate executable with this name)
-TARGET	= TestFARSITE
+TARGET    := TestFARSITE
 
-CXX=g++
-CXXFLAGS=-c -std=c++17 -g -Wall
-#CXXFLAGS=-c -std=c++17 -g -o2
-LINKER   = g++ -o
-LFLAGS   =
+CC        := g++
+LD        := g++
 
-SRCDIR   = src
-OBJDIR   = obj
-BINDIR   = bin
+CXXFLAGS  := -c -std=c++17 -g -Wall
+LFLAGS    :=
 
-SOURCES  := $(wildcard $(SRCDIR)/*.cpp)
-INCLUDES := $(wildcard $(SRCDIR)/*.h)
-OBJECTS  := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
-rm       = rm -f
+MODULES   := main farsite5 icf fuel_moisture shapelib utils  
+SRC_DIR   := $(addprefix src/,$(MODULES))
+BUILD_DIR := $(addprefix build/,$(MODULES))
 
-UNAME := $(shell uname)
-ifeq ($(UNAME), Darwin)
-  ARCH = 2
-  $(info *****************  I'm a MAC  ******************)
-endif
-ifeq ($(UNAME), Linux)
-  ARCH = 1
-  $(info *****************  I'm a Linux machine  ******************)
-endif
+SRC       := $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.cpp))
+OBJ       := $(patsubst src/%.cpp,build/%.o,$(SRC))
+INCLUDES  := $(addprefix -I,$(SRC_DIR))
 
+vpath %.cpp $(SRC_DIR)
 
+define make-goal
+$1/%.o: %.cpp
+	$(CC) $(INCLUDES) $(CXXFLAGS) -c $$< -o $$@
+endef
 
-$(BINDIR)/$(TARGET): $(OBJECTS)
-	@$(LINKER) $@ $(LFLAGS) $(OBJECTS)
-	@echo "Linking complete!"
+.PHONY: all checkdirs clean
 
-$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
-	@$(CXX) $(CXXFLAGS) -c $< -o $@
-	@echo "Compiled "$<" successfully!"
+all: checkdirs build/$(TARGET)
 
-.PHONEY: clean
+build/$(TARGET): $(OBJ)
+	$(LD) $^ -o $(LFLAGS) $@
+
+checkdirs: $(BUILD_DIR)
+
+$(BUILD_DIR):
+	@mkdir -p $@
+
 clean:
-	@$(rm) $(OBJECTS)
-	@echo "Cleanup complete!"
+	@rm -rf $(BUILD_DIR)
 
-.PHONEY: remove
-remove: clean
-	@$(rm) $(BINDIR)/$(TARGET)
-	@echo "Executable removed!"
-
+$(foreach bdir,$(BUILD_DIR),$(eval $(call make-goal,$(bdir))))
