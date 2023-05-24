@@ -1,20 +1,32 @@
-//FARSITE.h
-//Defines exported class for FARSITE.dll
+// FARSITE.h
 
-/*#ifdef BUILD_FARSITEDLL
+// Date and authors?
+
+// Defines the main user-level (or shared library) class for the farsite fire
+// spread model. IN the windows version, this is built to `FARSITE.dll`
+
+
+
+/*
+#ifdef BUILD_FARSITEDLL
 #define FARSITEDLL_EXPORT __declspec(dllexport)
 #else
 #define FARSITEDLL_EXPORT __declspec(dllimport)
-#endif */
+#endif
+*/
+
 #define FARSITEDLL_EXPORT
 
-#include <string>
 #include <mutex>
 
-extern std::mutex iomutex;  // for locking std::cout and cerr
+extern std::mutex iomutex;  // for locking std::cout and cerr. An alternative
+                            // with c++20 is to use a synced stream object.
 
-class Farsite5;
+// Declare main implementation class. Note that this is sued inside the
+// CFarsite class as a member object. No inheritance is used.
+class Farsite5
 
+// CFarsite class. This is interface for application-level code.
 class FARSITEDLL_EXPORT CFarsite
 {
 public:
@@ -42,16 +54,19 @@ public:
 
 	int CanLaunchFarsite(void);
 	int LaunchFarsite(void);
+
+    // Progress indicators for use in progress bars, spinners, etc.
     int GetFarsiteProgress() const;
     const char* GetFarsiteStatusString() const;
 
 	int CancelFarsite(void);
 
-	//output functions
-    // all outputs
+	// output functions
+    
+    // write all outputs
     int writeOutputs(int outType, const std::string outputPath);
 
-    //individual
+    // write individual spatial products
 	int WriteArrivalTimeGrid(const char *trgName);
 	int WriteIntensityGrid(const char *trgName);
 	int WriteFlameLengthGrid(const char *trgName);

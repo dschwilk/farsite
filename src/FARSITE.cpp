@@ -1,8 +1,13 @@
-// FARSITE.cpp : Defines the exported functions for the DLL application.
-//
+// FARSITE.cpp
+
+// Authors? Date?
+
+// Defines the exported functions for the main application level
+// interface clsss, CFarsite//
 
 #include "FARSITE.h"
-#include "Farsite5.h"
+#include "Farsite5.h" // implementation of actual spread model, used as
+                      // contained member `m_pFarsite`
 
 #include <iostream>
 #include <sstream>
@@ -19,14 +24,14 @@ void CFarsite::printError(const char *theerr,  const char *fname)
 
 CFarsite::CFarsite()
 {
-	m_pFarsite = new Farsite5();//NULL;
+	m_pFarsite = new Farsite5();
 }
 
 CFarsite::~CFarsite()
 {
 	if(m_pFarsite)
 		delete m_pFarsite;
-	m_pFarsite = NULL;
+	m_pFarsite = nullptr;
 }
 
 int CFarsite::SetLandscapeFile(const char *_lcpFileName)

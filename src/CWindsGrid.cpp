@@ -1,3 +1,7 @@
+// CWindsGrid.cpp
+//
+// Author? Date?
+// Implementation of gridded winds class.
 
 #include "CWindsGrid.h"
 #include "Farsite5.h"
@@ -9,7 +13,7 @@
 #include <locale>
 
 // Some helper string trimming functions. Best to remove and use filesystem
-// stuff but leaving for now.
+// stuff but leaving for now. TODO.
 
 // trim from start (in place)
 static inline void ltrim(std::string &s) {
@@ -177,7 +181,7 @@ int CAtmWindGrid::Load(short month, short day, short hour, const char *speedFile
     }
     m_dirVals = tVals;
     if (isMetric)
-    {//convert to mph here from km/hour, ALSO COVERT FROM 10M TO 20' HEIGHT
+    {//convert to mph here from km/hour, ALSO CONVERT FROM 10M TO 20' HEIGHT
         const double kph2mph = 0.62137119223733;
 
         for (long long int c = 0; c < m_nCols * m_nRows; c++) //replaced windows variable __int64 with long long int

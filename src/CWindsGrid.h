@@ -1,3 +1,9 @@
+// CWindsGrid.h
+//
+// Author? Date?
+// Define gridded winds class. This allows WindNinja outputs as wx inputs to farsite.
+
+
 #include "Farsite5.h"
 
 #include <vector>
