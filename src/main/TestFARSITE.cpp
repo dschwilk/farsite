@@ -110,7 +110,7 @@ void ProgressThread(void *_pFarsites, int nFarsites, int interval)
           
                 if (std::strcmp(status, "Complete")==0)
                 {
-                    cout << "Farsite #" << f+1 << ": Writing results.";
+                    cout << "Farsite #" << f+1 << ": Writing results " << progress << "% complete. ";
                 } else
                 {              
                     cout << "Farsite #" << f+1 << ": " << status << " " << progress << "% complete. ";
@@ -219,7 +219,7 @@ int MPMain(int argc, char* argv[])
 		pFarsites[i] = nullptr;  // start empty
 
 	//printMsg("Starting 'ProgressThread' thread.");
-    auto progressThread = std::thread(ProgressThread, &pFarsites[0], nFarsites, 600);
+    auto progressThread = std::thread(ProgressThread, &pFarsites[0], nFarsites, 500);
 	int f;
            
 	for(f = 0; f < nFarsites; f++)

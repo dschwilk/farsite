@@ -99,6 +99,9 @@ public:
 private:
 	Farsite5 *m_pFarsite;
 
+    // Internally can set the progress tracker of the Farsite5 object
+    void SetFarsiteProgress(int newProgress);
+
     // For error output thread safe
     void printError(const char *theerr,  const char *fname);
 

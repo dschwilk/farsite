@@ -1239,10 +1239,10 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 
 	int CancelFarsite(void);
 
-    // Status getting
-	int SetFarsiteProgress(int newProgress);
+    // Status getting/setting
     int GetFarsiteProgress() const;
     const char* GetFarsiteStatusString() const;
+	void SetFarsiteProgress(int newProgress);
 
 	clock_t timeLaunchFarsite;
 	clock_t timeFinish;

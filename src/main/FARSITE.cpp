@@ -492,6 +492,9 @@ int CFarsite::writeOutputs(int outType, const std::string outputPath)
     // one and ten hour fuels
     int ret;
     int nOutputs, outN=0;
+
+    this->SetFarsiteProgress(0);
+    
     switch(outType) {
     case 1 :
         nOutputs = 14;
@@ -509,6 +512,7 @@ int CFarsite::writeOutputs(int outType, const std::string outputPath)
         nOutputs = 6;
     }
 
+    int increment=std::round(100/nOutputs);
         
     if(outType == 0 || outType == 1 || outType == 4)
     {
@@ -516,8 +520,11 @@ int CFarsite::writeOutputs(int outType, const std::string outputPath)
         if(outType == 4)
         {
             this->WriteOneHours(outputPath.c_str());
+            this->SetFarsiteProgress(outN+=increment);
             this->WriteTenHours(outputPath.c_str());
+            this->SetFarsiteProgress(outN+=increment);
         }
+
         // type 0 and 1:
         ret = this->WriteCrownFireGrid( (outputPath + "_CrownFire.asc").c_str());
         if(ret != 1)
@@ -525,48 +532,63 @@ int CFarsite::writeOutputs(int outType, const std::string outputPath)
             char *a = this->CommandFileError(ret);
             printError(a, outputPath.c_str());
         }
+        this->SetFarsiteProgress(outN+=increment);
+
         ret = this->WriteArrivalTimeGrid((outputPath + "_ArrivalTime.asc").c_str());
         if(ret != 1)
         {
             char *a = this->CommandFileError(ret);
             printError(a, outputPath.c_str());
         }
+        this->SetFarsiteProgress(outN+=increment);
+        
         ret = this->WriteIntensityGrid( (outputPath + "_Intensity.asc").c_str());
         if(ret != 1)
         {
             char *a = this->CommandFileError(ret);
             printError(a, outputPath.c_str());
         }
+        this->SetFarsiteProgress(outN+=increment);
+        
         ret = this->WriteFlameLengthGrid((outputPath + "_FlameLength.asc").c_str());
         if(ret != 1)
         {
             char *a = this->CommandFileError(ret);
             printError(a, outputPath.c_str());
         }
+        this->SetFarsiteProgress(outN+=increment);
+        
         ret = this->WriteSpreadRateGrid( (outputPath + "_SpreadRate.asc").c_str());
         if(ret != 1)
         {
             char *a = this->CommandFileError(ret);
             printError(a, outputPath.c_str());
         }
+        this->SetFarsiteProgress(outN+=increment);
+        
         ret = this->WriteSpreadDirectionGrid( (outputPath + "_SpreadDirection.asc").c_str());
         if(ret != 1)
         {
             char *a = this->CommandFileError(ret);
             printError(a, outputPath.c_str());
         }
+        this->SetFarsiteProgress(outN+=increment);
+        
         ret = this->WriteHeatPerUnitAreaGrid( (outputPath + "_HeatPerUnitArea.asc").c_str());
         if(ret != 1)
         {
             char *a = this->CommandFileError(ret);
             printError(a, outputPath.c_str());
         }
+        this->SetFarsiteProgress(outN+=increment);
+        
         ret = this->WriteReactionIntensityGrid( (outputPath + "_ReactionIntensity.asc").c_str());
         if(ret != 1)
         {
             char *a = this->CommandFileError(ret);
             printError(a, outputPath.c_str());
         }
+        this->SetFarsiteProgress(outN+=increment);
     }
         
     if(outType == 0 || outType == 2)
@@ -577,48 +599,63 @@ int CFarsite::writeOutputs(int outType, const std::string outputPath)
             char *a = this->CommandFileError(ret);
             printError(a, outputPath.c_str());
         }
+        this->SetFarsiteProgress(outN+=increment);
+        
         ret = this->WriteArrivalTimeGridBinary( (outputPath + "ArrivalTime.fbg").c_str());
         if(ret != 1)
         {
             char *a = this->CommandFileError(ret);
             printError(a, outputPath.c_str());
         }
+        this->SetFarsiteProgress(outN+=increment);
+        
         ret = this->WriteIntensityGridBinary( (outputPath + "_Intensity.fbg").c_str());
         if(ret != 1)
         {
             char *a = this->CommandFileError(ret);
             printError(a, outputPath.c_str());
         }
+        this->SetFarsiteProgress(outN+=increment);
+        
         ret = this->WriteFlameLengthGridBinary( (outputPath + "_FlameLength.fbg").c_str());
         if(ret != 1)
         {
             char *a = this->CommandFileError(ret);
             printError(a, outputPath.c_str());
         }
+        this->SetFarsiteProgress(outN+=increment);
+        
         ret = this->WriteSpreadRateGridBinary( (outputPath + "_SpreadRate.fbg").c_str());
         if(ret != 1)
         {
             char *a = this->CommandFileError(ret);
             printError(a, outputPath.c_str());
         }
+        this->SetFarsiteProgress(outN+=increment);
+        
         ret = this->WriteSpreadDirectionGridBinary((outputPath + "_SpreadDirection.fbg").c_str());
         if(ret != 1)
         {
             char *a = this->CommandFileError(ret);
             printError(a, outputPath.c_str());
         }
+        this->SetFarsiteProgress(outN+=increment);
+        
         ret = this->WriteHeatPerUnitAreaGridBinary( (outputPath + "_HeatPerUnitArea.fbg").c_str());
         if(ret != 1)
         {
             char *a = this->CommandFileError(ret);
             printError(a, outputPath.c_str());
         }
+        this->SetFarsiteProgress(outN+=increment);
+        
         ret = this->WriteReactionIntensityGridBinary((outputPath + "_ReactionIntensity.fbg").c_str());
         if(ret != 1)
         {
             char *a = this->CommandFileError(ret);
             printError(a, outputPath.c_str());
         }
+        this->SetFarsiteProgress(outN+=increment);
     }
     /*sprintf(outputPath.c_str(), "%s_Moistures.txt", outs[f]);
       ret = this->WriteMoistData(outputPath.c_str());
@@ -635,38 +672,56 @@ int CFarsite::writeOutputs(int outType, const std::string outputPath)
         char *a = this->CommandFileError(ret);
         printError(a, outputPath.c_str());
     }
+    this->SetFarsiteProgress(outN+=increment);
+    
     ret = this->WritePerimetersShapeFile( (outputPath + "_Perimeters.shp").c_str());
     if(ret != 1)
     {
         char *a = this->CommandFileError(ret);
         printError(a, outputPath.c_str());
     }
+    this->SetFarsiteProgress(outN+=increment);
+    
     ret = this->WriteSpotGrid( (outputPath + "_SpotGrid.asc").c_str());
     if(ret != 1)
     {
         char *a = this->CommandFileError(ret);
         printError(a, outputPath.c_str());
     }
+    this->SetFarsiteProgress(outN+=increment);
+    
     ret = this->WriteSpotDataFile( (outputPath + "_Spots.csv").c_str());
     if(ret != 1)
     {
         char *a = this->CommandFileError(ret);
         printError(a, outputPath.c_str());
     }
+    this->SetFarsiteProgress(outN+=increment);
+    
     ret = this->WriteSpotShapeFile( (outputPath + "_Spots.shp").c_str());
     if(ret != 1)
     {
         char *a = this->CommandFileError(ret);
         printError(a, outputPath.c_str());
     }
-    ret = this->WriteTimingsFile( (outputPath + "_Timings.txt").c_str());
 
+    this->SetFarsiteProgress(outN+=increment);
+    
+    ret = this->WriteTimingsFile( (outputPath + "_Timings.txt").c_str());
     if(ret != 1)
     {
         char *a = this->CommandFileError(ret);
         printError(a, outputPath.c_str());
     }
-    
-return ret;
+
+    this->SetFarsiteProgress(100);
+    return ret;
 }
 
+
+// private
+
+void CFarsite::SetFarsiteProgress(int newProgress)
+{
+	this->m_pFarsite->SetFarsiteProgress(newProgress);
+}

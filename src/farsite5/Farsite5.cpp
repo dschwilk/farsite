@@ -11568,14 +11568,10 @@ int Farsite5::WriteSpotShapeFile(const char *trgName)
 }
 
 /*************************************************************************************/
-// DONE: Why not just have this class call FPC::SetProgress directly. Users
-// should not need to set prorgress, only read it
-// int Farsite5::SetFarsiteProgress(int newProgress)
-// {
-//     m_FPC.SetProgress
-// 	progress = newProgress;
-// 	return progress;
-// }
+void Farsite5::SetFarsiteProgress(int newProgress)
+{
+    m_FPC.SetProgress(newProgress);
+}
 
 /*************************************************************
  * 
