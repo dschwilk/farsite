@@ -1,2 +1,2 @@
-./examples/Panther/cust/input/238648_cust_fm94.lcp ./examples/Panther/cust/input/cust.input ./examples/Panther/cust/input/ignit2.shp 0 ./examples/Panther/cust/output/cust_ignit2 0
-./examples/Panther/test1177973/input/test1177973.lcp ./examples/Panther/test1177973/input/test1177973.input ./examples/Panther/test1177973/input/test1177973_NTFBIgnition.shp ./examples/Panther/test1177973/input/test1177973_NTFBBarrier.shp ./examples/Panther/test1177973/output/test1177973_NTFBIgnition 0
+./examples/Panther/test1177973/input/test1177973.lcp ./examples/Panther/test1177973/input/test1177973.input ./examples/Panther/test1177973/input/test1177973_NTFBIgnition.shp ./examples/Panther/test1177973/input/test1177973_NTFBBarrier.shp ./examples/Panther/test1177973/output/test1177973_NTFBIgnition 1
+./examples/Panther/cust/input/238648_cust_fm94.lcp ./examples/Panther/cust/input/cust.input ./examples/Panther/cust/input/ignit2.shp 0 ./examples/Panther/cust/output/cust_ignit2 1
