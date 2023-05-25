@@ -5,7 +5,6 @@
 *
 *********************************************************************/
 #include "Far_FPC.h"
-//#include "Farsite5.h"
 
 // Return state as a string
 constexpr const char* ProgressStateToString(ProgressState s)
@@ -38,12 +37,8 @@ FPC::~FPC()
 /**********************************************************************/
 void FPC::Init ()
 {
-    _state = e_Starting;
+    _state = e_Idle;
     _progress = 0;
- // f_PreProg = 0;
- // f_pcCond = 0;     /* is approximated to run */
- // f_pcFar = 0;
-
 }
 
 /***********************************************************************/

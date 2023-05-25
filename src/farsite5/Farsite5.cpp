@@ -407,9 +407,6 @@ Farsite5::Farsite5(void) :
 	this->m_FPC.SetProgress(0);
     this->m_FPC.SetStarting();
 
-    //fN_WNToDo = 0;
-    //fN_WNDone = 0;
-
 	m_nCellsLit = 0;
     m_xLo = m_xHi = m_yLo = m_yHi = 0.0;
 }

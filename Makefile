@@ -9,13 +9,13 @@ LD        := g++
 CXXFLAGS  := -c -std=c++17 -g -Wall
 LFLAGS    :=
 
-MODULES   := main farsite5 icf fuel_moisture shapelib utils  
+MODULES   := main farsite5 icf fuel_moisture shapelib utils 
 SRC_DIR   := $(addprefix src/,$(MODULES))
 BUILD_DIR := $(addprefix build/,$(MODULES))
 
 SRC       := $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.cpp))
 OBJ       := $(patsubst src/%.cpp,build/%.o,$(SRC))
-INCLUDES  := $(addprefix -I,$(SRC_DIR))
+INCLUDES  := $(addprefix -I,$(SRC_DIR)) -I src/
 
 vpath %.cpp $(SRC_DIR)
 

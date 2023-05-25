@@ -5,9 +5,14 @@
 
 // This source file only depends upon the main shared FARSITE library declared
 // in FARSITE.h and only interacts with the fire growth model through that
-// interface.qq
+// interface.
 
 #include "FARSITE.h"  
+
+// indicators header library for progress bars
+#include "indicators/cursor_control.hpp"
+#include "indicators/progress_bar.hpp"
+#include "indicators/dynamic_progress.hpp"
 
 #include <vector>
 #include <iostream>
@@ -17,7 +22,6 @@
 #include <thread>
 #include <mutex>
 #include <atomic>
-
 #include <cstring>
 
 using namespace std::chrono_literals;
@@ -38,12 +42,14 @@ Where:
     [IgnitionFileName] is the path to the Ignition shape file
     [BarrierFileName] is the path to the Barrier shape file (0 if no barrier)
     [outputDirPath] is the path to the output files base name (no extension)
-    [outputsType] is the file type for outputs (0 = both, 1 = ASCII grid,
-                  2 = FlamMap binary grid)
+    [outputsType] indicates which output files to write (1 = ASCII grids,
+                  2 = FlamMap binary grids, 0 = both grid types, 4 = fuels
+                  information plus ASCII grids)
 )";
 
-atomic_bool cancelRequest = false; // Flag to end program based on user input.
-                                   // Not yet changed based on user.
+atomic_bool FarsitesComplete = false; // Flag for progress thread to check to
+                                      // determine if all farsite runs have
+                                      // completed.
 
 // The 6 required command file arguments
 struct FarsiteCommand {
@@ -92,43 +98,72 @@ void printMsg(const std::string msg)
     cout << msg << "\n";
 }
 
-// This is very simple for now. It would be nice to have a progress bar of the
-// type in the indicators library.
+// Function to handle progress updates for all farsite instances. Function
+// will query CFarsite instances for current task/status (string) and progress
+// percentage within that status.
 void ProgressThread(void *_pFarsites, int nFarsites, int interval)
 {
- 	CFarsite **pFarsites = (CFarsite **)_pFarsites;
-	int progress = 0;
-	while(!cancelRequest)
-	{
-		for(int f = 0; f < nFarsites; f++)        
-		{
-            progress=0;
- 			std::lock_guard<std::mutex> {iomutex};
-            if(pFarsites[f]) {
-                progress = pFarsites[f]->GetFarsiteProgress();
-                const char* status = pFarsites[f]->GetFarsiteStatusString();
-          
-                if (std::strcmp(status, "Complete")==0)
-                {
-                    cout << "Farsite #" << f+1 << ": Writing results " << progress << "% complete. ";
-                } else
-                {              
-                    cout << "Farsite #" << f+1 << ": " << status << " " << progress << "% complete. ";
-                }
-            }
-            cout << "\n";
-		}
-        iomutex.lock();
-        cout << std::flush;
-        iomutex.unlock();
-        std::this_thread::sleep_for(std::chrono::milliseconds(interval));
-	}
-}
+    using namespace indicators;
 
+    CFarsite **pFarsites = (CFarsite **)_pFarsites;
+    ProgressBar* bar_parray[nFarsites];  // to store pointers to dynamically
+                                         // allocated progress bars
+ 
+    int f;
+
+    // store the pointers in an array so we can delete them once the
+    // DynamicProgress container is out of scope
+    for(f=0; f < nFarsites; f++)
+    {
+        ProgressBar *nbar = new ProgressBar(option::BarWidth{50},
+                                            option::PrefixText{string("Farsite #") + to_string(f+1)});
+        bar_parray[f] = nbar;
+    }
+    
+    if (!FarsitesComplete)
+    {
+        DynamicProgress<ProgressBar> bars;
+        for(f=0; f < nFarsites; f++)
+        {
+            bars.push_back(*(bar_parray[f]));
+        }
+    
+        while(!FarsitesComplete)
+        {
+            for(f = 0; f < nFarsites; f++)        
+            {
+                if(pFarsites[f]) {
+                    const char* status = pFarsites[f]->GetFarsiteStatusString();
+                    int progress = pFarsites[f]->GetFarsiteProgress();
+                    bars[f].set_progress(progress);
+                    if(std::strcmp(status, "Complete")==0)
+                    {
+                        bars[f].set_option(option::PostfixText{"Writing files"});
+                    } else {
+                        bars[f].set_option(option::PostfixText{status});
+                    }
+                }                
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(interval));
+        }
+        for(f=0;f<nFarsites;f++)
+        {
+            bars[f].mark_as_completed();
+        }
+    }
+
+    // delete dynamically allocated bars
+    for(f=0; f < nFarsites; f++)
+    {
+        delete bar_parray[f];
+    }
+}
+    
 // This function must be called from the main thread -- it is unsafe to have
 // multiple versions running concurrently due to how the ICF class handles
-// error messages and strings. I'm not sure why because it seems like it should
-// be ok. A thread-safe ICF class would allow this to be run in a thread.
+// error messages and strings. I'm not precisely sure why because it seems like
+// it should be ok. A thread-safe ICF class would allow this to be run in a
+// thread.
 int LoadCommandInputs(CFarsite *pFarsite, int f, FarsiteCommand fc)
 {
     int ret;
@@ -165,9 +200,208 @@ int LoadCommandInputs(CFarsite *pFarsite, int f, FarsiteCommand fc)
     return ret;
 }
 
+/*******************************************************************************************
+ * WriteOutputs Write all outputs. outputPath is directory and base file name.
+ * The code below appends an underscore, file type description, and extension
+ * to this string to create the various output file name. outType is integer
+ * indicating which group of outputs to produce. This is verbose and could be
+ * handled more cleanly. I had this set to update progress but it it was
+ * choppy. Better to just test when writing is occurring and use some spinner
+ * or similar I think.
+ *
+ *******************************************************************************************/
+int writeOutputs(CFarsite *pFarsite, int outType, const std::string outputPath)
+{
+    // 0 = all outputs, 1 = ascii grids, 2 = binary grids, 4 = same as 1 plus
+    // one and ten hour fuels
+    int ret;
+     
+    if(outType == 0 || outType == 1 || outType == 4)
+    {
+        // type 4:
+        if(outType == 4)
+        {
+            pFarsite->WriteOneHours(outputPath.c_str());
+           
+            pFarsite->WriteTenHours(outputPath.c_str());
+           
+        }
 
-// Launch a farsite run. this can run asynchronously in its own thread.
-// LoadCommandInputs must have been already called on the Farsite object.
+        // type 0 and 1:
+        ret = pFarsite->WriteCrownFireGrid( (outputPath + "_CrownFire.asc").c_str());
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+
+        ret = pFarsite->WriteArrivalTimeGrid((outputPath + "_ArrivalTime.asc").c_str());
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        
+        ret = pFarsite->WriteIntensityGrid( (outputPath + "_Intensity.asc").c_str());
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        
+        ret = pFarsite->WriteFlameLengthGrid((outputPath + "_FlameLength.asc").c_str());
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        
+        ret = pFarsite->WriteSpreadRateGrid( (outputPath + "_SpreadRate.asc").c_str());
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        
+        ret = pFarsite->WriteSpreadDirectionGrid( (outputPath + "_SpreadDirection.asc").c_str());
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        
+        ret = pFarsite->WriteHeatPerUnitAreaGrid( (outputPath + "_HeatPerUnitArea.asc").c_str());
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        
+        ret = pFarsite->WriteReactionIntensityGrid( (outputPath + "_ReactionIntensity.asc").c_str());
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+       
+    }
+        
+    if(outType == 0 || outType == 2)
+    {
+        ret = pFarsite->WriteCrownFireGridBinary( (outputPath + "_CrownFire.fbg").c_str());
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        
+        ret = pFarsite->WriteArrivalTimeGridBinary( (outputPath + "ArrivalTime.fbg").c_str());
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        
+        ret = pFarsite->WriteIntensityGridBinary( (outputPath + "_Intensity.fbg").c_str());
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        
+        ret = pFarsite->WriteFlameLengthGridBinary( (outputPath + "_FlameLength.fbg").c_str());
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        
+        ret = pFarsite->WriteSpreadRateGridBinary( (outputPath + "_SpreadRate.fbg").c_str());
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        
+        ret = pFarsite->WriteSpreadDirectionGridBinary((outputPath + "_SpreadDirection.fbg").c_str());
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        
+        ret = pFarsite->WriteHeatPerUnitAreaGridBinary( (outputPath + "_HeatPerUnitArea.fbg").c_str());
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+        
+        ret = pFarsite->WriteReactionIntensityGridBinary((outputPath + "_ReactionIntensity.fbg").c_str());
+        if(ret != 1)
+        {
+            char *a = pFarsite->CommandFileError(ret);
+            printError(a, outputPath.c_str());
+        }
+       
+    }
+    /*sprintf(outputPath.c_str(), "%s_Moistures.txt", outs[f]);
+      ret = pFarsite->WriteMoistData(outputPath.c_str());
+      if(ret != 1)
+      {
+      char *a = pFarsite->CommandFileError(ret);
+      printError(a, outputPath.c_str());
+      }*/
+
+    // all output types:
+    ret = pFarsite->WriteIgnitionGrid( (outputPath + "_Ignitions.asc").c_str());
+    if(ret != 1)
+    {
+        char *a = pFarsite->CommandFileError(ret);
+        printError(a, outputPath.c_str());
+    }
+    
+    ret = pFarsite->WritePerimetersShapeFile( (outputPath + "_Perimeters.shp").c_str());
+    if(ret != 1)
+    {
+        char *a = pFarsite->CommandFileError(ret);
+        printError(a, outputPath.c_str());
+    }
+    
+    ret = pFarsite->WriteSpotGrid( (outputPath + "_SpotGrid.asc").c_str());
+    if(ret != 1)
+    {
+        char *a = pFarsite->CommandFileError(ret);
+        printError(a, outputPath.c_str());
+    }
+    
+    ret = pFarsite->WriteSpotDataFile( (outputPath + "_Spots.csv").c_str());
+    if(ret != 1)
+    {
+        char *a = pFarsite->CommandFileError(ret);
+        printError(a, outputPath.c_str());
+    }
+    
+    ret = pFarsite->WriteSpotShapeFile( (outputPath + "_Spots.shp").c_str());
+    if(ret != 1)
+    {
+        char *a = pFarsite->CommandFileError(ret);
+        printError(a, outputPath.c_str());
+    }
+       
+    ret = pFarsite->WriteTimingsFile( (outputPath + "_Timings.txt").c_str());
+    if(ret != 1)
+    {
+        char *a = pFarsite->CommandFileError(ret);
+        printError(a, outputPath.c_str());
+    }
+
+    return ret;
+}
+
+
+// Launch a farsite run. this can run asynchronously in its own thread. LoadCommandInputs
+// must have been already called on the Farsite object.
 void LaunchFarsite(void *_pFarsite, int f, FarsiteCommand fc)
 {
     // cast array of pointers to farsite objects.
@@ -181,11 +415,11 @@ void LaunchFarsite(void *_pFarsite, int f, FarsiteCommand fc)
         return;  // throw?
     }
      // write outputs
-    ret = pFarsite->writeOutputs(fc.outType, fc.outPath);
+    ret = writeOutputs(pFarsite, fc.outType, fc.outPath);
     if(ret != 1) 
     {
         printMsg(string("Error: Writing results failure for farsite #") + to_string(f+1) );
-        return;  // throw?
+        return;
     }
 }
 
@@ -218,48 +452,46 @@ int MPMain(int argc, char* argv[])
 	for(int i = 0; i < nFarsites; i++)
 		pFarsites[i] = nullptr;  // start empty
 
-	//printMsg("Starting 'ProgressThread' thread.");
     auto progressThread = std::thread(ProgressThread, &pFarsites[0], nFarsites, 500);
-	int f;
-           
+
+    int f;
 	for(f = 0; f < nFarsites; f++)
 	{
 		pFarsites[f] = new CFarsite();
 		
-		if(!cancelRequest)
+		if(!FarsitesComplete)
 		{
             // Load inputs
             int ret = LoadCommandInputs(pFarsites[f], f, cmds[f]);
             if(ret != 1) 
             {
-                //printMsg(string("Command File Error in farsite #") + to_string(f+1));
                 char *a = pFarsites[f]->CommandFileError(ret);
-                printError(cmds[f].input.c_str(),a);
+                printError(cmds[f].input.c_str(), a);
                 delete pFarsites[f];
                 pFarsites[f] = nullptr;
             }
 
-            // Launch simulation in own thread
+            // Launch each simulation in own thread
 			printMsg(string("Launching Farsite #") + to_string(f+1));
+                     
             FarsiteThreads.push_back(std::thread(LaunchFarsite, pFarsites[f], f, cmds[f]));
 		}
 		
 	}
     
-	bool complete = !cancelRequest;
 	while (!FarsiteThreads.empty())
     {
         FarsiteThreads.back().join();
         FarsiteThreads.pop_back();
     }
 
-    cancelRequest = true;
+    FarsitesComplete = true;
     progressThread.join();
 
-	if(complete)
-	{
+//	if(complete)
+//	{
 		printMsg("Done\n");
-	}
+//	}
     
 	for(int i = 0; i < nFarsites; i++)
 	{
