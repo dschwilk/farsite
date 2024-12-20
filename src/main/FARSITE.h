@@ -22,7 +22,7 @@
 class Farsite5;
 
 #include <mutex>
-
+#include <string>
 extern std::mutex iomutex;  // for locking std::cout and cerr. An alternative
                             // with c++20 is to use a synced stream object.
 
